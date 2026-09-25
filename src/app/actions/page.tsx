@@ -1,3 +1,4 @@
+import { AppNav } from "@/components/app-nav";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { executeApprovedAction, recordSaleOutcome } from "./actions";
@@ -17,6 +18,7 @@ export default async function ActionsPage({ searchParams }: ActionsPageProps) {
     : params.error === "sale" ? "Não foi possível registar esta venda." : null;
   const { data: actions } = await supabase.from("actions").select("id,action_type,status,risk,rationale,created_at,outcomes(kind,revenue_minor,attribution)").eq("organization_id", membership.organization_id).order("created_at", { ascending: false });
   return <main>
+    <AppNav />
     <header><div className="brand">NOVA IA</div><div className="badge">Action Ledger</div></header>
     <section className="hero"><h1>Ações e resultados</h1><p>Cada ação mantém estado, evidência e resultado comercial separado da decisão da IA.</p></section>
     <section className="card ledger"><h2>Ledger</h2>
