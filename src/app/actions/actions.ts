@@ -27,6 +27,7 @@ export async function recordSaleOutcome(formData: FormData) {
   const { supabase } = await context();
   const actionId = String(formData.get("action_id") ?? "").trim();
   const rawAmount = String(formData.get("amount") ?? "").trim().replace(",", ".");
+  if (!/^\d{1,9}(\.\d{1,2})?$/.test(rawAmount)) redirect("/actions?error=sale");
   const amount = Number(rawAmount);
   if (!/^[0-9a-f-]{36}$/i.test(actionId) || !Number.isFinite(amount) || amount <= 0 || amount > 100000000) redirect("/actions?error=sale");
   const revenueMinor = Math.round(amount * 100);
