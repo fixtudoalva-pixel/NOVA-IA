@@ -34,7 +34,7 @@ export default async function ActionsPage({ searchParams }: ActionsPageProps) {
         const revenue=saleOutcome?.revenue_minor ?? 0;
         return <div className="row" key={a.id}>
           <div><strong>{a.action_type}</strong><br/><span>{a.rationale ? (a.rationale.length > 300 ? a.rationale.slice(0, 300) + "…" : a.rationale) : "Sem justificação"}</span></div>
-          <div>{a.status} · {a.risk}</div><div>{revenue ? `${formatMoney(revenue)} assistidos · confirmação humana` : "Sem receita confirmada"}</div>
+          <div>{a.status.replaceAll("_", " ")} · risco {a.risk}</div><div>{revenue ? `${formatMoney(revenue)} assistidos · confirmação humana` : "Sem receita confirmada"}</div>
           <div>{a.status==="approved" && <form><input type="hidden" name="action_id" value={a.id}/><button formAction={executeApprovedAction} type="submit" aria-label={`Executar ${a.action_type}`}>Executar</button></form>}
           {a.status==="completed" && <form className="inline-form"><input type="hidden" name="action_id" value={a.id}/><input name="amount" aria-label="Valor da venda" aria-describedby="sale-help" type="number" min="0.01" max="100000000" step="0.01" inputMode="decimal" placeholder={orgSettings?.currency ?? "EUR"} defaultValue={revenue ? (revenue/100).toFixed(2) : undefined}/><button formAction={recordSaleOutcome} type="submit" aria-label={`${revenue ? "Atualizar" : "Registar"} venda para ${a.action_type}`}>{revenue ? "Atualizar venda" : "Registar venda"}</button></form>}</div>
         </div>;
