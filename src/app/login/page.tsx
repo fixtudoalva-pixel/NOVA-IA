@@ -14,7 +14,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         : params.error === "signup"
           ? "Não foi possível criar a conta. Confirma os dados ou tenta outro email."
           : params.error === "confirmation"
-            ? "O link de confirmação é inválido, expirou ou já foi utilizado. Pede um novo email de confirmação."
+            ? "O link de confirmação é inválido, expirou ou já foi utilizado. Tenta novamente mais tarde ou usa o email de confirmação mais recente."
             : null;
 
   return (
