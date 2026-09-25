@@ -25,6 +25,7 @@ export default async function AskPage({ searchParams }: Props) {
   ]);
 
   const revenue = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
+  const dataWarning = [conversations, waitingHuman, approvals, openActions, approvedKnowledge].some(value => value === null);
   const answer = question ? answerBusinessQuestion(question, { conversations: conversations ?? 0, waitingHuman: waitingHuman ?? 0, pendingApprovals: approvals ?? 0, openActions: openActions ?? 0, assistedRevenueMinor: revenue, approvedKnowledge: approvedKnowledge ?? 0 }) : null;
 
   return <main>
@@ -32,6 +33,7 @@ export default async function AskPage({ searchParams }: Props) {
     <header><div className="brand">NOVA IA</div><div className="badge">Ask Your Business</div></header>
     <section className="hero"><h1>Pergunta à tua empresa</h1><p>Respostas calculadas apenas a partir dos dados da organização autenticada.</p></section>
     <form className="card auth-form" method="get"><label>Pergunta<input name="q" defaultValue={question} placeholder="O que tenho para fazer hoje?" required /></label><button type="submit">Perguntar</button></form>
+    {dataWarning && <p role="alert">Algumas métricas não puderam ser carregadas. A resposta pode estar incompleta.</p>}
     {answer && <section className="card"><span>Resposta</span><strong>{answer.text}</strong>{answer.href && <p><a href={answer.href}>{answer.label} →</a></p>}</section>}
     <section className="card"><h2>Exemplos</h2><div className="auth-actions"><a href="/ask?q=Tenho+clientes+à+espera%3F">Clientes à espera</a><a href="/ask?q=Tenho+aprovações+pendentes%3F">Aprovações</a><a href="/ask?q=Quanto+tenho+de+receita+assistida%3F">Receita</a><a href="/ask?q=O+que+tenho+para+fazer+hoje%3F">Trabalho de hoje</a></div></section>
   </main>;
