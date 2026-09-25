@@ -12,4 +12,6 @@ describe("Ask Your Business", () => {
   it("routes customer waiting questions to inbox", () => expect(answerBusinessQuestion("Tenho clientes à espera?", data).href).toBe("/inbox"));
   it("refuses unsupported questions", () => expect(answerBusinessQuestion("Qual é o melhor produto?", data).text).toContain("não consigo responder"));
   it("handles empty questions", () => expect(answerBusinessQuestion("", data).text).toContain("Escreve"));
+  it("does not invent revenue for unsupported questions", () => expect(answerBusinessQuestion("Diz-me o lucro líquido", data).text).toContain("não consigo responder"));
+  it("labels assisted revenue as non-causal", () => expect(answerBusinessQuestion("Quanto vendi?", data).text).toContain("não prova causalidade"));
 });
