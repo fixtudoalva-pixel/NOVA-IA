@@ -32,3 +32,9 @@ The live database migration history is append-only and includes short-lived secu
 
 ## MVP Operator approval enforcement
 The database now derives the MVP Operator approval requirement itself: every proposed external Operator action is persisted as awaiting approval, regardless of any client-supplied requiresApproval field. Critical actions remain rejected. This removes the previous trust in the browser/server-action payload for approval state.
+
+## Database validation added in this hardening pass
+- Operator approval requirements are enforced by the RPC.
+- MVP onboarding rejects a second organization membership and unsupported locale/currency values.
+- Simulated inbound length/name validation is mirrored in the RPC.
+- Core tables now constrain action risk, non-negative AI/token costs, approval decisions, non-negative revenue and Knowledge kinds.
