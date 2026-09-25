@@ -28,7 +28,7 @@ export function runDeterministicOperator(input: {
   let confidence = 0.55;
 
   if (relevant.length) {
-    reply = relevant.map(k => `${k.title}: ${k.content}`).join("\\n");
+    reply = relevant.slice(0, 5).map(k => `${k.title}: ${k.content}`).join("\\n").slice(0, 8000);
     confidence = 0.88;
   } else if (asksPrice) {
     reply = "Ainda não tenho um preço aprovado para lhe indicar. Posso recolher os detalhes necessários e pedir confirmação?";
