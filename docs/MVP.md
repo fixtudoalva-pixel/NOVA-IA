@@ -71,3 +71,6 @@ Before real customer data or external side effects:
 - Weekly reporting currently uses Monday 00:00 UTC as the boundary.
 - Profit, margin, tax, cash collected and causal incremental revenue are not inferred from assisted revenue.
 - Ask Your Business must decline unsupported financial questions rather than relabel available revenue.
+
+## MVP tenant model
+The current UI intentionally resolves a single organization membership. Organization creation is now also constrained server-side to one membership per onboarding user for this MVP flow. A future multi-organization release requires an explicit active-organization selector rather than relying on the first membership.
