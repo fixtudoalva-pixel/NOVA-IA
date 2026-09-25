@@ -10,7 +10,7 @@
 - Sale revenue is human-confirmed assisted attribution, not causal proof.
 
 ## Current limitations
-- Some authenticated table write grants remain necessary because public RPCs are SECURITY INVOKER. Do not describe the operational write boundary as production-hardened yet.
+- Some authenticated table write grants remain necessary because public RPCs are SECURITY INVOKER. RLS still scopes them to tenant membership, but callers can potentially bypass intended workflow transitions inside their own tenant. Do not describe the operational write boundary as production-hardened yet.
 - Moving sensitive writes behind a backend-only executor/private boundary is required before real customer deployment.
 - Supabase leaked-password protection is currently reported disabled by Security Advisor.
 - Multi-organization selection is not implemented; current UI uses the first membership.
