@@ -1,3 +1,4 @@
+import { AppNav } from "@/components/app-nav";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { addKnowledge, approveKnowledge } from "./actions";
@@ -25,6 +26,7 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
             : null;
 
   return <main>
+    <AppNav />
     <header><div className="brand">NOVA IA</div><div className="badge">Knowledge</div></header>
     <section className="hero"><h1>Conhecimento aprovado</h1><p>O operador só deve tratar factos específicos da empresa como verdade depois de aprovação humana.</p></section>
     <form className="card auth-form">
