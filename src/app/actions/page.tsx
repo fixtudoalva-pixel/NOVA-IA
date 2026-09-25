@@ -26,7 +26,7 @@ export default async function ActionsPage({ searchParams }: ActionsPageProps) {
     <AppNav />
     <header><div className="brand">NOVA IA</div><div className="badge">Action Ledger</div></header>
     <section className="hero"><h1>Ações e resultados</h1><p>Cada ação mantém estado, evidência e resultado comercial separado da decisão da IA.</p></section>
-    <section className="card ledger"><h2>Ledger</h2>
+    <section className="card ledger" aria-labelledby="ledger-heading"><h2 id="ledger-heading">Ledger</h2>
       {message ? <p role="status">{message}</p> : null}
       {!actions?.length && <p className="empty-state">Ainda não existem ações. As decisões do Operator aparecerão aqui quando propuser trabalho executável.</p>}
       {actions?.map(a => {
