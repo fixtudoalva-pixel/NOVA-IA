@@ -21,7 +21,7 @@ export function answerBusinessQuestion(question: string, data: BusinessSnapshot)
   if (/receita|vendi|vendas|faturei|faturação|faturacao/.test(q) && !/lucro|margem|líquido|liquido|imposto|iva|recebi|cobrei/.test(q)) {
     const weekly = /semana|semanal/.test(q);
     const minor = weekly ? (data.weeklyAssistedRevenueMinor ?? 0) : data.assistedRevenueMinor;
-    const amount = new Intl.NumberFormat(data.locale ?? "pt-PT", { style: "currency", currency: data.currency ?? "EUR" }).format(minor / 100);
+    const amount = new Intl.NumberFormat(data.locale ?? "pt-PT", { style: "currency", currency: /^[A-Z]{3}$/.test(data.currency ?? "") ? data.currency : "EUR" }).format(minor / 100);
     return { text: (weekly ? "Receita assistida registada esta semana (desde segunda-feira 00:00 UTC): " : "Receita assistida registada: ") + amount + ". Este valor é atribuição assistida, não prova causalidade.", href: "/actions", label: "Ver Ledger" };
   }
   if (/conhecimento|knowledge|factos|preços|precos|serviços|servicos|políticas|politicas/.test(q) && !/\b(?:o|um|este|esse)\s+preç[oa]\b/.test(q)) return { text: "Itens de conhecimento aprovados: " + data.approvedKnowledge + ".", href: "/knowledge", label: "Ver Knowledge" };
