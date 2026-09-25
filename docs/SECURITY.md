@@ -38,3 +38,6 @@ The database now derives the MVP Operator approval requirement itself: every pro
 - MVP onboarding rejects a second organization membership and unsupported locale/currency values.
 - Simulated inbound length/name validation is mirrored in the RPC.
 - Core tables now constrain action risk, non-negative AI/token costs, approval decisions, non-negative revenue and Knowledge kinds.
+
+## Conversation lifecycle
+Closed conversations are rejected by both the server action and the database Operator RPC. The UI disables the Operator trigger for closed conversations; the database remains the authoritative enforcement layer.
