@@ -21,6 +21,7 @@ export function runDeterministicOperator(input: {
   const safeKnowledge = input.knowledge.slice(0, 200).map(k => ({ ...k, title: k.title.trim().slice(0, 160), content: k.content.trim().slice(0, 10000) })).filter(k => k.title.length >= 2 && k.content.length >= 2);
   const relevant = findRelevantKnowledge(message, safeKnowledge);
   const priceKnowledge = relevant.filter(k => k.kind === "price");
+  const bookingKnowledge = relevant.filter(k => k.kind === "policy" || k.kind === "service");
   const lower = message.toLocaleLowerCase("pt-PT");
   const asksPrice = /preç|custa|quanto\s+(?:custa|fica|é)|orçamento|orcamento/.test(lower);
   const asksBooking = /marcar|marcação|agendar|agendamento|disponib|vaga|horário|horario/.test(lower) || /(?:amanhã|hoje).*(?:marcar|agendar|hora)|(?:marcar|agendar).*(?:amanhã|hoje)/.test(lower);
@@ -31,6 +32,9 @@ export function runDeterministicOperator(input: {
   if (asksPrice && priceKnowledge.length) {
     reply = priceKnowledge.slice(0, 5).map(k => `${k.title}: ${k.content}`).join("\\n").slice(0, 8000);
     confidence = 0.9;
+  } else if (asksBooking && bookingKnowledge.length) {
+    reply = bookingKnowledge.slice(0, 3).map(k => `${k.title}: ${k.content}`).join("\\n").slice(0, 6000) + "\\nPosso preparar um pedido de marcação, mas a disponibilidade concreta continua por confirmar.";
+    confidence = 0.88;
   } else if (relevant.length && !asksPrice && !asksBooking) {
     reply = relevant.slice(0, 5).map(k => `${k.title}: ${k.content}`).join("\\n").slice(0, 8000);
     confidence = 0.88;
