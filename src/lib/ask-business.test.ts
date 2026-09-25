@@ -15,6 +15,7 @@ describe("Ask Your Business", () => {
   it("does not map pending opportunities to generic actions", () => expect(answerBusinessQuestion("Que oportunidades tenho pendentes?", data).text).toContain("não consigo responder"));
   it("still recognizes explicit pending actions", () => expect(answerBusinessQuestion("Que ações tenho pendentes?", data).href).toBe("/approvals"));
   it("refuses unsupported questions", () => expect(answerBusinessQuestion("Qual é o melhor produto?", data).text).toContain("não consigo responder"));
+  it("handles uppercase Portuguese questions", () => expect(answerBusinessQuestion("TENHO APROVAÇÕES?", data).href).toBe("/approvals"));
   it("handles empty questions", () => expect(answerBusinessQuestion("", data).text).toContain("Escreve"));
   it("rejects one-character questions", () => expect(answerBusinessQuestion("?", data).text).toContain("mais completa"));
   it("does not invent revenue for unsupported questions", () => expect(answerBusinessQuestion("Diz-me o lucro líquido", data).text).toContain("não consigo responder"));
