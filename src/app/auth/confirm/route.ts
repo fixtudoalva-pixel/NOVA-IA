@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   const allowedTypes = new Set<EmailOtpType>(["signup","invite","magiclink","recovery","email_change","email"]);
   const type = rawType && allowedTypes.has(rawType as EmailOtpType) ? rawType as EmailOtpType : null;
   const next = searchParams.get("next")?.trim() ?? null;
-  const safeNext = next?.startsWith("/") && !next.startsWith("//") && !next.includes("\\") && next.length <= 500 ? next : "/dashboard";
+  const safeNext = next?.startsWith("/") && !next.startsWith("//") && !next.includes("\\") && !/[\u0000-\u001F]/.test(next) && next.length <= 500 ? next : "/dashboard";
 
   if (tokenHash && tokenHash.length <= 512 && type) {
     const supabase = await createClient();
