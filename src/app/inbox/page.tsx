@@ -47,7 +47,7 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
       <h2 id="conversations-heading">Conversas persistidas</h2>
       {!conversations?.length && <p className="empty-state">Ainda não existem conversas. Usa o simulador acima para criar a primeira.</p>}
       {conversations?.map(c => {
-        const msgs = [...(c.messages ?? [])].sort((a,b)=>a.created_at.localeCompare(b.created_at));
+        const msgs = [...(c.messages ?? [])].sort((a,b)=>a.created_at.localeCompare(b.created_at)).slice(-100);
         const last = msgs.at(-1);
         const contact = Array.isArray(c.contacts) ? c.contacts[0] : c.contacts;
         return <div className="row" key={c.id}>
