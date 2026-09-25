@@ -33,7 +33,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
     <form className="card auth-form" aria-labelledby="org-form-heading"><h2 id="org-form-heading">Dados da organização</h2>
       <label>Nome da empresa<input name="name" required minLength={2} maxLength={120} placeholder="Empresa de teste" /></label>
       {message ? <p role="alert">{message}</p> : null}
-      <button formAction={createOrganization}>Criar organização</button>
+      <button formAction={createOrganization} type="submit">Criar organização</button>
     </form>
   </main>;
 }
