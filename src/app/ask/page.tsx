@@ -31,8 +31,8 @@ export default async function AskPage({ searchParams }: Props) {
     supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("status", "waiting_human"),
     supabase.from("approvals").select("*", { count: "exact", head: true }).eq("organization_id", orgId).is("decision", null),
     supabase.from("actions").select("*", { count: "exact", head: true }).eq("organization_id", orgId).in("status", ["proposed","awaiting_approval","approved","executing"]),
-    supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId).eq("kind", "sale"),
-    supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId).eq("kind", "sale").gte("created_at", weekStart.toISOString()),
+    supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId).eq("kind", "sale").eq("attribution", "assisted"),
+    supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId).eq("kind", "sale").eq("attribution", "assisted").gte("created_at", weekStart.toISOString()),
     supabase.from("knowledge_items").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("is_approved", true)
   ]);
 
