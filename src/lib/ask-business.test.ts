@@ -48,6 +48,7 @@ describe("Ask Your Business", () => {
     expect(text).toContain("UTC");
   });
   it("labels assisted revenue as non-causal", () => expect(answerBusinessQuestion("Quanto vendi?", data).text).toContain("não prova causalidade"));
+  it("formats zero assisted revenue without inventing activity", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, assistedRevenueMinor: 0 }).text).toContain("0,00"));
   it("formats revenue with tenant currency", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, locale: "en-US", currency: "USD" }).text).toContain("$123.45"));
   it("formats default revenue as Portuguese EUR", () => {
     const text = answerBusinessQuestion("Quanto vendi?", data).text;
