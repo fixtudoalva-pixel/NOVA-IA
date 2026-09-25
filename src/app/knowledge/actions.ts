@@ -17,14 +17,38 @@ export async function addKnowledge(formData: FormData) {
   const title = String(formData.get("title") ?? "").trim();
   const content = String(formData.get("content") ?? "").trim();
   const kind = String(formData.get("kind") ?? "fact");
-  if (title.length < 2 || content.length < 2) return;
-  await supabase.from("knowledge_items").insert({ organization_id: organizationId, title, content, kind, source: "owner", is_approved: false });
+  const allowedKinds = new Set(["service", "price", "policy", "fact"]);
+
+  if (title.length < 2 || content.length < 2 || !allowedKinds.has(kind)) {
+    redirect("/knowledge?error=validation");
+  }
+
+  const { error } = await supabase.from("knowledge_items").insert({
+    organization_id: organizationId,
+    title,
+    content,
+    kind,
+    source: "owner",
+    is_approved: false
+  });
+
+  if (error) redirect("/knowledge?error=create");
   revalidatePath("/knowledge");
+  redirect("/knowledge?created=1");
 }
 
 export async function approveKnowledge(formData: FormData) {
   const { supabase, organizationId } = await currentOrg();
-  const id = String(formData.get("id") ?? "");
-  await supabase.from("knowledge_items").update({ is_approved: true, updated_at: new Date().toISOString() }).eq("id", id).eq("organization_id", organizationId);
+  const id = String(formData.get("id") ?? "").trim();
+  if (!id) redirect("/knowledge?error=approval");
+
+  const { error } = await supabase
+    .from("knowledge_items")
+    .update({ is_approved: true, updated_at: new Date().toISOString() })
+    .eq("id", id)
+    .eq("organization_id", organizationId);
+
+  if (error) redirect("/knowledge?error=approval");
   revalidatePath("/knowledge");
+  redirect("/knowledge?approved=1");
 }
