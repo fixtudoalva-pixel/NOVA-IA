@@ -23,13 +23,15 @@ export async function executeApprovedAction(formData: FormData) {
 }
 
 export async function recordSaleOutcome(formData: FormData) {
-  const { supabase, user, orgId } = await context();
+  const { supabase } = await context();
   const actionId = String(formData.get("action_id") ?? "");
   const euros = Number(formData.get("euros") ?? 0);
   if (!actionId || !Number.isFinite(euros) || euros <= 0) redirect("/actions?error=sale");
-  const { data: action } = await supabase.from("actions").select("id,status").eq("id", actionId).eq("organization_id", orgId).single();
-  if (!action || action.status !== "completed") redirect("/actions?error=sale");
-  const { error } = await supabase.from("outcomes").insert({ organization_id: orgId, action_id: actionId, kind: "sale", revenue_minor: Math.round(euros * 100), attribution: "assisted", evidence: { source: "human_confirmation", confirmed_by: user.id } });
+  const revenueMinor = Math.round(euros * 100);
+  const { error } = await supabase.rpc("record_sale_outcome", {
+    p_action_id: actionId,
+    p_revenue_minor: revenueMinor
+  });
   if (error) redirect("/actions?error=sale");
   revalidatePath("/actions"); revalidatePath("/dashboard");
   redirect("/actions?sale=1");
