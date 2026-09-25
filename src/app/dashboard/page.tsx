@@ -21,7 +21,7 @@ export default async function DashboardPage() {
     supabase.from("actions").select("*", { count: "exact", head: true }).eq("organization_id", orgId!),
     supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId!),
     supabase.from("approvals").select("*", { count: "exact", head: true }).eq("organization_id", orgId!).is("decision", null),
-    supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId!),
+    supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId!).eq("kind", "sale"),
     supabase.from("knowledge_items").select("*", { count: "exact", head: true }).eq("organization_id", orgId!).eq("is_approved", true)
   ]);
   const assisted = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
