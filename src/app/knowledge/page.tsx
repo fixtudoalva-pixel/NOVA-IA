@@ -38,6 +38,7 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
     </form>
     <section className="card ledger">
       <h2>Base de conhecimento</h2>
+      {!items?.length && <p className="empty-state">Ainda não existe conhecimento. Adiciona um rascunho e aprova-o antes de o Operator o usar.</p>}
       {items?.map(item => <div className="row" key={item.id}>
         <div><strong>{item.title}</strong><br/><span>{item.kind}</span></div>
         <div>{item.content}</div>
