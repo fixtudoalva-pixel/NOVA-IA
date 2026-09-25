@@ -25,7 +25,8 @@ export function runDeterministicOperator(input: {
   let confidence = 0.55;
 
   if (relevant.length) {
-    reply = relevant.map(k => `${k.title}: ${k.content}`).join("\n");
+    reply = relevant.map(k => `${k.title}: ${k.content}`).join("
+");
     confidence = 0.88;
   } else if (asksPrice) {
     reply = "Ainda não tenho um preço aprovado para lhe indicar. Posso recolher os detalhes necessários e pedir confirmação?";
@@ -42,12 +43,18 @@ export function runDeterministicOperator(input: {
     payload: {}
   }] : [];
 
-  const policyDecisions = proposedActions.map(a => evaluateActionPolicy({\n    autonomy: input.autonomy, risk: a.risk, hasExternalSideEffect: true\n  }));\n  const needsHuman = policyDecisions.some(p => p.requiresApproval);\n\n  return OperatorDecisionSchema.parse({
+  const policyDecisions = proposedActions.map(a => evaluateActionPolicy({
+    autonomy: input.autonomy, risk: a.risk, hasExternalSideEffect: true
+  }));
+  const needsHuman = policyDecisions.some(p => p.requiresApproval);
+
+  return OperatorDecisionSchema.parse({
     intent: asksPrice ? "price_enquiry" : asksBooking ? "booking_enquiry" : "general_enquiry",
     summary: "Mensagem recebida e analisada com base apenas no conhecimento aprovado.",
     confidence,
     reply,
     proposedActions,
-    needsHuman,\n    humanReason: needsHuman ? "A política atual exige aprovação para esta ação." : null
+    needsHuman,
+    humanReason: needsHuman ? "A política atual exige aprovação para esta ação." : null
   });
 }
