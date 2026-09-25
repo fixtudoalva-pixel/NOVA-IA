@@ -6,7 +6,9 @@ import { createClient } from "@/lib/supabase/server";
 
 function getSiteUrl(host: string | null, protocol: string | null) {
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (configured && /^https?:\/\//i.test(configured)) return configured.replace(/\/$/, "");
+  if (configured && /^https?:\/\//i.test(configured)) {
+    try { return new URL(configured).origin; } catch { /* use validated fallbacks */ }
+  }
 
   const vercel = process.env.NEXT_PUBLIC_VERCEL_URL?.trim();
   if (vercel && /^[a-z0-9.-]+$/i.test(vercel)) return `https://${vercel.replace(/\/$/, "")}`;
