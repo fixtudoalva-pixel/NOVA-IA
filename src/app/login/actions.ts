@@ -17,8 +17,9 @@ function getSiteUrl(host: string | null, protocol: string | null) {
 
 export async function login(formData: FormData) {
   const supabase = await createClient();
-  const email = String(formData.get("email") ?? "");
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
+  if (!email || password.length < 8) redirect("/login?error=invalid");
   const { error } = await supabase.auth.signInWithPassword({ email, password });
   if (error) redirect("/login?error=invalid");
   redirect("/dashboard");
@@ -26,8 +27,9 @@ export async function login(formData: FormData) {
 
 export async function signup(formData: FormData) {
   const supabase = await createClient();
-  const email = String(formData.get("email") ?? "");
+  const email = String(formData.get("email") ?? "").trim().toLowerCase();
   const password = String(formData.get("password") ?? "");
+  if (!email || password.length < 8) redirect("/login?error=signup");
   const requestHeaders = await headers();
   const siteUrl = getSiteUrl(
     requestHeaders.get("host"),
