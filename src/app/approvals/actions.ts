@@ -9,9 +9,11 @@ async function decide(formData: FormData, decision: "approved" | "rejected") {
   if (!user) redirect("/login");
   const approvalId = String(formData.get("approval_id") ?? "");
   const actionId = String(formData.get("action_id") ?? "");
-  if (!approvalId || !actionId) return;
-  await supabase.rpc("decide_approval", { p_approval_id: approvalId, p_action_id: actionId, p_decision: decision });
+  if (!approvalId || !actionId) redirect("/approvals?error=decision");
+  const { error } = await supabase.rpc("decide_approval", { p_approval_id: approvalId, p_action_id: actionId, p_decision: decision });
+  if (error) redirect("/approvals?error=decision");
   revalidatePath("/approvals"); revalidatePath("/actions"); revalidatePath("/dashboard");
+  redirect(`/approvals?${decision === "approved" ? "approved" : "rejected"}=1`);
 }
 export async function approve(formData: FormData) { return decide(formData, "approved"); }
 export async function reject(formData: FormData) { return decide(formData, "rejected"); }
