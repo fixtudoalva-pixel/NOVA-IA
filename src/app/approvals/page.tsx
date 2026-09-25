@@ -26,8 +26,8 @@ export default async function ApprovalsPage({ searchParams }: ApprovalsPageProps
     <AppNav />
     <header><div className="brand">NOVA IA</div><div className="badge">Human control</div></header>
     <section className="hero"><h1>Aprovações</h1><p>Ações fora da autonomia permitida ficam bloqueadas até decisão humana.</p></section>
-    <section className="card ledger">
-      <h2>Pendentes</h2>
+    <section className="card ledger" aria-labelledby="approvals-heading">
+      <h2 id="approvals-heading">Pendentes</h2>
       {message ? <p role="status">{message}</p> : null}
       {!approvals?.length && <p className="empty-state">Sem aprovações pendentes. O Operator continuará a pedir autorização quando a política exigir.</p>}
       {approvals?.map(a => {
