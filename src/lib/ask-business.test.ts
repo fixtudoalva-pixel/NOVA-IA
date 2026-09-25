@@ -41,6 +41,7 @@ describe("Ask Your Business", () => {
     const text = answerBusinessQuestion("Quanto tenho de receita esta semana?", data).text;
     expect(text).toContain("45,67");
     expect(text).toContain("esta semana");
+    expect(text).toContain("UTC");
   });
   it("labels assisted revenue as non-causal", () => expect(answerBusinessQuestion("Quanto vendi?", data).text).toContain("não prova causalidade"));
   it("formats revenue with tenant currency", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, locale: "en-US", currency: "USD" }).text).toContain("$123.45"));
