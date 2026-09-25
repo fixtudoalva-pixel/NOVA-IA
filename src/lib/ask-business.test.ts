@@ -19,6 +19,7 @@ describe("Ask Your Business", () => {
   it("recognizes reply-needed customer wording", () => expect(answerBusinessQuestion("Que clientes tenho para responder?", data).href).toBe("/inbox"));
   it("does not map pending opportunities to generic actions", () => expect(answerBusinessQuestion("Que oportunidades tenho pendentes?", data).text).toContain("não consigo responder"));
   it("still recognizes explicit pending actions", () => expect(answerBusinessQuestion("Que ações tenho pendentes?", data).href).toBe("/approvals"));
+  it("does not turn a generic pending question into work", () => expect(answerBusinessQuestion("O que está pendente?", data).text).toContain("não consigo responder"));
   it("refuses unsupported questions", () => expect(answerBusinessQuestion("Qual é o melhor produto?", data).text).toContain("não consigo responder"));
   it("handles uppercase Portuguese questions", () => expect(answerBusinessQuestion("TENHO APROVAÇÕES?", data).href).toBe("/approvals"));
   it("handles empty questions", () => expect(answerBusinessQuestion("", data).text).toContain("Escreve"));
