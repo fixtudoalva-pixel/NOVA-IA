@@ -35,7 +35,8 @@ export async function recordSaleOutcome(formData: FormData) {
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actionId) || !Number.isFinite(amount) || amount <= 0 || amount > 100000000) redirect("/actions?error=sale");
   const { data: action, error: readError } = await supabase.from("actions").select("id").eq("id", actionId).eq("organization_id", orgId).eq("status", "completed").maybeSingle();
   if (readError || !action) redirect("/actions?error=sale");
-  const revenueMinor = Math.round(amount * 100);
+  const [whole, fraction = ""] = rawAmount.split(".");
+  const revenueMinor = Number(whole) * 100 + Number((fraction + "00").slice(0, 2));
   if (!Number.isSafeInteger(revenueMinor)) redirect("/actions?error=sale");
   const { error } = await supabase.rpc("record_sale_outcome", {
     p_action_id: actionId,
