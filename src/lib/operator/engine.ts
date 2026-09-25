@@ -4,9 +4,9 @@ import { evaluateActionPolicy } from "../domain";
 type Knowledge = { kind: string; title: string; content: string };
 
 function findRelevantKnowledge(message: string, knowledge: Knowledge[]) {
-  const words = new Set(message.toLocaleLowerCase().split(/\W+/).filter(w => w.length > 2));
+  const words = new Set(message.toLocaleLowerCase("pt-PT").split(/[^\p{L}\p{N}]+/u).filter(w => w.length > 2));
   return knowledge.filter(k => {
-    const haystack = `${k.title} ${k.content} ${k.kind}`.toLocaleLowerCase();
+    const haystack = `${k.title} ${k.content} ${k.kind}`.toLocaleLowerCase("pt-PT");
     return [...words].some(word => haystack.includes(word));
   });
 }
