@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isUuid } from "@/lib/validation";
 
 async function context() {
   const supabase = await createClient();
@@ -16,7 +17,7 @@ async function context() {
 export async function executeApprovedAction(formData: FormData) {
   const { supabase, orgId } = await context();
   const actionId = String(formData.get("action_id") ?? "").trim();
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actionId)) redirect("/actions?error=execute");
+  if (!isUuid(actionId)) redirect("/actions?error=execute");
   const { data: action, error: readError } = await supabase.from("actions").select("id").eq("id", actionId).eq("organization_id", orgId).eq("status", "approved").maybeSingle();
   if (readError || !action) redirect("/actions?error=execute");
   const { error } = await supabase.rpc("execute_approved_action", { p_action_id: actionId });
@@ -31,7 +32,7 @@ export async function recordSaleOutcome(formData: FormData) {
   const rawAmount = String(formData.get("amount") ?? "").trim().replace(",", ".");
   if (rawAmount.length > 12) redirect("/actions?error=sale");
   if (!/^\d{1,9}(\.\d{1,2})?$/.test(rawAmount)) redirect("/actions?error=sale");
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actionId) || Number(rawAmount) <= 0 || Number(rawAmount) > 100000000) redirect("/actions?error=sale");
+  if (!isUuid(actionId) || Number(rawAmount) <= 0 || Number(rawAmount) > 100000000) redirect("/actions?error=sale");
   const { data: action, error: readError } = await supabase.from("actions").select("id").eq("id", actionId).eq("organization_id", orgId).eq("status", "completed").maybeSingle();
   if (readError || !action) redirect("/actions?error=sale");
   const [whole, fraction = ""] = rawAmount.split(".");
