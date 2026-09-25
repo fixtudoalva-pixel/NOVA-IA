@@ -26,7 +26,7 @@ describe("deterministic operator", () => {
   });
   it("does not invent availability without Knowledge", () => {
     const r = runDeterministicOperator({ message: "Têm disponibilidade?", knowledge: [], autonomy: 2 });
-    expect(r.reply).not.toMatch(/sim|temos vaga/i);
+    expect(r.reply).toContain("não confirmei disponibilidade");
     expect(r.proposedActions[0]?.type).toBe("propose_booking");
   });
   it("never invents a missing price", () => {
