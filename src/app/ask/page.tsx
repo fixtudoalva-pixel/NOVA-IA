@@ -1,6 +1,7 @@
 import { AppNav } from "@/components/app-nav";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { startOfUtcReportingWeek, sumRevenueMinor } from "@/lib/reporting";
 import { answerBusinessQuestion } from "@/lib/ask-business";
 
 type Props = { searchParams: Promise<{ q?: string }> };
@@ -22,10 +23,7 @@ export default async function AskPage({ searchParams }: Props) {
   const questionHasControls = /[\u0000-\u001F\u007F]/.test(rawQuestion);
 
   // MVP reporting weeks use UTC Monday boundaries; tenant time zones are not modeled yet.
-  const weekStart = new Date();
-  const day = weekStart.getUTCDay();
-  weekStart.setUTCDate(weekStart.getUTCDate() - ((day + 6) % 7));
-  weekStart.setUTCHours(0, 0, 0, 0);
+  const weekStart = startOfUtcReportingWeek();
 
   const [{ count: conversations, error: conversationsError }, { count: waitingHuman, error: waitingError }, { count: approvals, error: approvalsError }, { count: openActions, error: actionsError }, { data: outcomes, error: outcomesError }, { data: weeklyOutcomes, error: weeklyOutcomesError }, { count: approvedKnowledge, error: knowledgeError }] = await Promise.all([
     supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
@@ -37,8 +35,8 @@ export default async function AskPage({ searchParams }: Props) {
     supabase.from("knowledge_items").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("is_approved", true)
   ]);
 
-  const revenue = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
-  const weeklyRevenue = weeklyOutcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
+  const revenue = sumRevenueMinor(outcomes);
+  const weeklyRevenue = sumRevenueMinor(weeklyOutcomes);
   const dataWarning = Boolean(conversationsError || waitingError || approvalsError || actionsError || outcomesError || weeklyOutcomesError || knowledgeError);
   const answer = question && !dataWarning && !questionTooLong && !questionHasControls ? answerBusinessQuestion(question, { locale: orgSettings?.locale ?? "pt-PT", currency: orgSettings?.currency ?? "EUR", conversations: conversations ?? 0, waitingHuman: waitingHuman ?? 0, pendingApprovals: approvals ?? 0, openActions: openActions ?? 0, assistedRevenueMinor: revenue, weeklyAssistedRevenueMinor: weeklyRevenue, approvedKnowledge: approvedKnowledge ?? 0 }) : null;
 
