@@ -20,6 +20,7 @@ describe("Ask Your Business", () => {
   it("does not treat every customer question as waiting-human", () => expect(answerBusinessQuestion("O que aconteceu com o cliente João?", data).text).toContain("não consigo responder"));
   it("recognizes reply-needed customer wording", () => expect(answerBusinessQuestion("Que clientes tenho para responder?", data).href).toBe("/inbox"));
   it("does not map pending opportunities to generic actions", () => expect(answerBusinessQuestion("Que oportunidades tenho pendentes?", data).text).toContain("não consigo responder"));
+  it("does not answer completed action history with open-work count", () => expect(answerBusinessQuestion("Quantas ações concluídas tenho?", data).text).toContain("não consigo responder"));
   it("still recognizes explicit pending actions", () => expect(answerBusinessQuestion("Que ações tenho pendentes?", data).href).toBe("/approvals"));
   it("does not turn a generic pending question into work", () => expect(answerBusinessQuestion("O que está pendente?", data).text).toContain("não consigo responder"));
   it("refuses unsupported questions", () => expect(answerBusinessQuestion("Qual é o melhor produto?", data).text).toContain("não consigo responder"));
