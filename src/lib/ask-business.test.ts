@@ -23,6 +23,7 @@ describe("Ask Your Business", () => {
   it("still recognizes explicit pending actions", () => expect(answerBusinessQuestion("Que ações tenho pendentes?", data).href).toBe("/approvals"));
   it("does not turn a generic pending question into work", () => expect(answerBusinessQuestion("O que está pendente?", data).text).toContain("não consigo responder"));
   it("refuses unsupported questions", () => expect(answerBusinessQuestion("Qual é o melhor produto?", data).text).toContain("não consigo responder"));
+  it("handles repeated whitespace", () => expect(answerBusinessQuestion("Quanto   vendi?", data).text).toContain("123,45"));
   it("handles uppercase Portuguese questions", () => expect(answerBusinessQuestion("TENHO APROVAÇÕES?", data).href).toBe("/approvals"));
   it("handles empty questions", () => expect(answerBusinessQuestion("", data).text).toContain("Escreve"));
   it("rejects DEL characters", () => expect(answerBusinessQuestion("vendas\u007Fagora", data).text).toContain("segurança"));
