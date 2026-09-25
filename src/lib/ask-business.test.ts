@@ -17,6 +17,7 @@ describe("Ask Your Business", () => {
   it("refuses unsupported questions", () => expect(answerBusinessQuestion("Qual é o melhor produto?", data).text).toContain("não consigo responder"));
   it("handles uppercase Portuguese questions", () => expect(answerBusinessQuestion("TENHO APROVAÇÕES?", data).href).toBe("/approvals"));
   it("handles empty questions", () => expect(answerBusinessQuestion("", data).text).toContain("Escreve"));
+  it("rejects oversized questions", () => expect(answerBusinessQuestion("a".repeat(501), data).text).toContain("500"));
   it("rejects one-character questions", () => expect(answerBusinessQuestion("?", data).text).toContain("mais completa"));
   it("does not invent revenue for unsupported questions", () => expect(answerBusinessQuestion("Diz-me o lucro líquido", data).text).toContain("não consigo responder"));
   it("recognizes faturação as assisted revenue wording", () => expect(answerBusinessQuestion("Qual é a faturação registada?", data).href).toBe("/actions"));
