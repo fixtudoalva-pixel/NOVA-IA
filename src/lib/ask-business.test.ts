@@ -5,6 +5,7 @@ const data = { conversations: 4, waitingHuman: 2, pendingApprovals: 1, openActio
 
 describe("Ask Your Business", () => {
   it("answers revenue from supplied data", () => expect(answerBusinessQuestion("Quanto vendi?", data).text).toContain("123,45"));
+  it("recognizes autorização wording", () => expect(answerBusinessQuestion("Tenho autorizações pendentes?", data).href).toBe("/approvals"));
   it("answers approvals from supplied data", () => expect(answerBusinessQuestion("Tenho aprovações?", data).text).toContain("1"));
   it("routes pending work to approvals", () => expect(answerBusinessQuestion("O que tenho para fazer hoje?", data).href).toBe("/approvals"));
   it("refuses a specific price approval question without item-level data", () => expect(answerBusinessQuestion("O preço está aprovado?", data).text).toContain("não consigo responder"));
