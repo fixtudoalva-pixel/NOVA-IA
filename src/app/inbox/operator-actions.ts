@@ -45,7 +45,7 @@ export async function runOperator(formData: FormData) {
     const policy = evaluateActionPolicy({ autonomy: 2, risk: proposed.risk, hasExternalSideEffect: true });
     const status = policy.requiresApproval ? "awaiting_approval" : "approved";
     const { data: action } = await supabase.from("actions").insert({
-      organization_id: orgId, action_type: proposed.type, status,
+      organization_id: orgId, conversation_id: conversationId, action_type: proposed.type, status,
       risk: proposed.risk, rationale: proposed.rationale,
       input: { ...proposed.payload, agent_run_id: run?.id ?? null }
     }).select("id").single();
