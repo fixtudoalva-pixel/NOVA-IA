@@ -9,7 +9,7 @@ export default function Home() {
     <main>
       <header>
         <div className="brand">NOVA IA</div>
-        <div className="badge">Prototype · Operator v0</div>
+        <nav style={{display:"flex",gap:"12px",alignItems:"center"}}>\n          <a href="/login" className="badge">Entrar</a>\n          <div className="badge">Prototype · Operator v0</div>\n        </nav>
       </header>
       <section className="hero">
         <h1>IA que trabalha.<br/>Resultados que se medem.</h1>
