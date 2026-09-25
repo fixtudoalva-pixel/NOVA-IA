@@ -1,27 +1,35 @@
-const threads = [
-  { name: "Cliente teste", message: "Quanto custa trocar o ecrã do meu telemóvel?", status: "Novo" },
-  { name: "Lead #002", message: "Conseguem ver isto amanhã?", status: "Aguardar IA" },
-  { name: "Lead #003", message: "Obrigado, fica combinado.", status: "Concluído" }
-];
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { simulateInbound } from "./actions";
 
-export default function InboxPage() {
-  return (
-    <main>
-      <header><div className="brand">NOVA IA</div><div className="badge">Inbox Simulator</div></header>
-      <section className="hero">
-        <h1>Inbox</h1>
-        <p>Laboratório sem custos para testar atendimento, decisões, aprovações e resultados antes de ligar canais externos.</p>
-      </section>
-      <section className="card">
-        {threads.map((thread) => (
-          <div className="row" key={thread.name}>
-            <strong>{thread.name}</strong>
-            <div>{thread.message}</div>
-            <div>{thread.status}</div>
-            <div>simulator</div>
-          </div>
-        ))}
-      </section>
-    </main>
-  );
+export default async function InboxPage() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+  const { data: membership } = await supabase.from("organization_members").select("organization_id").limit(1).single();
+  if (!membership) redirect("/onboarding");
+  const { data: conversations } = await supabase.from("conversations")
+    .select("id,status,channel,created_at,contacts(display_name),messages(body,actor,created_at)")
+    .eq("organization_id", membership.organization_id).order("created_at", { ascending: false });
+
+  return <main>
+    <header><div className="brand">NOVA IA</div><div className="badge">Live simulator</div></header>
+    <section className="hero"><h1>Inbox</h1><p>Cria leads fictícios, mas guarda conversas reais no tenant. Nenhum canal pago é necessário.</p></section>
+    <form className="card auth-form">
+      <label>Cliente<input name="name" placeholder="Cliente teste" /></label>
+      <label>Mensagem<textarea name="body" required rows={3} placeholder="Quanto custa o serviço?" /></label>
+      <button formAction={simulateInbound}>Simular mensagem recebida</button>
+    </form>
+    <section className="card ledger">
+      <h2>Conversas persistidas</h2>
+      {conversations?.map(c => {
+        const msgs = [...(c.messages ?? [])].sort((a,b)=>a.created_at.localeCompare(b.created_at));
+        const last = msgs.at(-1);
+        const contact = Array.isArray(c.contacts) ? c.contacts[0] : c.contacts;
+        return <div className="row" key={c.id}>
+          <div><strong>{contact?.display_name ?? "Sem nome"}</strong></div><div>{last?.body ?? "—"}</div><div>{c.status}</div><div>{c.channel}</div>
+        </div>;
+      })}
+    </section>
+  </main>;
 }
