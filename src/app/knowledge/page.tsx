@@ -38,8 +38,8 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
       {message ? <p role="status">{message}</p> : null}
       <button formAction={addKnowledge} type="submit">Adicionar rascunho</button>
     </form>
-    <section className="card ledger">
-      <h2>Base de conhecimento</h2>
+    <section className="card ledger" aria-labelledby="knowledge-list-heading">
+      <h2 id="knowledge-list-heading">Base de conhecimento</h2>
       {!items?.length && <p className="empty-state">Ainda não existe conhecimento. Adiciona um rascunho e aprova-o antes de o Operator o usar.</p>}
       {items?.map(item => <div className="row" key={item.id}>
         <div><strong>{item.title}</strong><br/><span>{item.kind}</span></div>
