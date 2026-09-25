@@ -2,13 +2,27 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { addKnowledge, approveKnowledge } from "./actions";
 
-export default async function KnowledgePage() {
+type KnowledgePageProps = { searchParams: Promise<{ error?: string; created?: string; approved?: string }> };
+
+export default async function KnowledgePage({ searchParams }: KnowledgePageProps) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
   const { data: membership } = await supabase.from("organization_members").select("organization_id").limit(1).single();
   if (!membership) redirect("/onboarding");
   const { data: items } = await supabase.from("knowledge_items").select("*").eq("organization_id", membership.organization_id).order("created_at", { ascending: false });
+  const params = await searchParams;
+  const message = params.created === "1"
+    ? "Rascunho guardado. Revê-o antes de aprovar."
+    : params.approved === "1"
+      ? "Conhecimento aprovado e disponível para o Operator."
+      : params.error === "validation"
+        ? "Preenche um título e conteúdo válidos."
+        : params.error === "create"
+          ? "Não foi possível guardar o conhecimento."
+          : params.error === "approval"
+            ? "Não foi possível aprovar este conhecimento."
+            : null;
 
   return <main>
     <header><div className="brand">NOVA IA</div><div className="badge">Knowledge</div></header>
@@ -17,6 +31,7 @@ export default async function KnowledgePage() {
       <label>Tipo<select name="kind"><option value="service">Serviço</option><option value="price">Preço</option><option value="policy">Política</option><option value="fact">Facto</option></select></label>
       <label>Título<input name="title" required /></label>
       <label>Conteúdo<textarea name="content" required rows={4} /></label>
+      {message ? <p role="status">{message}</p> : null}
       <button formAction={addKnowledge}>Adicionar rascunho</button>
     </form>
     <section className="card ledger">
