@@ -45,6 +45,7 @@ export default async function DashboardPage() {
       <p>Configura conhecimento aprovado, simula uma conversa e acompanha as decisões e resultados do Operator.</p>
       <p><a href={nextStep.href}>{nextStep.label} →</a></p>
       <div className="auth-actions">
+        <a href="/ask">Pergunta à empresa</a>
         <a href="/knowledge">Knowledge</a>
         <a href="/inbox">Inbox</a>
         <a href="/approvals">Aprovações</a>
