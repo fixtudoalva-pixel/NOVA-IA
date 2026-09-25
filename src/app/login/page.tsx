@@ -23,7 +23,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       <section className="hero"><h1>Entrar</h1><p>Acesso ao operador empresarial e respetivo Action Ledger.</p></section>
       <form className="card auth-form">
         <label>Email<input name="email" type="email" required autoComplete="email" /></label>
-        <label>Password<input name="password" type="password" required minLength={8} autoComplete="current-password" /></label>
+        <label>Password<input name="password" type="password" required minLength={8} autoComplete="current-password" aria-describedby="password-help" /></label>
+        <p id="password-help">Mínimo de 8 caracteres. Para produção, evita passwords reutilizadas noutros serviços.</p>
         {message ? <p role="status">{message}</p> : null}
         <div className="auth-actions">
           <button formAction={login}>Entrar</button>
