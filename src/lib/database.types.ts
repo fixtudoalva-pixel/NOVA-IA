@@ -20,6 +20,7 @@ export type Database = {
           ai_cost_minor: number
           completed_at: string | null
           contact_id: string | null
+          conversation_id: string | null
           created_at: string
           goal_id: string | null
           id: string
@@ -35,6 +36,7 @@ export type Database = {
           ai_cost_minor?: number
           completed_at?: string | null
           contact_id?: string | null
+          conversation_id?: string | null
           created_at?: string
           goal_id?: string | null
           id?: string
@@ -50,6 +52,7 @@ export type Database = {
           ai_cost_minor?: number
           completed_at?: string | null
           contact_id?: string | null
+          conversation_id?: string | null
           created_at?: string
           goal_id?: string | null
           id?: string
@@ -66,6 +69,13 @@ export type Database = {
             columns: ["contact_id"]
             isOneToOne: false
             referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
             referencedColumns: ["id"]
           },
           {
