@@ -61,8 +61,8 @@ export default async function DashboardPage() {
       <article className="card"><span>Aprovações pendentes</span><strong>{hasMetricReadFailure ? "—" : approvals ?? 0}</strong><p>Decisões que continuam sob controlo humano.</p></article>
       <article className="card"><span>Knowledge aprovado</span><strong>{hasMetricReadFailure ? "—" : knowledge ?? 0}</strong><p>Factos empresariais disponíveis para respostas do Operator.</p></article>
     </section>
-    <section className="card">
-      <h2>Começar a trabalhar</h2>
+    <section className="card" aria-labelledby="next-step-heading">
+      <h2 id="next-step-heading">Começar a trabalhar</h2>
       <p>Configura conhecimento aprovado, simula uma conversa e acompanha as decisões e resultados do Operator.</p>
       {nextStep ? <p><a href={nextStep.href}>{nextStep.label} →</a></p> : <p>O próximo passo fica suspenso até as métricas carregarem corretamente.</p>}
       <div className="auth-actions">
