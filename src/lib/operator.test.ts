@@ -34,3 +34,18 @@ describe("deterministic operator", () => {
     expect(result.needsHuman).toBe(true);
   });
 });
+
+
+describe("operator escalation consistency", () => {
+  it("does not invent a human reason when no action requires approval", () => {
+    const decision = runDeterministicOperator({ message: "Olá, preciso de ajuda", knowledge: [], autonomy: 4 });
+    expect(decision.needsHuman).toBe(false);
+    expect(decision.humanReason).toBeNull();
+  });
+
+  it("keeps the human reason aligned with policy for booking", () => {
+    const decision = runDeterministicOperator({ message: "Quero marcar amanhã", knowledge: [], autonomy: 2 });
+    expect(decision.needsHuman).toBe(true);
+    expect(decision.humanReason).toContain("aprovação");
+  });
+});
