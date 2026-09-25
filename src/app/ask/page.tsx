@@ -35,7 +35,7 @@ export default async function AskPage({ searchParams }: Props) {
     <AppNav />
     <header><div className="brand">NOVA IA</div><div className="badge">Ask Your Business</div></header>
     <section className="hero"><h1>Pergunta à tua empresa</h1><p>Respostas calculadas apenas a partir dos dados da organização autenticada.</p></section>
-    <form className="card auth-form" method="get"><label>Pergunta<input name="q" defaultValue={question} maxLength={500} placeholder="O que tenho para fazer hoje?" required /></label><button type="submit">Perguntar</button></form>
+    <form className="card auth-form" method="get"><label>Pergunta<input name="q" defaultValue={question} minLength={2} maxLength={500} aria-describedby="ask-help" placeholder="O que tenho para fazer hoje?" required /></label><p id="ask-help">Usa perguntas operacionais sobre conversas, aprovações, ações, conhecimento ou receita assistida.</p><button type="submit">Perguntar</button></form>
     {dataWarning && <p role="alert">Algumas métricas não puderam ser carregadas. Não vou gerar uma resposta com métricas incompletas.</p>}
     {answer && <section className="card"><span>Resposta</span><strong>{answer.text}</strong>{answer.href && <p><a href={answer.href}>{answer.label} →</a></p>}</section>}
     <section className="card"><h2>Exemplos</h2><div className="auth-actions"><a href="/ask?q=Tenho+clientes+à+espera%3F">Clientes à espera</a><a href="/ask?q=Tenho+aprovações+pendentes%3F">Aprovações</a><a href="/ask?q=Quanto+tenho+de+receita+assistida%3F">Receita</a><a href="/ask?q=O+que+tenho+para+fazer+hoje%3F">Trabalho de hoje</a></div></section>
