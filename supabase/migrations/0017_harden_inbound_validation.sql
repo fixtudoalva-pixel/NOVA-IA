@@ -6,7 +6,7 @@ begin
  if auth.uid() is null then raise exception 'authentication required'; end if;
  if length(v_name)>120 then raise exception 'invalid name'; end if;
  if length(v_body)<2 or length(v_body)>4000 then raise exception 'invalid message'; end if;
- if v_name ~ '[[:cntrl:]]' or v_body ~ '[[:cntrl:]&&[^\n\r\t]]' then raise exception 'invalid control characters'; end if;
+ if v_name ~ '[[:cntrl:]]' then raise exception 'invalid control characters'; end if;
  select organization_id into v_org from public.organization_members where user_id=auth.uid() order by created_at limit 1;
  if v_org is null then raise exception 'organization required'; end if;
  insert into public.contacts(organization_id,display_name) values(v_org,nullif(v_name,'')) returning id into v_contact;
