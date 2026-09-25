@@ -1,7 +1,7 @@
 import { AppNav } from "@/components/app-nav";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { startOfUtcReportingWeek, sumRevenueMinor } from "@/lib/reporting";
+import { formatMoneyMinor, startOfUtcReportingWeek, sumRevenueMinor } from "@/lib/reporting";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -33,8 +33,8 @@ export default async function DashboardPage() {
   const assisted = sumRevenueMinor(outcomes);
   const weeklyAssisted = sumRevenueMinor(weeklyOutcomes);
   const orgSettings = Array.isArray(org) ? org[0] : org;
-  const assistedFormatted = new Intl.NumberFormat(orgSettings?.locale ?? "pt-PT", { style: "currency", currency: orgSettings?.currency ?? "EUR" }).format(assisted / 100);
-  const weeklyAssistedFormatted = new Intl.NumberFormat(orgSettings?.locale ?? "pt-PT", { style: "currency", currency: orgSettings?.currency ?? "EUR" }).format(weeklyAssisted / 100);
+  const assistedFormatted = formatMoneyMinor(assisted, orgSettings?.locale ?? "pt-PT", orgSettings?.currency ?? "EUR");
+  const weeklyAssistedFormatted = formatMoneyMinor(weeklyAssisted, orgSettings?.locale ?? "pt-PT", orgSettings?.currency ?? "EUR");
   const hasMetricReadFailure = Boolean(actionsError || conversationsError || approvalsError || outcomesError || weeklyOutcomesError || knowledgeError);
   const nextStep = hasMetricReadFailure
     ? null
