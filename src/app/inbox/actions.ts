@@ -2,13 +2,14 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { hasUnsafeControlChars, normalizeSingleLine } from "@/lib/validation";
 
 export async function simulateInbound(formData: FormData) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const rawName = String(formData.get("name") ?? "").trim().replace(/\s+/g, " ");
+  const rawName = normalizeSingleLine(formData.get("name"), 120);
   const name = rawName || "Cliente teste";
   const body = String(formData.get("body") ?? "").trim().replace(/\r\n/g, "\n");
   if (name.length < 1 || name.length > 120 || body.length < 2 || body.length > 4000 || /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(name) || /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(body)) redirect("/inbox?error=message");
