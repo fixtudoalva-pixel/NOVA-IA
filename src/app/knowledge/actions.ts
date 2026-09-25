@@ -34,6 +34,8 @@ export async function addKnowledge(formData: FormData) {
 
   if (error) redirect("/knowledge?error=create");
   revalidatePath("/knowledge");
+  revalidatePath("/dashboard");
+  revalidatePath("/ask");
   redirect("/knowledge?created=1");
 }
 
