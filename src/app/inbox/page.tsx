@@ -28,7 +28,7 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
               : null;
 
   const { data: conversations } = await supabase.from("conversations")
-    .select("id,status,channel,created_at,contacts(display_name),messages(body,actor,created_at)")
+    .select("id,status,channel,created_at,updated_at,contacts(display_name),messages(body,actor,created_at)")
     .eq("organization_id", membership.organization_id).order("updated_at", { ascending: false });
 
   return <main>
