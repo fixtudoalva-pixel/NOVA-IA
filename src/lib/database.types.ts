@@ -109,6 +109,7 @@ export type Database = {
           organization_id: string
           output: Json | null
           prompt_tokens: number
+          source_message_id: string | null
           started_at: string | null
           status: string
         }
@@ -126,6 +127,7 @@ export type Database = {
           organization_id: string
           output?: Json | null
           prompt_tokens?: number
+          source_message_id?: string | null
           started_at?: string | null
           status?: string
         }
@@ -143,6 +145,7 @@ export type Database = {
           organization_id?: string
           output?: Json | null
           prompt_tokens?: number
+          source_message_id?: string | null
           started_at?: string | null
           status?: string
         }
@@ -166,6 +169,13 @@ export type Database = {
             columns: ["organization_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_runs_source_message_id_fkey"
+            columns: ["source_message_id"]
+            isOneToOne: false
+            referencedRelation: "messages"
             referencedColumns: ["id"]
           },
         ]
@@ -537,15 +547,25 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      commit_operator_decision: {
-        Args: {
-          p_actions: Json
-          p_conversation_id: string
-          p_decision: Json
-          p_message_created_at: string
-        }
-        Returns: string
-      }
+      commit_operator_decision:
+        | {
+            Args: {
+              p_actions: Json
+              p_conversation_id: string
+              p_decision: Json
+              p_message_created_at: string
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              p_actions: Json
+              p_conversation_id: string
+              p_decision: Json
+              p_source_message_id: string
+            }
+            Returns: string
+          }
       create_organization: {
         Args: {
           organization_currency?: string
