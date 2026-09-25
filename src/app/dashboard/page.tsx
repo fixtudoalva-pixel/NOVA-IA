@@ -52,7 +52,7 @@ export default async function DashboardPage() {
     <AppNav />
     <header><div className="brand">NOVA IA</div><div className="badge">{membership.role}</div></header>
     <section className="hero"><h1>{Array.isArray(org) ? org[0]?.name : org?.name}</h1><p>Dados reais da organização autenticada.</p></section>
-    {hasMetricReadFailure && <p role="alert">Algumas métricas não puderam ser carregadas. Atualiza a página antes de tomar decisões com estes números.</p>}
+    {hasMetricReadFailure && <p role="alert" aria-live="assertive">Algumas métricas não puderam ser carregadas. Atualiza a página antes de tomar decisões com estes números.</p>}
     <section className="grid" aria-label="Métricas da organização">
       <article className="card"><span>Receita assistida</span><strong>{hasMetricReadFailure ? "—" : assistedFormatted}</strong><p>Somatório apenas de vendas registadas como receita assistida.</p></article>
       <article className="card"><span>Receita esta semana</span><strong>{hasMetricReadFailure ? "—" : weeklyAssistedFormatted}</strong><p>Vendas assistidas registadas desde segunda-feira 00:00 UTC.</p></article>
