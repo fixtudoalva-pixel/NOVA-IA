@@ -23,12 +23,13 @@ export default async function ActionsPage({ searchParams }: ActionsPageProps) {
       {message ? <p role="status">{message}</p> : null}
       {!actions?.length && <p>Ainda não existem ações.</p>}
       {actions?.map(a => {
-        const revenue=(a.outcomes ?? []).reduce((s,o)=>s+(o.revenue_minor ?? 0),0);
+        const saleOutcome=(a.outcomes ?? []).find(o=>o.kind==="sale");
+        const revenue=saleOutcome?.revenue_minor ?? 0;
         return <div className="row" key={a.id}>
           <div><strong>{a.action_type}</strong><br/><span>{a.rationale}</span></div>
           <div>{a.status} · {a.risk}</div><div>{revenue ? `€${(revenue/100).toFixed(2)} assistidos` : "Sem receita confirmada"}</div>
           <div>{a.status==="approved" && <form><input type="hidden" name="action_id" value={a.id}/><button formAction={executeApprovedAction}>Executar</button></form>}
-          {a.status==="completed" && <form className="inline-form"><input type="hidden" name="action_id" value={a.id}/><input name="euros" type="number" min="0.01" step="0.01" placeholder="€"/><button formAction={recordSaleOutcome}>Registar venda</button></form>}</div>
+          {a.status==="completed" && <form className="inline-form"><input type="hidden" name="action_id" value={a.id}/><input name="euros" type="number" min="0.01" step="0.01" placeholder="€" defaultValue={revenue ? (revenue/100).toFixed(2) : undefined}/><button formAction={recordSaleOutcome}>{revenue ? "Atualizar venda" : "Registar venda"}</button></form>}</div>
         </div>;
       })}
     </section>
