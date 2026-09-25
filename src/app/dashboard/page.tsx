@@ -19,7 +19,7 @@ export default async function DashboardPage() {
   const org = membership.organizations;
   const orgId = Array.isArray(org) ? org[0]?.id : org?.id;
   if (!orgId) redirect("/onboarding");
-  const [{ count: actions }, { count: conversations }, { count: approvals }, { data: outcomes }, { count: knowledge }] = await Promise.all([
+  const [{ count: actions, error: actionsError }, { count: conversations, error: conversationsError }, { count: approvals, error: approvalsError }, { data: outcomes, error: outcomesError }, { count: knowledge, error: knowledgeError }] = await Promise.all([
     supabase.from("actions").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
     supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
     supabase.from("approvals").select("*", { count: "exact", head: true }).eq("organization_id", orgId).is("decision", null),
@@ -27,7 +27,7 @@ export default async function DashboardPage() {
     supabase.from("knowledge_items").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("is_approved", true)
   ]);
   const assisted = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
-  const hasMetricReadFailure = [actions, conversations, approvals, knowledge].some(value => value === null) || outcomes === null;
+  const hasMetricReadFailure = Boolean(actionsError || conversationsError || approvalsError || outcomesError || knowledgeError);
   const nextStep = (approvals ?? 0) > 0
     ? { href: "/approvals", label: "Rever aprovações pendentes" }
     : (knowledge ?? 0) === 0
