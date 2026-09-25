@@ -58,6 +58,7 @@ describe("Ask Your Business", () => {
   it("formats zero assisted revenue without inventing activity", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, assistedRevenueMinor: 0 }).text).toContain("0,00"));
   it("falls back from malformed currency safely", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, currency: "INVALID" }).text).toContain("€"));
   it("formats revenue with tenant currency", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, locale: "en-US", currency: "USD" }).text).toContain("$123.45"));
+  it("falls back safely when tenant currency settings are invalid", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, locale: "bad-locale", currency: "NOPE" }).text).toContain("€"));
   it("formats default revenue as Portuguese EUR", () => {
     const text = answerBusinessQuestion("Quanto vendi?", data).text;
     expect(text).toContain("123,45");
