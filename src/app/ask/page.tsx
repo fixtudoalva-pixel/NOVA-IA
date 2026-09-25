@@ -45,7 +45,7 @@ export default async function AskPage({ searchParams }: Props) {
     <AppNav />
     <header><div className="brand">NOVA IA</div><div className="badge">Ask Your Business</div></header>
     <section className="hero"><h1>Pergunta à tua empresa</h1><p>Respostas calculadas apenas a partir dos dados da organização autenticada.</p></section>
-    <form className="card auth-form" method="get" aria-labelledby="ask-form-heading"><h2 id="ask-form-heading">Pergunta operacional</h2><label>Pergunta<input name="q" defaultValue={question} minLength={2} maxLength={500} aria-describedby="ask-help" placeholder="O que tenho para fazer hoje?" required /></label><p id="ask-help">Usa perguntas operacionais sobre conversas, aprovações, ações, conhecimento ou receita assistida.</p><button type="submit">Perguntar</button></form>
+    <form className="card auth-form" method="get" aria-labelledby="ask-form-heading"><h2 id="ask-form-heading">Pergunta operacional</h2><label>Pergunta<input name="q" defaultValue={question} minLength={2} maxLength={500} aria-describedby="ask-help" placeholder="O que tenho para fazer hoje?" required autoComplete="off" /></label><p id="ask-help">Usa perguntas operacionais sobre conversas, aprovações, ações, conhecimento ou receita assistida.</p><button type="submit">Perguntar</button></form>
     {questionTooLong && <p role="alert">A pergunta excede o limite de 500 caracteres.</p>}
     {dataWarning && <p role="alert">Algumas métricas não puderam ser carregadas. Não vou gerar uma resposta com métricas incompletas.</p>}
     {answer && <section className="card"><span>Resposta</span><strong>{answer.text}</strong>{answer.href && <p><a href={answer.href}>{answer.label} →</a></p>}</section>}
