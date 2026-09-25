@@ -35,7 +35,7 @@ export default async function ApprovalsPage({ searchParams }: ApprovalsPageProps
         return <div className="row" key={a.id}>
           <div><strong>{action?.action_type}</strong><br/><span>{action?.rationale}</span></div>
           <div>Risco declarado: {action?.risk}</div><div>{action?.status}</div>
-          <div className="auth-actions"><form><input type="hidden" name="approval_id" value={a.id}/><input type="hidden" name="action_id" value={action?.id}/><button formAction={approve}>Aprovar</button><button className="secondary" formAction={reject}>Rejeitar</button></form></div>
+          <div className="auth-actions"><form><input type="hidden" name="approval_id" value={a.id}/><input type="hidden" name="action_id" value={action?.id}/><button formAction={approve} aria-label={`Aprovar ${action?.action_type ?? "ação"}`}>Aprovar</button><button className="secondary" formAction={reject} aria-label={`Rejeitar ${action?.action_type ?? "ação"}`}>Rejeitar</button></form></div>
         </div>;
       })}
     </section>
