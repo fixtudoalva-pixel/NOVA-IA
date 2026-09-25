@@ -7,11 +7,12 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: memberships } = await supabase
+  const { data: memberships, error: membershipError } = await supabase
     .from("organization_members")
     .select("role, organizations(id,name,locale,currency)")
     .limit(1);
 
+  if (membershipError) throw new Error("Não foi possível carregar a organização.");
   const membership = memberships?.[0];
   if (!membership) redirect("/onboarding");
 
