@@ -51,7 +51,8 @@ export async function runOperator(formData: FormData) {
   });
 
   // The database independently enforces approval for every MVP Operator side effect.
-  const actions = decision.proposedActions.map(proposed => ({ ...proposed, requiresApproval: true }));
+  const actions = decision.proposedActions;
+
 
   const { error } = await supabase.rpc("commit_operator_decision", {
     p_conversation_id: conversationId,
