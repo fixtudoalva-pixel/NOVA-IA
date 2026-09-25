@@ -9,7 +9,7 @@ function getSiteUrl(host: string | null, protocol: string | null) {
   if (configured && /^https?:\/\//i.test(configured)) return configured.replace(/\/$/, "");
 
   const vercel = process.env.NEXT_PUBLIC_VERCEL_URL?.trim();
-  if (vercel) return `https://${vercel.replace(/\/$/, "")}`;
+  if (vercel && /^[a-z0-9.-]+$/i.test(vercel)) return `https://${vercel.replace(/\/$/, "")}`;
 
   if (host && /^[a-z0-9.-]+(?::\\d+)?$/i.test(host)) return `${protocol === "http" ? "http" : "https"}://${host}`;
   return "http://localhost:3000";
