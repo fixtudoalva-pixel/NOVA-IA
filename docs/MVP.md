@@ -28,3 +28,17 @@ A business owner can create an organization, add business knowledge and policies
 - Tenant isolation tests pass.
 - No paid external channel is required.
 - AI/provider can be replaced without changing the domain model.
+
+
+## Ask Your Business
+
+The owner can ask plain-language questions about the business, such as:
+- What do I have to do today?
+- Which customers are waiting for a reply?
+- Which opportunities are still pending?
+- What happened with a specific customer?
+- What assisted revenue was recorded this week?
+
+Answers must be grounded only in tenant-scoped data the signed-in user is allowed to access. If the data is missing or ambiguous, the Operator must say so rather than invent an answer.
+
+The assistant may also propose a next action from the answer (for example, preparing follow-up for stale opportunities), but execution remains subject to the same autonomy and approval policy as every other Operator action.
