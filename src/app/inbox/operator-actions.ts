@@ -37,7 +37,9 @@ export async function runOperator(formData: FormData) {
     .from("knowledge_items")
     .select("kind,title,content")
     .eq("organization_id", orgId)
-    .eq("is_approved", true);
+    .eq("is_approved", true)
+    .order("updated_at", { ascending: false })
+    .limit(200);
   if (knowledgeError) redirect("/inbox?error=operator");
 
   const decision = runDeterministicOperator({
