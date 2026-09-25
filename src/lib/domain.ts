@@ -19,6 +19,9 @@ export function evaluateActionPolicy(input: {
   if (!input.hasExternalSideEffect) {
     return { allowed: true, requiresApproval: false, reason: "Read-only/internal action." };
   }
+  if (!Number.isInteger(input.autonomy) || input.autonomy < 0 || input.autonomy > 4) {
+    return { allowed: false, requiresApproval: true, reason: "Invalid autonomy level." };
+  }
   if (input.autonomy < 2) {
     return { allowed: true, requiresApproval: true, reason: "Current autonomy requires human approval." };
   }
