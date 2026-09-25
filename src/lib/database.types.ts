@@ -537,6 +537,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      commit_operator_decision: {
+        Args: {
+          p_actions: Json
+          p_conversation_id: string
+          p_decision: Json
+          p_message_created_at: string
+        }
+        Returns: string
+      }
       create_organization: {
         Args: {
           organization_currency?: string
