@@ -2,7 +2,7 @@ name: Quality Gate
 on:
   pull_request:
   push:
-    branches: [main]
+    branches: [main, foundation/auth-live-data]
 jobs:
   verify:
     runs-on: ubuntu-latest
