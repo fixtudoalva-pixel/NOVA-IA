@@ -11,17 +11,18 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
 
-  const { data: membership } = await supabase
+  const { data: membership, error: membershipError } = await supabase
     .from("organization_members")
     .select("organization_id")
     .limit(1)
     .maybeSingle();
+  if (membershipError) throw new Error("Não foi possível verificar a organização.");
   if (membership) redirect("/dashboard");
 
   const params = await searchParams;
   const message =
     params.error === "name"
-      ? "Indica um nome de empresa com pelo menos 2 caracteres."
+      ? "Indica um nome de empresa entre 2 e 120 caracteres."
       : params.error === "create"
         ? "Não foi possível criar a empresa. Tenta novamente."
         : null;
