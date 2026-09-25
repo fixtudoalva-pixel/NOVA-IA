@@ -25,7 +25,7 @@ export default async function DashboardPage() {
   weekStart.setUTCDate(weekStart.getUTCDate() - ((day + 6) % 7));
   weekStart.setUTCHours(0, 0, 0, 0);
   const [{ count: actions, error: actionsError }, { count: conversations, error: conversationsError }, { count: approvals, error: approvalsError }, { data: outcomes, error: outcomesError }, { data: weeklyOutcomes, error: weeklyOutcomesError }, { count: knowledge, error: knowledgeError }] = await Promise.all([
-    supabase.from("actions").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+    supabase.from("actions").select("*", { count: "exact", head: true }).eq("organization_id", orgId).in("status", ["proposed","awaiting_approval","approved","executing"]),
     supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
     supabase.from("approvals").select("*", { count: "exact", head: true }).eq("organization_id", orgId).is("decision", null),
     supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId).eq("kind", "sale").eq("attribution", "assisted"),
@@ -56,7 +56,7 @@ export default async function DashboardPage() {
     <section className="grid" aria-label="Métricas da organização">
       <article className="card"><span>Receita assistida</span><strong>{hasMetricReadFailure ? "—" : assistedFormatted}</strong><p>Somatório apenas de vendas registadas como receita assistida.</p></article>
       <article className="card"><span>Receita esta semana</span><strong>{hasMetricReadFailure ? "—" : weeklyAssistedFormatted}</strong><p>Vendas assistidas registadas desde segunda-feira.</p></article>
-      <article className="card"><span>Ações</span><strong>{hasMetricReadFailure ? "—" : actions ?? 0}</strong><p>Ações visíveis apenas nesta organização.</p></article>
+      <article className="card"><span>Ações abertas</span><strong>{hasMetricReadFailure ? "—" : actions ?? 0}</strong><p>Ações visíveis apenas nesta organização.</p></article>
       <article className="card"><span>Conversas</span><strong>{hasMetricReadFailure ? "—" : conversations ?? 0}</strong><p>Inbox persistida e isolada por tenant.</p></article>
       <article className="card"><span>Aprovações pendentes</span><strong>{hasMetricReadFailure ? "—" : approvals ?? 0}</strong><p>Decisões que continuam sob controlo humano.</p></article>
       <article className="card"><span>Knowledge aprovado</span><strong>{hasMetricReadFailure ? "—" : knowledge ?? 0}</strong><p>Factos empresariais disponíveis para respostas do Operator.</p></article>
