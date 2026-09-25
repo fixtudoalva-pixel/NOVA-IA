@@ -42,7 +42,7 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
       {items?.map(item => <div className="row" key={item.id}>
         <div><strong>{item.title}</strong><br/><span>{item.kind}</span></div>
         <div>{item.content}</div>
-        <div>{item.is_approved ? "Aprovado" : "Rascunho"}</div>
+        <div>{item.is_approved ? "Aprovado · utilizável pelo Operator" : "Rascunho · ainda não utilizável"}</div>
         <div>{!item.is_approved && <form><input type="hidden" name="id" value={item.id}/><button formAction={approveKnowledge}>Aprovar</button></form>}</div>
       </div>)}
     </section>
