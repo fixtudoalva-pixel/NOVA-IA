@@ -2,7 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { isUuid } from "@/lib/validation";
+import { hasUnsafeControlChars, isUuid, normalizeSingleLine } from "@/lib/validation";
 
 async function currentOrg() {
   const supabase = await createClient();
@@ -16,7 +16,7 @@ async function currentOrg() {
 
 export async function addKnowledge(formData: FormData) {
   const { supabase, organizationId } = await currentOrg();
-  const title = String(formData.get("title") ?? "").trim().replace(/\s+/g, " ");
+  const title = normalizeSingleLine(formData.get("title"), 160);
   const content = String(formData.get("content") ?? "").trim().replace(/\r\n/g, "\n");
   const kind = String(formData.get("kind") ?? "fact").trim().toLowerCase();
   const allowedKinds = new Set(["service", "price", "policy", "fact"]);
