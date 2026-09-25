@@ -24,3 +24,8 @@
 
 ## Migration history note
 The live database migration history is append-only and includes short-lived security experiments followed by explicit rollback migrations. The repository documents the effective final state; historical migration records should not be deleted merely to simplify names.
+
+## Authentication redirects
+- Production must set NEXT_PUBLIC_SITE_URL to the stable canonical HTTPS origin.
+- Request Host and Vercel host are fallbacks, not the preferred production authority.
+- Post-confirmation redirects accept only bounded relative paths.
