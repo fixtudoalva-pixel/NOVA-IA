@@ -92,6 +92,7 @@ describe("operator safety edge cases", () => {
     expect(decision.proposedActions).toHaveLength(0);
     expect(decision.reply).toContain("mensagem com conteúdo");
   });
+  it("does not create booking action from the word hora alone", () => expect(runDeterministicOperator({ message: "Que hora é?", knowledge: [], autonomy: 2 }).proposedActions).toHaveLength(0));
   it("does not turn an unknown request into an external action", () => {
     const decision = runDeterministicOperator({ message: "Podes ajudar-me com uma dúvida?", knowledge: [], autonomy: 2 });
     expect(decision.proposedActions).toHaveLength(0);
