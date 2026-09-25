@@ -16,7 +16,7 @@ export default async function AskPage({ searchParams }: Props) {
   const params = await searchParams;
   const question = (params.q ?? "").trim().slice(0, 500);
 
-  const [{ count: conversations }, { count: waitingHuman }, { count: approvals }, { count: openActions }, { data: outcomes }, { count: approvedKnowledge }] = await Promise.all([
+  const [{ count: conversations, error: conversationsError }, { count: waitingHuman, error: waitingError }, { count: approvals, error: approvalsError }, { count: openActions, error: actionsError }, { data: outcomes, error: outcomesError }, { count: approvedKnowledge, error: knowledgeError }] = await Promise.all([
     supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
     supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("status", "waiting_human"),
     supabase.from("approvals").select("*", { count: "exact", head: true }).eq("organization_id", orgId).is("decision", null),
@@ -26,7 +26,7 @@ export default async function AskPage({ searchParams }: Props) {
   ]);
 
   const revenue = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
-  const dataWarning = [conversations, waitingHuman, approvals, openActions, approvedKnowledge].some(value => value === null) || outcomes === null;
+  const dataWarning = Boolean(conversationsError || waitingError || approvalsError || actionsError || outcomesError || knowledgeError);
   const answer = question ? answerBusinessQuestion(question, { conversations: conversations ?? 0, waitingHuman: waitingHuman ?? 0, pendingApprovals: approvals ?? 0, openActions: openActions ?? 0, assistedRevenueMinor: revenue, approvedKnowledge: approvedKnowledge ?? 0 }) : null;
 
   return <main>
