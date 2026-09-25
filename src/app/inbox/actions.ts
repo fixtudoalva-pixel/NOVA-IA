@@ -10,7 +10,7 @@ export async function simulateInbound(formData: FormData) {
 
   const name = (String(formData.get("name") ?? "").trim() || "Cliente teste").slice(0, 120);
   const body = String(formData.get("body") ?? "").trim();
-  if (body.length < 2 || body.length > 4000) redirect("/inbox?error=message");
+  if (name.length < 1 || body.length < 2 || body.length > 4000) redirect("/inbox?error=message");
 
   const { error } = await supabase.rpc("simulate_inbound", { p_name: name, p_body: body });
   if (error) redirect("/inbox?error=simulate");
