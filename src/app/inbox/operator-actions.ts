@@ -14,7 +14,7 @@ export async function runOperator(formData: FormData) {
   const { data: membership } = await supabase.from("organization_members").select("organization_id").limit(1).single();
   if (!membership) redirect("/onboarding");
   const orgId = membership.organization_id;
-  const { data: conversation } = await supabase.from("conversations").select("id,messages(body,actor,created_at)").eq("id",conversationId).eq("organization_id",orgId).single();
+  const { data: conversation } = await supabase.from("conversations").select("id,messages(id,body,actor,created_at)").eq("id",conversationId).eq("organization_id",orgId).single();
   if (!conversation) return;
   const latestCustomer=[...(conversation.messages??[])].filter(m=>m.actor==="customer").sort((a,b)=>b.created_at.localeCompare(a.created_at))[0];
   if (!latestCustomer) return;
