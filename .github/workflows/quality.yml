@@ -11,17 +11,20 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22
-      - run: npm install
+      - name: Install dependencies
+        run: npm install
       - name: Audit production dependencies
         run: npm audit --omit=dev --audit-level=high
       - name: Audit all dependencies
         run: npm audit --audit-level=high
-      - run: npm run validate:types
+      - name: Validate generated database types
+        run: npm run validate:types
       - name: Typecheck
         run: npm run typecheck
       - name: Unit tests
         run: npm test
-      - run: npm run build
+      - name: Production build
+        run: npm run build
         env:
           NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
           NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: sb_publishable_test
