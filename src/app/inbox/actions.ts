@@ -16,6 +16,6 @@ export async function simulateInbound(formData: FormData) {
   if (error) redirect("/inbox?error=simulate");
 
   revalidatePath("/inbox");
-  revalidatePath("/dashboard");
+  revalidatePath("/dashboard"); revalidatePath("/ask");
   redirect("/inbox?created=1");
 }
