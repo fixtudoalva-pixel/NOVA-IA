@@ -1,4 +1,6 @@
 export type BusinessSnapshot = {
+  locale?: string;
+  currency?: string;
   conversations: number;
   waitingHuman: number;
   pendingApprovals: number;
@@ -12,7 +14,10 @@ export type BusinessAnswer = { text: string; href?: string; label?: string };
 export function answerBusinessQuestion(question: string, data: BusinessSnapshot): BusinessAnswer {
   const q = question.trim().toLowerCase();
   if (!q) return { text: "Escreve uma pergunta sobre a operação da empresa." };
-  if (/receita|vendi|vendas|faturei/.test(q)) return { text: "Receita assistida registada: EUR " + (data.assistedRevenueMinor / 100).toFixed(2) + ". Este valor é atribuição assistida, não prova causalidade.", href: "/actions", label: "Ver Ledger" };
+  if (/receita|vendi|vendas|faturei/.test(q)) {
+    const amount = new Intl.NumberFormat(data.locale ?? "pt-PT", { style: "currency", currency: data.currency ?? "EUR" }).format(data.assistedRevenueMinor / 100);
+    return { text: "Receita assistida registada: " + amount + ". Este valor é atribuição assistida, não prova causalidade.", href: "/actions", label: "Ver Ledger" };
+  }
   if (/conhecimento|knowledge|factos|preços/.test(q)) return { text: "Itens de conhecimento aprovados: " + data.approvedKnowledge + ".", href: "/knowledge", label: "Ver Knowledge" };
   if (/aprova|autoriza/.test(q)) return { text: "Aprovações pendentes: " + data.pendingApprovals + ".", href: "/approvals", label: "Ver aprovações" };
   if (/(cliente|clientes|conversa|conversas).*(espera|responder|resposta)|(espera|responder|resposta).*(cliente|clientes|conversa|conversas)/.test(q)) return { text: "Conversas à espera de intervenção humana: " + data.waitingHuman + ".", href: "/inbox", label: "Abrir Inbox" };
