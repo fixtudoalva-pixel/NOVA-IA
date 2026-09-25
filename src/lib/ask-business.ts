@@ -13,7 +13,7 @@ export type BusinessSnapshot = {
 export type BusinessAnswer = { text: string; href?: string; label?: string };
 
 export function answerBusinessQuestion(question: string, data: BusinessSnapshot): BusinessAnswer {
-  const q = question.trim().toLocaleLowerCase("pt-PT");
+  const q = question.trim().replace(/\s+/g, " ").toLocaleLowerCase("pt-PT");
   if (/[\u0000-\u001F\u007F]/.test(q)) return { text: "Não consigo processar essa pergunta com segurança." };
   if (q.length > 500) return { text: "A pergunta excede o limite de 500 caracteres." };
   if (!q) return { text: "Escreve uma pergunta sobre a operação da empresa." };
