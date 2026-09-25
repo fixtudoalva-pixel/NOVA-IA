@@ -46,11 +46,11 @@ export default async function DashboardPage() {
     <section className="hero"><h1>{Array.isArray(org) ? org[0]?.name : org?.name}</h1><p>Dados reais da organização autenticada.</p></section>
     {hasMetricReadFailure && <p role="alert">Algumas métricas não puderam ser carregadas. Atualiza a página antes de tomar decisões com estes números.</p>}
     <section className="grid">
-      <article className="card"><span>Receita assistida</span><strong>{assistedFormatted}</strong><p>Somatório apenas de vendas registadas como receita assistida.</p></article>
-      <article className="card"><span>Ações</span><strong>{actions ?? 0}</strong><p>Ações visíveis apenas nesta organização.</p></article>
-      <article className="card"><span>Conversas</span><strong>{conversations ?? 0}</strong><p>Inbox persistida e isolada por tenant.</p></article>
-      <article className="card"><span>Aprovações pendentes</span><strong>{approvals ?? 0}</strong><p>Decisões que continuam sob controlo humano.</p></article>
-      <article className="card"><span>Knowledge aprovado</span><strong>{knowledge ?? 0}</strong><p>Factos empresariais disponíveis para respostas do Operator.</p></article>
+      <article className="card"><span>Receita assistida</span><strong>{hasMetricReadFailure ? "—" : assistedFormatted}</strong><p>Somatório apenas de vendas registadas como receita assistida.</p></article>
+      <article className="card"><span>Ações</span><strong>{hasMetricReadFailure ? "—" : actions ?? 0}</strong><p>Ações visíveis apenas nesta organização.</p></article>
+      <article className="card"><span>Conversas</span><strong>{hasMetricReadFailure ? "—" : conversations ?? 0}</strong><p>Inbox persistida e isolada por tenant.</p></article>
+      <article className="card"><span>Aprovações pendentes</span><strong>{hasMetricReadFailure ? "—" : approvals ?? 0}</strong><p>Decisões que continuam sob controlo humano.</p></article>
+      <article className="card"><span>Knowledge aprovado</span><strong>{hasMetricReadFailure ? "—" : knowledge ?? 0}</strong><p>Factos empresariais disponíveis para respostas do Operator.</p></article>
     </section>
     <section className="card">
       <h2>Começar a trabalhar</h2>
