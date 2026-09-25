@@ -1,0 +1,13 @@
+-- Add database constraints for invariants already expected by application and RPC validation.
+alter table public.actions drop constraint if exists actions_risk_allowed;
+alter table public.actions add constraint actions_risk_allowed check (risk in ('low','medium','high','critical'));
+alter table public.actions drop constraint if exists actions_cost_nonnegative;
+alter table public.actions add constraint actions_cost_nonnegative check (ai_cost_minor >= 0);
+alter table public.agent_runs drop constraint if exists agent_runs_costs_nonnegative;
+alter table public.agent_runs add constraint agent_runs_costs_nonnegative check (prompt_tokens >= 0 and completion_tokens >= 0 and cost_minor >= 0);
+alter table public.approvals drop constraint if exists approvals_decision_allowed;
+alter table public.approvals add constraint approvals_decision_allowed check (decision is null or decision in ('approved','rejected'));
+alter table public.outcomes drop constraint if exists outcomes_revenue_nonnegative;
+alter table public.outcomes add constraint outcomes_revenue_nonnegative check (revenue_minor is null or revenue_minor >= 0);
+alter table public.knowledge_items drop constraint if exists knowledge_kind_allowed;
+alter table public.knowledge_items add constraint knowledge_kind_allowed check (kind in ('service','price','policy','fact'));
