@@ -66,5 +66,6 @@ export async function runOperator(formData: FormData) {
   revalidatePath("/approvals");
   revalidatePath("/actions");
   revalidatePath("/dashboard");
+  revalidatePath("/ask");
   redirect("/inbox?operator=1");
 }
