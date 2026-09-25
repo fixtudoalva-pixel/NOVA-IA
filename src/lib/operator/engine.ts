@@ -21,7 +21,7 @@ export function runDeterministicOperator(input: {
   const safeKnowledge = input.knowledge.slice(0, 200).map(k => ({ ...k, title: k.title.trim().slice(0, 160), content: k.content.trim().slice(0, 10000) })).filter(k => k.title.length >= 2 && k.content.length >= 2);
   const relevant = findRelevantKnowledge(message, safeKnowledge);
   const lower = message.toLocaleLowerCase("pt-PT");
-  const asksPrice = /preç|custa|quanto|orçamento/.test(lower);
+  const asksPrice = /preç|custa|quanto\s+(?:custa|fica|é)|orçamento/.test(lower);
   const asksBooking = /marcar|marcação|amanhã|hoje|hora|disponib/.test(lower);
 
   let reply: string;
