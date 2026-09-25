@@ -1,3 +1,4 @@
+import { AppNav } from "@/components/app-nav";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
@@ -25,6 +26,7 @@ export default async function DashboardPage() {
   const assisted = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
 
   return <main>
+    <AppNav />
     <header><div className="brand">NOVA IA</div><div className="badge">{membership.role}</div></header>
     <section className="hero"><h1>{Array.isArray(org) ? org[0]?.name : org?.name}</h1><p>Dados reais da organização autenticada.</p></section>
     <section className="grid">
