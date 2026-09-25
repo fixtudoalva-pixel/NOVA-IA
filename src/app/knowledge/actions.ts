@@ -49,6 +49,6 @@ export async function approveKnowledge(formData: FormData) {
     .eq("organization_id", organizationId);
 
   if (error) redirect("/knowledge?error=approval");
-  revalidatePath("/knowledge");
+  revalidatePath("/knowledge"); revalidatePath("/dashboard"); revalidatePath("/ask");
   redirect("/knowledge?approved=1");
 }
