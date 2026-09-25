@@ -29,6 +29,10 @@ describe("deterministic operator", () => {
     expect(result.intent).toBe("price_enquiry");
     expect(result.reply.toLowerCase()).toContain("não tenho um preço aprovado");
   });
+  it("matches accented Portuguese knowledge words", () => {
+    const result = runDeterministicOperator({ message: "Qual é a reparação disponível?", knowledge: [{ kind: "service", title: "Reparação", content: "Reparação disponível." }], autonomy: 2 });
+    expect(result.reply).toContain("Reparação disponível");
+  });
   it("uses approved knowledge supplied to it", () => {
     const result = runDeterministicOperator({
       message: "Quanto custa trocar o ecrã do modelo X?",
