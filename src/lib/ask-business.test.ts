@@ -16,6 +16,7 @@ describe("Ask Your Business", () => {
   it("does not confuse approved knowledge with pending approvals", () => expect(answerBusinessQuestion("Tenho conhecimento aprovado?", data).href).toBe("/knowledge"));
   it("does not treat generic clientes as waiting-human", () => expect(answerBusinessQuestion("Quantos clientes tenho?", data).text).toContain("não consigo responder"));
   it("routes customer waiting questions to inbox", () => expect(answerBusinessQuestion("Tenho clientes à espera?", data).href).toBe("/inbox"));
+  it("does not answer closed conversation history with total count", () => expect(answerBusinessQuestion("Quantas conversas fechadas tenho?", data).text).toContain("não consigo responder"));
   it("recognizes contactos wording", () => expect(answerBusinessQuestion("Quantos contactos tenho?", data).text).toContain("4"));
   it("does not treat every customer question as waiting-human", () => expect(answerBusinessQuestion("O que aconteceu com o cliente João?", data).text).toContain("não consigo responder"));
   it("recognizes reply-needed customer wording", () => expect(answerBusinessQuestion("Que clientes tenho para responder?", data).href).toBe("/inbox"));
