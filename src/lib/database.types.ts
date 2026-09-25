@@ -527,6 +527,14 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_organization: {
+        Args: {
+          organization_currency?: string
+          organization_locale?: string
+          organization_name: string
+        }
+        Returns: string
+      }
       is_org_member: { Args: { org_id: string }; Returns: boolean }
     }
     Enums: {
