@@ -31,6 +31,7 @@ export async function runOperator(formData: FormData) {
     .filter(m => m.actor === "customer" && m.direction === "inbound")
     .sort((a,b) => b.created_at.localeCompare(a.created_at))[0];
   if (!latestCustomer) redirect("/inbox?error=no_customer_message");
+  if (latestCustomer.body.trim().length < 2 || latestCustomer.body.length > 4000 || /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(latestCustomer.body)) redirect("/inbox?error=operator");
 
   const { data: knowledge, error: knowledgeError } = await supabase
     .from("knowledge_items")
