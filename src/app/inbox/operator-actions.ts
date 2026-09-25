@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { isUuid } from "@/lib/validation";
 import type { Json } from "@/lib/database.types";
 import { runDeterministicOperator } from "@/lib/operator/engine";
 
@@ -11,7 +12,7 @@ export async function runOperator(formData: FormData) {
   if (!user) redirect("/login");
 
   const conversationId = String(formData.get("conversation_id") ?? "").trim();
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(conversationId)) redirect("/inbox?error=operator");
+  if (!isUuid(conversationId)) redirect("/inbox?error=operator");
 
   const { data: membership, error: membershipError } = await supabase.from("organization_members").select("organization_id").limit(1).maybeSingle();
   if (membershipError) redirect("/inbox?error=operator");
