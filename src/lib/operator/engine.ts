@@ -31,7 +31,7 @@ export function runDeterministicOperator(input: {
   if (asksPrice && priceKnowledge.length) {
     reply = priceKnowledge.slice(0, 5).map(k => `${k.title}: ${k.content}`).join("\\n").slice(0, 8000);
     confidence = 0.9;
-  } else if (relevant.length && !asksPrice) {
+  } else if (relevant.length && !asksPrice && !asksBooking) {
     reply = relevant.slice(0, 5).map(k => `${k.title}: ${k.content}`).join("\\n").slice(0, 8000);
     confidence = 0.88;
   } else if (asksPrice) {
