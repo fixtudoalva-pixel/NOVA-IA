@@ -42,6 +42,7 @@ export default async function DashboardPage() {
       <article className="card"><span>Ações</span><strong>{actions ?? 0}</strong><p>Ações visíveis apenas nesta organização.</p></article>
       <article className="card"><span>Conversas</span><strong>{conversations ?? 0}</strong><p>Inbox persistida e isolada por tenant.</p></article>
       <article className="card"><span>Aprovações pendentes</span><strong>{approvals ?? 0}</strong><p>Decisões que continuam sob controlo humano.</p></article>
+      <article className="card"><span>Knowledge aprovado</span><strong>{knowledge ?? 0}</strong><p>Factos empresariais disponíveis para respostas do Operator.</p></article>
     </section>
     <section className="card">
       <h2>Começar a trabalhar</h2>
