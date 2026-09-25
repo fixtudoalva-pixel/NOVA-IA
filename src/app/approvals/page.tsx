@@ -9,7 +9,8 @@ export default async function ApprovalsPage({ searchParams }: ApprovalsPageProps
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-  const { data: membership } = await supabase.from("organization_members").select("organization_id").limit(1).single();
+  const { data: membership, error: membershipError } = await supabase.from("organization_members").select("organization_id").limit(1).maybeSingle();
+  if (membershipError) throw new Error("Não foi possível carregar a organização.");
   if (!membership) redirect("/onboarding");
   const params = await searchParams;
   const message = params.approved === "1" ? "Ação aprovada. Já pode avançar para execução."
