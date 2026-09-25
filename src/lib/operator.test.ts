@@ -29,6 +29,7 @@ describe("deterministic operator", () => {
     expect(r.reply).toContain("não confirmei disponibilidade");
     expect(r.proposedActions[0]?.type).toBe("propose_booking");
   });
+  it("recognizes orçamento without accent", () => expect(runDeterministicOperator({ message: "Quero um orcamento", knowledge: [], autonomy: 2 }).intent).toBe("price_enquiry"));
   it("never invents a missing price", () => {
     const result = runDeterministicOperator({ message: "Quanto custa trocar o ecrã?", knowledge: [], autonomy: 2 });
     expect(result.intent).toBe("price_enquiry");
