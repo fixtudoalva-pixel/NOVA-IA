@@ -18,7 +18,7 @@ export async function executeApprovedAction(formData: FormData) {
   if (!actionId) redirect("/actions?error=execute");
   const { error } = await supabase.rpc("execute_approved_action", { p_action_id: actionId });
   if (error) redirect("/actions?error=execute");
-  revalidatePath("/actions"); revalidatePath("/dashboard");
+  revalidatePath("/actions"); revalidatePath("/dashboard"); revalidatePath("/ask");
   redirect("/actions?executed=1");
 }
 
