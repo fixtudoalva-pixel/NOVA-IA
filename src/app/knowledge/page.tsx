@@ -36,7 +36,7 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
       <label>Título<input name="title" required minLength={2} maxLength={160} /></label>
       <label>Conteúdo<textarea name="content" required rows={4} minLength={2} maxLength={10000} /></label>
       {message ? <p role="status">{message}</p> : null}
-      <button formAction={addKnowledge}>Adicionar rascunho</button>
+      <button formAction={addKnowledge} type="submit">Adicionar rascunho</button>
     </form>
     <section className="card ledger">
       <h2>Base de conhecimento</h2>
