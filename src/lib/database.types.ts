@@ -583,6 +583,10 @@ export type Database = {
         Returns: undefined
       }
       is_org_member: { Args: { org_id: string }; Returns: boolean }
+      record_sale_outcome: {
+        Args: { p_action_id: string; p_revenue_minor: number }
+        Returns: undefined
+      }
       simulate_inbound: {
         Args: { p_body: string; p_name: string }
         Returns: string
