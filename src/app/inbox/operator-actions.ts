@@ -26,7 +26,7 @@ export async function runOperator(formData: FormData) {
   }));
   await supabase.rpc("commit_operator_decision",{
     p_conversation_id:conversationId,
-    p_message_created_at:latestCustomer.created_at,
+    p_source_message_id:latestCustomer.id,
     p_decision:JSON.parse(JSON.stringify(decision)) as Json,
     p_actions:JSON.parse(JSON.stringify(actions)) as Json
   });
