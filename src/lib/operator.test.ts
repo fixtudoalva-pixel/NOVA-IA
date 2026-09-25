@@ -115,6 +115,7 @@ describe("operator safety edge cases", () => {
     expect(decision.reply.toLowerCase()).toContain("preço");
     expect(decision.reply).not.toContain("  ");
   });
+  it("rejects DEL without actions", () => expect(runDeterministicOperator({ message: "marcar\u007Famanhã", knowledge: [], autonomy: 2 }).proposedActions).toHaveLength(0));
   it("rejects control characters without actions", () => {
     const r = runDeterministicOperator({ message: "marcar\u0000amanhã", knowledge: [], autonomy: 2 });
     expect(r.proposedActions).toHaveLength(0);
