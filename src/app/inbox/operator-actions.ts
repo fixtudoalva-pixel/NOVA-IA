@@ -14,7 +14,8 @@ export async function runOperator(formData: FormData) {
   const conversationId = String(formData.get("conversation_id") ?? "").trim();
   if (!conversationId) redirect("/inbox?error=operator");
 
-  const { data: membership } = await supabase.from("organization_members").select("organization_id").limit(1).single();
+  const { data: membership, error: membershipError } = await supabase.from("organization_members").select("organization_id").limit(1).maybeSingle();
+  if (membershipError) redirect("/inbox?error=operator");
   if (!membership) redirect("/onboarding");
 
   const orgId = membership.organization_id;
