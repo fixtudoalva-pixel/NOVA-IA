@@ -115,6 +115,11 @@ describe("operator safety edge cases", () => {
     expect(decision.reply.toLowerCase()).toContain("preço");
     expect(decision.reply).not.toContain("  ");
   });
+  it("rejects control characters without actions", () => {
+    const r = runDeterministicOperator({ message: "marcar\u0000amanhã", knowledge: [], autonomy: 2 });
+    expect(r.proposedActions).toHaveLength(0);
+    expect(r.reply).toContain("segurança");
+  });
   it("normalizes repeated message whitespace", () => expect(runDeterministicOperator({ message: "Quero   um   orcamento", knowledge: [], autonomy: 2 }).intent).toBe("price_enquiry"));
   it("handles whitespace-only input without creating an action", () => {
     const decision = runDeterministicOperator({ message: "   ", knowledge: [], autonomy: 2 });
