@@ -22,7 +22,7 @@ export function runDeterministicOperator(input: {
   const relevant = findRelevantKnowledge(message, safeKnowledge);
   const lower = message.toLocaleLowerCase("pt-PT");
   const asksPrice = /preç|custa|quanto\s+(?:custa|fica|é)|orçamento/.test(lower);
-  const asksBooking = /marcar|marcação|agendar|agendamento|disponib|vaga|horário/.test(lower) || /(?:amanhã|hoje).*(?:marcar|agendar|hora)|(?:marcar|agendar|hora).*(?:amanhã|hoje)/.test(lower);
+  const asksBooking = /marcar|marcação|agendar|agendamento|disponib|vaga|horário/.test(lower) || /(?:amanhã|hoje).*(?:marcar|agendar|hora)|(?:marcar|agendar).*(?:amanhã|hoje)/.test(lower);
 
   let reply: string;
   let confidence = 0.55;
