@@ -15,7 +15,7 @@ export default function Home() {
       </section>
       <section className="card ledger">
         <h2>Estado deste protótipo</h2>
-        <p>O simulador funciona no navegador e não contacta clientes. Autenticação, persistência, modelos de IA e integrações externas ainda não estão ligados.</p>
+        <p>O simulador funciona no navegador e não contacta clientes. O espaço de trabalho usa autenticação e guarda dados por empresa; as respostas continuam simuladas. Modelos de IA e integrações externas ainda não estão ligados.</p>
       </section>
     </main>
   );
