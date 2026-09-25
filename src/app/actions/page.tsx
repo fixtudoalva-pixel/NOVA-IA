@@ -1,6 +1,7 @@
 import { AppNav } from "@/components/app-nav";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { formatMoneyMinor } from "@/lib/reporting";
 import { executeApprovedAction, recordSaleOutcome } from "./actions";
 
 type ActionsPageProps = { searchParams: Promise<{ error?: string; executed?: string; sale?: string }> };
@@ -14,7 +15,7 @@ export default async function ActionsPage({ searchParams }: ActionsPageProps) {
   if (!membership) redirect("/onboarding");
   const org = membership.organizations;
   const orgSettings = Array.isArray(org) ? org[0] : org;
-  const formatMoney = (minor: number) => new Intl.NumberFormat(orgSettings?.locale ?? "pt-PT", { style: "currency", currency: orgSettings?.currency ?? "EUR" }).format(minor / 100);
+  const formatMoney = (minor: number) => formatMoneyMinor(minor, orgSettings?.locale ?? "pt-PT", orgSettings?.currency ?? "EUR");
   const params = await searchParams;
   const message = params.executed === "1" ? "Ação executada e registada no ledger."
     : params.sale === "1" ? "Venda registada como receita assistida."
