@@ -43,8 +43,8 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
       {message ? <p role="status">{message}</p> : null}
       <button formAction={simulateInbound} type="submit">Simular mensagem recebida</button>
     </form>
-    <section className="card ledger">
-      <h2>Conversas persistidas</h2>
+    <section className="card ledger" aria-labelledby="conversations-heading">
+      <h2 id="conversations-heading">Conversas persistidas</h2>
       {!conversations?.length && <p className="empty-state">Ainda não existem conversas. Usa o simulador acima para criar a primeira.</p>}
       {conversations?.map(c => {
         const msgs = [...(c.messages ?? [])].sort((a,b)=>a.created_at.localeCompare(b.created_at));
