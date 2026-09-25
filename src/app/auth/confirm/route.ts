@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     try { origin = new URL(configured).origin; } catch { /* fall back to request origin */ }
   }
   const tokenHash = searchParams.get("token_hash")?.trim() ?? null;
-  const rawType = searchParams.get("type");
+  const rawType = searchParams.get("type")?.trim() ?? null;
   const allowedTypes = new Set<EmailOtpType>(["signup","invite","magiclink","recovery","email_change","email"]);
   const type = rawType && allowedTypes.has(rawType as EmailOtpType) ? rawType as EmailOtpType : null;
   const next = searchParams.get("next");
