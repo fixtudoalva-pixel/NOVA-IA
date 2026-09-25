@@ -18,7 +18,7 @@ export function runDeterministicOperator(input: {
 }): OperatorDecision {
   const message = input.message.trim().replace(/\s+/g, " ").slice(0, 4000);
   if (!message) return OperatorDecisionSchema.parse({ intent: "general_enquiry", summary: "Mensagem vazia; nenhuma ação foi proposta.", confidence: 1, reply: "Preciso de uma mensagem com conteúdo para poder ajudar.", proposedActions: [], needsHuman: false, humanReason: null });
-  const safeKnowledge = input.knowledge.slice(0, 200).map(k => ({ ...k, title: k.title.trim().slice(0, 160), content: k.content.trim().slice(0, 10000), kind: k.kind.trim().toLowerCase().slice(0, 40) })).filter(k => k.title.length >= 2 && k.content.length >= 2);
+  const safeKnowledge = input.knowledge.slice(0, 200).map(k => ({ ...k, title: k.title.trim().slice(0, 160), content: k.content.trim().slice(0, 10000), kind: k.kind.trim().toLowerCase().slice(0, 40) })).filter(k => k.title.length >= 2 && k.content.length >= 2 && ["service","price","policy","fact"].includes(k.kind));
   const relevant = findRelevantKnowledge(message, safeKnowledge);
   const priceKnowledge = relevant.filter(k => k.kind === "price");
   const bookingKnowledge = relevant.filter(k => k.kind === "policy" || k.kind === "service");
