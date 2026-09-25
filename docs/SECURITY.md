@@ -44,3 +44,6 @@ Closed conversations are rejected by both the server action and the database Ope
 
 ## MVP Operator approval boundary
 The application may classify action risk for UX, but the database does not trust an application-provided approval flag. commit_operator_decision persists every non-critical MVP Operator side effect as awaiting_approval and creates an approval record. Critical actions are rejected. This is intentionally stricter than the future earned-autonomy model.
+
+## Tenant isolation verification
+RLS policy applicability is restricted to authenticated users and all tenant predicates use is_org_member. An explicit anon-role smoke test returned zero visible organizations, actions and Knowledge rows. Full authenticated A-versus-B isolation testing remains blocked until two confirmed test identities/tenants exist; do not describe tenant isolation as fully penetration-tested before that test is completed.
