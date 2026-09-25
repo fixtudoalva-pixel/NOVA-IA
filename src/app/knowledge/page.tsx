@@ -34,7 +34,7 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
     <form className="card auth-form" aria-labelledby="knowledge-form-heading"><h2 id="knowledge-form-heading">Novo conhecimento</h2>
       <label>Tipo<select name="kind" required><option value="service">Serviço</option><option value="price">Preço</option><option value="policy">Política</option><option value="fact">Facto</option></select></label>
       <label>Título<input name="title" required minLength={2} maxLength={160} /></label>
-      <label>Conteúdo<textarea name="content" required rows={4} minLength={2} maxLength={10000} /></label>
+      <label>Conteúdo<textarea aria-describedby="knowledge-content-help" name="content" required rows={4} minLength={2} maxLength={10000} /></label><p id="knowledge-content-help">Máximo de 10 000 caracteres. Só fica disponível ao Operator depois de aprovação humana.</p>
       {message ? <p role="status">{message}</p> : null}
       <button formAction={addKnowledge} type="submit">Adicionar rascunho</button>
     </form>
