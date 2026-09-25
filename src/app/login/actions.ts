@@ -44,6 +44,10 @@ export async function signup(formData: FormData) {
     }
   });
 
-  if (error) redirect("/login?error=signup");
+  if (error) {
+    const code = "code" in error ? String(error.code ?? "") : "";
+    if (code === "over_email_send_rate_limit") redirect("/login?error=rate_limit");
+    redirect("/login?error=signup");
+  }
   redirect("/login?created=1");
 }
