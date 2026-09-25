@@ -16,7 +16,7 @@ export function runDeterministicOperator(input: {
   knowledge: Knowledge[];
   autonomy: 0 | 1 | 2 | 3 | 4;
 }): OperatorDecision {
-  const message = input.message.trim().slice(0, 4000);
+  const message = input.message.trim().replace(/\s+/g, " ").slice(0, 4000);
   if (!message) return OperatorDecisionSchema.parse({ intent: "general_enquiry", summary: "Mensagem vazia; nenhuma ação foi proposta.", confidence: 1, reply: "Preciso de uma mensagem com conteúdo para poder ajudar.", proposedActions: [], needsHuman: false, humanReason: null });
   const safeKnowledge = input.knowledge.slice(0, 200).map(k => ({ ...k, title: k.title.trim().slice(0, 160), content: k.content.trim().slice(0, 10000) })).filter(k => k.title.length >= 2 && k.content.length >= 2);
   const relevant = findRelevantKnowledge(message, safeKnowledge);
