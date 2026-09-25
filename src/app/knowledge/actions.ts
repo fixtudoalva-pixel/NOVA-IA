@@ -15,7 +15,7 @@ async function currentOrg() {
 
 export async function addKnowledge(formData: FormData) {
   const { supabase, organizationId } = await currentOrg();
-  const title = String(formData.get("title") ?? "").trim();
+  const title = String(formData.get("title") ?? "").trim().replace(/\s+/g, " ");
   const content = String(formData.get("content") ?? "").trim();
   const kind = String(formData.get("kind") ?? "fact");
   const allowedKinds = new Set(["service", "price", "policy", "fact"]);
