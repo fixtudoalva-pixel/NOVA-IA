@@ -7,8 +7,8 @@ async function decide(formData: FormData, decision: "approved" | "rejected") {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-  const approvalId = String(formData.get("approval_id") ?? "");
-  const actionId = String(formData.get("action_id") ?? "");
+  const approvalId = String(formData.get("approval_id") ?? "").trim();
+  const actionId = String(formData.get("action_id") ?? "").trim();
   if (!approvalId || !actionId) redirect("/approvals?error=decision");
   const { error } = await supabase.rpc("decide_approval", { p_approval_id: approvalId, p_action_id: actionId, p_decision: decision });
   if (error) redirect("/approvals?error=decision");
