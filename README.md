@@ -23,7 +23,12 @@ Initial laboratory: a repair-service business. The domain model must remain gene
 ## Try the local simulator
 Run `npm install` and `npm run dev`, then open `/inbox`. Add an approved business fact and submit a fictional customer message such as “Quanto custa trocar o ecrã?”. Try autonomy levels 0–4 and a message requesting a discount. The decision history stays in browser memory and clears on refresh.
 
-The simulator uses deterministic rules, not a connected AI model. Its replies are never sent to a customer. No account, database or external channel is connected yet.
+The standalone simulator uses deterministic rules, not a connected AI model. Its replies are never sent to a customer and its state is not saved.
+
+## Authenticated workspace
+Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` for the NOVA IA Supabase project. The `/login` and `/workspace` routes provide account access, one organization per account, approved knowledge, simulated inbound conversations, decision proposals, approval, simulated execution and an action history. Configure the Supabase Auth site URL and redirect URL for the deployed domain so confirmation emails return to `/workspace`.
+
+The workspace uses the existing database RPCs and row-level security. It does not send real messages or invoke an AI provider. The deterministic operator is a prototype. The source schema in `supabase/migrations` does not yet include all migrations applied to the live NOVA IA database; treat the live schema as authoritative until reconciled.
 
 ## Status
-Interactive demo of the inbox and approval policy. The SQL schema and operator contract are foundations for later integration, not active persistence.
+Interactive local demo plus a database-backed workspace when the Supabase variables are configured. External channels and AI providers remain unconnected.

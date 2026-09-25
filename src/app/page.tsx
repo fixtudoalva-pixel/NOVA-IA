@@ -6,6 +6,7 @@ export default function Home() {
         <h1>IA que trabalha.<br/>Decisões que se explicam.</h1>
         <p>Experimente como um operador pode analisar pedidos de clientes, usar informação aprovada e pedir autorização antes de agir.</p>
         <a className="primary-link" href="/inbox">Abrir simulador de inbox →</a>
+        <a className="workspace-link" href="/workspace">Entrar no espaço de trabalho →</a>
       </section>
       <section className="grid">
         <article className="card"><span>1 · Conhecimento</span><strong>Informação aprovada</strong><p>Introduza os factos que podem fundamentar uma resposta. Sem preços inventados.</p></article>

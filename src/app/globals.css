@@ -46,3 +46,16 @@ button.secondary { background:transparent; color:var(--text); border:1px solid v
 .sim-summary span { border:1px solid var(--line); border-radius:999px; padding:8px 12px; color:var(--muted); font-size:13px; }
 .primary-link { display:inline-block; padding:13px 18px; border-radius:10px; background:var(--accent); color:#080b12; font-weight:700; text-decoration:none; }
 .grid .card strong { font-size:22px; line-height:1.2; }
+.workspace-link { display:inline-block; margin:12px; color:var(--text); }
+.auth-form { max-width:480px; }
+.sim-form input { width:100%; padding:12px; border:1px solid var(--line); border-radius:10px; background:var(--bg); color:var(--text); font:inherit; }
+.notice { background:#4a251f; color:#ffe4d9; padding:14px 18px; border-radius:10px; }
+.workspace-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start; }
+.section-title { margin-top:30px !important; }
+.conversation { display:block; width:100%; text-align:left; background:transparent; border:1px solid var(--line); color:var(--text); font-weight:400; }
+.conversation.active { border-color:var(--accent); }
+@media (max-width:760px) { .workspace-grid { grid-template-columns:1fr; } }
+.sale-form { display:flex; flex-wrap:wrap; align-items:flex-end; gap:8px; margin-top:12px; }
+.sale-form label { width:100%; color:var(--muted); font-size:13px; }
+.sale-form input { width:130px; padding:10px; border:1px solid var(--line); border-radius:10px; background:var(--bg); color:var(--text); font:inherit; }
+.sale-form button { margin:0; }
