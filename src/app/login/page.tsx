@@ -30,6 +30,24 @@ export default function LoginPage() {
     } finally { setBusy(false); }
   }
 
+  async function resendConfirmation() {
+    if (!supabase || busy) return;
+    if (!email.trim()) { setNotice("Indica primeiro o teu email para reenviar a confirmação."); return; }
+    setBusy(true);
+    setNotice("");
+    try {
+      const { error } = await supabase.auth.resend({
+        type: "signup",
+        email: email.trim(),
+        options: { emailRedirectTo: window.location.origin + "/workspace" }
+      });
+      if (error) throw error;
+      setNotice("Se o endereço tiver uma confirmação pendente, vais receber um novo email. Verifica também o spam.");
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "Não foi possível reenviar a confirmação.");
+    } finally { setBusy(false); }
+  }
+
   return <main>
     <header><a className="brand" href="/">NOVA IA</a><span className="badge">Acesso à empresa</span></header>
     <section className="hero"><h1>{mode === "login" ? "Entrar" : "Criar conta"}</h1><p>O espaço de trabalho utiliza autenticação e proteção de dados por empresa.</p></section>
@@ -39,6 +57,7 @@ export default function LoginPage() {
         <label htmlFor="password">Palavra-passe</label><input id="password" type="password" required minLength={6} autoComplete={mode === "login" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} />
         <button disabled={busy}>{busy ? "Aguarda…" : mode === "login" ? "Entrar" : "Criar conta"}</button>
         <button className="secondary" type="button" onClick={() => { setMode(mode === "login" ? "signup" : "login"); setNotice(""); }}>{mode === "login" ? "Criar uma conta" : "Já tenho conta"}</button>
+        {mode === "login" && <button className="secondary" type="button" disabled={busy} onClick={() => void resendConfirmation()}>Reenviar email de confirmação</button>}
         {notice && <p role="status">{notice}</p>}
       </form>}
   </main>;
