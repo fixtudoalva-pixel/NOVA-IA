@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import type { Json } from "@/lib/database.types";
 import { runDeterministicOperator } from "@/lib/operator/engine";
 import { evaluateActionPolicy } from "@/lib/domain";
 
@@ -38,7 +39,7 @@ export async function runOperator(formData: FormData) {
     organization_id: orgId, conversation_id: conversationId,
     model_provider: "deterministic", model_name: "operator-v0",
     status: "completed", input: { message_id: latestCustomer.created_at },
-    output: decision, started_at: new Date().toISOString(), completed_at: new Date().toISOString()
+    output: JSON.parse(JSON.stringify(decision)) as Json, started_at: new Date().toISOString(), completed_at: new Date().toISOString()
   }).select("id").single();
 
   for (const proposed of decision.proposedActions) {
