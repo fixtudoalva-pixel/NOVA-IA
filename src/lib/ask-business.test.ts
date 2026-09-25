@@ -1,0 +1,67 @@
+import { describe, expect, it } from "vitest";
+import { answerBusinessQuestion } from "./ask-business";
+
+const data = { conversations: 4, waitingHuman: 2, pendingApprovals: 1, openActions: 3, assistedRevenueMinor: 12345, weeklyAssistedRevenueMinor: 4567, approvedKnowledge: 5 };
+
+describe("Ask Your Business", () => {
+  it("answers revenue from supplied data", () => expect(answerBusinessQuestion("Quanto vendi?", data).text).toContain("123,45"));
+  it("recognizes autorização wording", () => expect(answerBusinessQuestion("Tenho autorizações pendentes?", data).href).toBe("/approvals"));
+  it("answers approvals from supplied data", () => expect(answerBusinessQuestion("Tenho aprovações?", data).text).toContain("1"));
+  it("routes pending work to approvals", () => expect(answerBusinessQuestion("O que tenho para fazer hoje?", data).href).toBe("/approvals"));
+  it("refuses a specific price approval question without item-level data", () => expect(answerBusinessQuestion("O preço está aprovado?", data).text).toContain("não consigo responder"));
+  it("recognizes serviços as Knowledge wording", () => expect(answerBusinessQuestion("Quantos serviços tenho registados?", data).href).toBe("/knowledge"));
+  it("answers approved knowledge count", () => expect(answerBusinessQuestion("Quanto conhecimento aprovado tenho?", data).text).toContain("5"));
+  it("does not treat the adjective aprovado as an approval queue", () => expect(answerBusinessQuestion("O preço está aprovado?", data).href).not.toBe("/approvals"));
+  it("does not claim a price value when asked whether a price is approved", () => expect(answerBusinessQuestion("O preço está aprovado?", data).text).not.toContain("123,45"));
+  it("does not confuse approved knowledge with pending approvals", () => expect(answerBusinessQuestion("Tenho conhecimento aprovado?", data).href).toBe("/knowledge"));
+  it("does not treat generic clientes as waiting-human", () => expect(answerBusinessQuestion("Quantos clientes tenho?", data).text).toContain("não consigo responder"));
+  it("routes customer waiting questions to inbox", () => expect(answerBusinessQuestion("Tenho clientes à espera?", data).href).toBe("/inbox"));
+  it("does not answer closed conversation history with total count", () => expect(answerBusinessQuestion("Quantas conversas fechadas tenho?", data).text).toContain("não consigo responder"));
+  it("recognizes contactos wording", () => expect(answerBusinessQuestion("Quantos contactos tenho?", data).text).toContain("4"));
+  it("does not treat every customer question as waiting-human", () => expect(answerBusinessQuestion("O que aconteceu com o cliente João?", data).text).toContain("não consigo responder"));
+  it("recognizes reply-needed customer wording", () => expect(answerBusinessQuestion("Que clientes tenho para responder?", data).href).toBe("/inbox"));
+  it("does not map pending opportunities to generic actions", () => expect(answerBusinessQuestion("Que oportunidades tenho pendentes?", data).text).toContain("não consigo responder"));
+  it("does not answer completed action history with open-work count", () => expect(answerBusinessQuestion("Quantas ações concluídas tenho?", data).text).toContain("não consigo responder"));
+  it("still recognizes explicit pending actions", () => expect(answerBusinessQuestion("Que ações tenho pendentes?", data).href).toBe("/approvals"));
+  it("does not turn a generic pending question into work", () => expect(answerBusinessQuestion("O que está pendente?", data).text).toContain("não consigo responder"));
+  it("refuses unsupported questions", () => expect(answerBusinessQuestion("Qual é o melhor produto?", data).text).toContain("não consigo responder"));
+  it("handles repeated whitespace", () => expect(answerBusinessQuestion("Quanto   vendi?", data).text).toContain("123,45"));
+  it("handles uppercase Portuguese questions", () => expect(answerBusinessQuestion("TENHO APROVAÇÕES?", data).href).toBe("/approvals"));
+  it("handles empty questions", () => expect(answerBusinessQuestion("", data).text).toContain("Escreve"));
+  it("rejects DEL characters", () => expect(answerBusinessQuestion("vendas\u007Fagora", data).text).toContain("segurança"));
+  it("rejects control characters", () => expect(answerBusinessQuestion("vendas\u0000agora", data).text).toContain("segurança"));
+  it("rejects oversized questions", () => expect(answerBusinessQuestion("a".repeat(501), data).text).toContain("500"));
+  it("rejects one-character questions", () => expect(answerBusinessQuestion("?", data).text).toContain("mais completa"));
+  it("does not answer IVA from assisted revenue", () => expect(answerBusinessQuestion("Quanto IVA tenho sobre as vendas?", data).text).toContain("não consigo responder"));
+  it("does not answer cash collected from assisted revenue", () => expect(answerBusinessQuestion("Quanto recebi das vendas?", data).text).toContain("não consigo responder"));
+  it("does not answer lucro with revenue even when vendas is mentioned", () => expect(answerBusinessQuestion("Qual foi o lucro das vendas?", data).text).toContain("não consigo responder"));
+  it("does not invent revenue for unsupported questions", () => expect(answerBusinessQuestion("Diz-me o lucro líquido", data).text).toContain("não consigo responder"));
+  it("recognizes receita semanal wording", () => expect(answerBusinessQuestion("Receita semanal", data).text).toContain("45,67"));
+  it("recognizes faturação as assisted revenue wording", () => expect(answerBusinessQuestion("Qual é a faturação registada?", data).href).toBe("/actions"));
+  it("does not use weekly revenue for an unqualified total question", () => {
+    const text = answerBusinessQuestion("Quanto vendi?", data).text;
+    expect(text).toContain("123,45");
+    expect(text).not.toContain("45,67");
+  });
+  it("does not label historical revenue as weekly when weekly data is absent", () => {
+    const { weeklyAssistedRevenueMinor: _weekly, ...withoutWeekly } = data;
+    const text = answerBusinessQuestion("Quanto vendi esta semana?", withoutWeekly).text;
+    expect(text).toContain("0,00");
+  });
+  it("answers weekly revenue from weekly data", () => {
+    const text = answerBusinessQuestion("Quanto tenho de receita esta semana?", data).text;
+    expect(text).toContain("45,67");
+    expect(text).toContain("esta semana");
+    expect(text).toContain("UTC");
+  });
+  it("labels assisted revenue as non-causal", () => expect(answerBusinessQuestion("Quanto vendi?", data).text).toContain("não prova causalidade"));
+  it("formats zero assisted revenue without inventing activity", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, assistedRevenueMinor: 0 }).text).toContain("0,00"));
+  it("falls back from malformed currency safely", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, currency: "INVALID" }).text).toContain("€"));
+  it("formats revenue with tenant currency", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, locale: "en-US", currency: "USD" }).text).toContain("$123.45"));
+  it("falls back safely when tenant currency settings are invalid", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, locale: "bad-locale", currency: "NOPE" }).text).toContain("€"));
+  it("formats default revenue as Portuguese EUR", () => {
+    const text = answerBusinessQuestion("Quanto vendi?", data).text;
+    expect(text).toContain("123,45");
+    expect(text).toContain("€");
+  });
+});

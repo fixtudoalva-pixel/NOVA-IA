@@ -22,3 +22,10 @@ Initial laboratory: a repair-service business. The domain model must remain gene
 
 ## Status
 Foundation phase. Architecture and domain model are being established before external integrations.
+
+
+## Local quality checks
+Run `npm run quality` before proposing a merge. CI additionally audits both production and development dependencies at high severity. The current branch intentionally uses `npm install` until a reviewed lockfile is committed.
+
+## Current MVP safety boundary
+Operator side effects are approval-gated in the database. Assisted revenue is recorded only from human-confirmed sale outcomes. This is still a development MVP: authenticated direct table-write grants remain a known hardening item before production clients.

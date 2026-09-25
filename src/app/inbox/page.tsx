@@ -1,27 +1,59 @@
-const threads = [
-  { name: "Cliente teste", message: "Quanto custa trocar o ecrã do meu telemóvel?", status: "Novo" },
-  { name: "Lead #002", message: "Conseguem ver isto amanhã?", status: "Aguardar IA" },
-  { name: "Lead #003", message: "Obrigado, fica combinado.", status: "Concluído" }
-];
+import { AppNav } from "@/components/app-nav";
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { simulateInbound } from "./actions";
+import { runOperator } from "./operator-actions";
 
-export default function InboxPage() {
-  return (
-    <main>
-      <header><div className="brand">NOVA IA</div><div className="badge">Inbox Simulator</div></header>
-      <section className="hero">
-        <h1>Inbox</h1>
-        <p>Laboratório sem custos para testar atendimento, decisões, aprovações e resultados antes de ligar canais externos.</p>
-      </section>
-      <section className="card">
-        {threads.map((thread) => (
-          <div className="row" key={thread.name}>
-            <strong>{thread.name}</strong>
-            <div>{thread.message}</div>
-            <div>{thread.status}</div>
-            <div>simulator</div>
-          </div>
-        ))}
-      </section>
-    </main>
-  );
+type InboxPageProps = { searchParams: Promise<{ error?: string; created?: string; operator?: string }> };
+
+export default async function InboxPage({ searchParams }: InboxPageProps) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+  const { data: membership, error: membershipError } = await supabase.from("organization_members").select("organization_id").limit(1).maybeSingle();
+  if (membershipError) throw new Error("Não foi possível carregar a organização.");
+  if (!membership) redirect("/onboarding");
+  const params = await searchParams;
+  const message = params.created === "1"
+    ? "Mensagem simulada guardada."
+    : params.operator === "1"
+      ? "Operator executado. A resposta e eventuais ações foram registadas."
+      : params.error === "message"
+        ? "Escreve uma mensagem válida."
+        : params.error === "simulate"
+          ? "Não foi possível criar a conversa simulada."
+          : params.error === "no_customer_message"
+            ? "Esta conversa não tem uma mensagem de cliente para processar."
+            : params.error === "operator"
+              ? "Não foi possível executar o Operator."
+              : null;
+
+  const { data: conversations, error: conversationsError } = await supabase.from("conversations")
+    .select("id,status,channel,created_at,updated_at,contacts(display_name),messages(body,actor,created_at)")
+    .eq("organization_id", membership.organization_id).order("updated_at", { ascending: false }).limit(100);
+  if (conversationsError) throw new Error("Não foi possível carregar o Inbox.");
+
+  return <main>
+    <AppNav />
+    <header><div className="brand">NOVA IA</div><div className="badge">Live simulator</div></header>
+    <section className="hero"><h1>Inbox</h1><p>Cria leads fictícios, mas guarda conversas reais no tenant. Nenhum canal pago é necessário.</p></section>
+    <form className="card auth-form" aria-labelledby="simulate-heading">
+      <h2 id="simulate-heading">Simular lead</h2><label>Cliente<input name="name" placeholder="Cliente teste" maxLength={120} autoComplete="name" /></label>
+      <label>Mensagem<textarea aria-describedby="message-help" name="body" required rows={3} minLength={2} maxLength={4000} placeholder="Quanto custa o serviço?" /></label><p id="message-help">Entre 2 e 4000 caracteres. Este simulador não envia nada para canais externos.</p>
+      {message ? <p role="status">{message}</p> : null}
+      <button formAction={simulateInbound} type="submit">Simular mensagem recebida</button>
+    </form>
+    <section className="card ledger" aria-labelledby="conversations-heading">
+      <h2 id="conversations-heading">Conversas persistidas</h2>
+      {!conversations?.length && <p className="empty-state">Ainda não existem conversas. Usa o simulador acima para criar a primeira.</p>}
+      {conversations?.map(c => {
+        const msgs = [...(c.messages ?? [])].sort((a,b)=>a.created_at.localeCompare(b.created_at)).slice(-100);
+        const last = msgs.at(-1);
+        const contact = Array.isArray(c.contacts) ? c.contacts[0] : c.contacts;
+        return <div className="row" key={c.id}>
+          <div><strong>{contact?.display_name ?? "Sem nome"}</strong><br/><span>{c.channel}</span></div><div><span>{last?.actor ?? "—"}</span><br/>{last?.body ? (last.body.length > 240 ? last.body.slice(0, 240) + "…" : last.body) : "—"}</div><div><span>Estado</span><br/>{c.status.replaceAll("_", " ")}</div><div><form aria-label={`Operator para ${contact?.display_name ?? "conversa"}`}><input type="hidden" name="conversation_id" value={c.id}/><button formAction={runOperator} disabled={c.status === "closed"} type="submit" aria-label={c.status === "closed" ? "Operator indisponível para conversa fechada" : `Executar Operator para ${contact?.display_name ?? "conversa"}`}>Executar Operator</button></form></div>
+        </div>;
+      })}
+    </section>
+  </main>;
 }
