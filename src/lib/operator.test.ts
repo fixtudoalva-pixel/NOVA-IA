@@ -37,6 +37,12 @@ describe("deterministic operator", () => {
     });
     expect(result.reply).toContain("100 €");
   });
+  it("does not treat a generic hoje statement as booking", () => {
+    expect(runDeterministicOperator({ message: "Hoje estou com um problema.", knowledge: [], autonomy: 2 }).proposedActions).toHaveLength(0);
+  });
+  it("recognizes agendar as booking intent", () => {
+    expect(runDeterministicOperator({ message: "Quero agendar uma visita.", knowledge: [], autonomy: 2 }).proposedActions[0]?.type).toBe("propose_booking");
+  });
   it("routes booking intent through human approval at level 2", () => {
     const result = runDeterministicOperator({ message: "Podemos marcar para amanhã?", knowledge: [], autonomy: 2 });
     expect(result.proposedActions[0]?.type).toBe("propose_booking");
