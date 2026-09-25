@@ -35,8 +35,8 @@ export default async function ActionsPage({ searchParams }: ActionsPageProps) {
         return <div className="row" key={a.id}>
           <div><strong>{a.action_type}</strong><br/><span>{a.rationale}</span></div>
           <div>{a.status} · {a.risk}</div><div>{revenue ? `${formatMoney(revenue)} assistidos · confirmação humana` : "Sem receita confirmada"}</div>
-          <div>{a.status==="approved" && <form><input type="hidden" name="action_id" value={a.id}/><button formAction={executeApprovedAction}>Executar</button></form>}
-          {a.status==="completed" && <form className="inline-form"><input type="hidden" name="action_id" value={a.id}/><input name="amount" aria-label="Valor da venda" type="number" min="0.01" max="100000000" step="0.01" placeholder={orgSettings?.currency ?? "EUR"} defaultValue={revenue ? (revenue/100).toFixed(2) : undefined}/><button formAction={recordSaleOutcome}>{revenue ? "Atualizar venda" : "Registar venda"}</button></form>}</div>
+          <div>{a.status==="approved" && <form><input type="hidden" name="action_id" value={a.id}/><button formAction={executeApprovedAction} aria-label={`Executar ${a.action_type}`}>Executar</button></form>}
+          {a.status==="completed" && <form className="inline-form"><input type="hidden" name="action_id" value={a.id}/><input name="amount" aria-label="Valor da venda" type="number" min="0.01" max="100000000" step="0.01" placeholder={orgSettings?.currency ?? "EUR"} defaultValue={revenue ? (revenue/100).toFixed(2) : undefined}/><button formAction={recordSaleOutcome} aria-label={`${revenue ? "Atualizar" : "Registar"} venda para ${a.action_type}`}>{revenue ? "Atualizar venda" : "Registar venda"}</button></form>}</div>
         </div>;
       })}
     </section>
