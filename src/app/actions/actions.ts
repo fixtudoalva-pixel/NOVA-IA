@@ -29,6 +29,7 @@ export async function recordSaleOutcome(formData: FormData) {
   const { supabase, orgId } = await context();
   const actionId = String(formData.get("action_id") ?? "").trim();
   const rawAmount = String(formData.get("amount") ?? "").trim().replace(",", ".");
+  if (rawAmount.length > 12) redirect("/actions?error=sale");
   if (!/^\d{1,9}(\.\d{1,2})?$/.test(rawAmount)) redirect("/actions?error=sale");
   const amount = Number(rawAmount);
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actionId) || !Number.isFinite(amount) || amount <= 0 || amount > 100000000) redirect("/actions?error=sale");
