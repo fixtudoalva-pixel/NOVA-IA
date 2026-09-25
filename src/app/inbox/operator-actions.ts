@@ -20,7 +20,7 @@ export async function runOperator(formData: FormData) {
   const orgId = membership.organization_id;
   const { data: conversation, error: conversationError } = await supabase
     .from("conversations")
-    .select("id,messages(id,body,actor,created_at)")
+    .select("id,messages(id,body,actor,direction,created_at)")
     .eq("id", conversationId)
     .eq("organization_id", orgId)
     .single();
@@ -28,7 +28,7 @@ export async function runOperator(formData: FormData) {
   if (conversationError || !conversation) redirect("/inbox?error=operator");
 
   const latestCustomer = [...(conversation.messages ?? [])]
-    .filter(m => m.actor === "customer")
+    .filter(m => m.actor === "customer" && m.direction === "inbound")
     .sort((a,b) => b.created_at.localeCompare(a.created_at))[0];
   if (!latestCustomer) redirect("/inbox?error=no_customer_message");
 
