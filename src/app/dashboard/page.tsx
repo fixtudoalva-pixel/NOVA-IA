@@ -30,7 +30,9 @@ export default async function DashboardPage() {
   const orgSettings = Array.isArray(org) ? org[0] : org;
   const assistedFormatted = new Intl.NumberFormat(orgSettings?.locale ?? "pt-PT", { style: "currency", currency: orgSettings?.currency ?? "EUR" }).format(assisted / 100);
   const hasMetricReadFailure = Boolean(actionsError || conversationsError || approvalsError || outcomesError || knowledgeError);
-  const nextStep = (approvals ?? 0) > 0
+  const nextStep = hasMetricReadFailure
+    ? null
+    : (approvals ?? 0) > 0
     ? { href: "/approvals", label: "Rever aprovações pendentes" }
     : (knowledge ?? 0) === 0
       ? { href: "/knowledge", label: "Adicionar conhecimento aprovado" }
@@ -53,7 +55,7 @@ export default async function DashboardPage() {
     <section className="card">
       <h2>Começar a trabalhar</h2>
       <p>Configura conhecimento aprovado, simula uma conversa e acompanha as decisões e resultados do Operator.</p>
-      <p><a href={nextStep.href}>{nextStep.label} →</a></p>
+      {nextStep ? <p><a href={nextStep.href}>{nextStep.label} →</a></p> : <p>O próximo passo fica suspenso até as métricas carregarem corretamente.</p>}
       <div className="auth-actions">
         <a href="/ask">Pergunta à empresa</a>
         <a href="/knowledge">Knowledge</a>
