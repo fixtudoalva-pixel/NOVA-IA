@@ -52,6 +52,7 @@ describe("deterministic operator", () => {
     const r = runDeterministicOperator({ message: "Quanto custa o ecrã?", knowledge: [{ kind: "fact", title: "Ecrã", content: "Trabalhamos com ecrãs." }], autonomy: 2 });
     expect(r.reply).toContain("não tenho um preço aprovado");
   });
+  it("normalizes Knowledge kind casing", () => expect(runDeterministicOperator({ message: "Quanto custa o X?", knowledge: [{ kind: " PRICE ", title: "X", content: "10 €" }], autonomy: 2 }).reply).toContain("10 €"));
   it("prefers price Knowledge over a matching generic fact", () => {
     const r = runDeterministicOperator({ message: "Quanto custa o modelo X?", knowledge: [{ kind: "fact", title: "Modelo X", content: "Existe." }, { kind: "price", title: "Modelo X", content: "Preço aprovado: 100 €." }], autonomy: 2 });
     expect(r.reply).toContain("100 €");
