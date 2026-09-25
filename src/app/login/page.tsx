@@ -31,8 +31,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         <p id="password-help">Mínimo de 8 caracteres. Para produção, evita passwords reutilizadas noutros serviços.</p>
         {message ? <p role="status">{message}</p> : null}
         <div className="auth-actions">
-          <button formAction={login}>Entrar</button>
-          <button className="secondary" formAction={signup}>Criar conta</button>
+          <button formAction={login} type="submit">Entrar</button>
+          <button className="secondary" formAction={signup} type="submit">Criar conta</button>
         </div>
       </form>
     </main>
