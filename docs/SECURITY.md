@@ -21,3 +21,6 @@
 - Do not use SECURITY DEFINER in the exposed public API schema merely to bypass table grants.
 - Re-run Security Advisor after database privilege or RPC changes.
 - Verify RLS with two authenticated tenants before production.
+
+## Migration history note
+The live database migration history is append-only and includes short-lived security experiments followed by explicit rollback migrations. The repository documents the effective final state; historical migration records should not be deleted merely to simplify names.
