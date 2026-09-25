@@ -1,6 +1,7 @@
 import { AppNav } from "@/components/app-nav";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { startOfUtcReportingWeek, sumRevenueMinor } from "@/lib/reporting";
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -20,10 +21,7 @@ export default async function DashboardPage() {
   const orgId = Array.isArray(org) ? org[0]?.id : org?.id;
   if (!orgId) redirect("/onboarding");
   // MVP reporting weeks use UTC Monday boundaries; tenant time zones are not modeled yet.
-  const weekStart = new Date();
-  const day = weekStart.getUTCDay();
-  weekStart.setUTCDate(weekStart.getUTCDate() - ((day + 6) % 7));
-  weekStart.setUTCHours(0, 0, 0, 0);
+  const weekStart = startOfUtcReportingWeek();
   const [{ count: actions, error: actionsError }, { count: conversations, error: conversationsError }, { count: approvals, error: approvalsError }, { data: outcomes, error: outcomesError }, { data: weeklyOutcomes, error: weeklyOutcomesError }, { count: knowledge, error: knowledgeError }] = await Promise.all([
     supabase.from("actions").select("*", { count: "exact", head: true }).eq("organization_id", orgId).in("status", ["proposed","awaiting_approval","approved","executing"]),
     supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
@@ -32,8 +30,8 @@ export default async function DashboardPage() {
     supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId).eq("kind", "sale").eq("attribution", "assisted").gte("created_at", weekStart.toISOString()),
     supabase.from("knowledge_items").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("is_approved", true)
   ]);
-  const assisted = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
-  const weeklyAssisted = weeklyOutcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
+  const assisted = sumRevenueMinor(outcomes);
+  const weeklyAssisted = sumRevenueMinor(weeklyOutcomes);
   const orgSettings = Array.isArray(org) ? org[0] : org;
   const assistedFormatted = new Intl.NumberFormat(orgSettings?.locale ?? "pt-PT", { style: "currency", currency: orgSettings?.currency ?? "EUR" }).format(assisted / 100);
   const weeklyAssistedFormatted = new Intl.NumberFormat(orgSettings?.locale ?? "pt-PT", { style: "currency", currency: orgSettings?.currency ?? "EUR" }).format(weeklyAssisted / 100);
