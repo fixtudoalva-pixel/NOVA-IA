@@ -17,12 +17,13 @@ export default async function DashboardPage() {
 
   const org = membership.organizations;
   const orgId = Array.isArray(org) ? org[0]?.id : org?.id;
+  if (!orgId) redirect("/onboarding");
   const [{ count: actions }, { count: conversations }, { count: approvals }, { data: outcomes }, { count: knowledge }] = await Promise.all([
-    supabase.from("actions").select("*", { count: "exact", head: true }).eq("organization_id", orgId!),
-    supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId!),
-    supabase.from("approvals").select("*", { count: "exact", head: true }).eq("organization_id", orgId!).is("decision", null),
-    supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId!).eq("kind", "sale"),
-    supabase.from("knowledge_items").select("*", { count: "exact", head: true }).eq("organization_id", orgId!).eq("is_approved", true)
+    supabase.from("actions").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+    supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
+    supabase.from("approvals").select("*", { count: "exact", head: true }).eq("organization_id", orgId).is("decision", null),
+    supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId).eq("kind", "sale"),
+    supabase.from("knowledge_items").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("is_approved", true)
   ]);
   const assisted = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
   const hasMetricReadFailure = [actions, conversations, approvals, knowledge].some(value => value === null) || outcomes === null;
