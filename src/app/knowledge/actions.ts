@@ -19,7 +19,7 @@ export async function addKnowledge(formData: FormData) {
   const kind = String(formData.get("kind") ?? "fact");
   const allowedKinds = new Set(["service", "price", "policy", "fact"]);
 
-  if (title.length < 2 || content.length < 2 || !allowedKinds.has(kind)) {
+  if (title.length < 2 || title.length > 160 || content.length < 2 || content.length > 10000 || !allowedKinds.has(kind)) {
     redirect("/knowledge?error=validation");
   }
 
