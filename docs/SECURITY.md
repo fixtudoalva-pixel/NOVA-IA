@@ -41,3 +41,6 @@ The database now derives the MVP Operator approval requirement itself: every pro
 
 ## Conversation lifecycle
 Closed conversations are rejected by both the server action and the database Operator RPC. The UI disables the Operator trigger for closed conversations; the database remains the authoritative enforcement layer.
+
+## MVP Operator approval boundary
+The application may classify action risk for UX, but the database does not trust an application-provided approval flag. commit_operator_decision persists every non-critical MVP Operator side effect as awaiting_approval and creates an approval record. Critical actions are rejected. This is intentionally stricter than the future earned-autonomy model.
