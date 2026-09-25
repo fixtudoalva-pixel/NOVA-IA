@@ -54,3 +54,13 @@ Authenticated organization members may ask questions over tenant-scoped operatio
 
 ### Boundary
 Customer-facing and business-facing retrieval are separate permission contexts. Sharing the same Operator engine must never imply sharing the same data access. Every answer must be grounded in the caller's permitted context; missing evidence produces an explicit uncertainty or escalation, not fabrication.
+
+
+## Pre-production security gate
+Before real customer data or external side effects:
+- authenticated two-tenant RLS isolation test;
+- backend-only/private executor for sensitive operational writes;
+- leaked-password protection reviewed/enabled where available;
+- stable production auth redirect URL verified;
+- full golden-path test from inbound lead through approval, execution, outcome and Ask Your Business;
+- no high/critical dependency audit findings.
