@@ -5,7 +5,9 @@ import { createClient } from "@/lib/supabase/server";
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const tokenHash = searchParams.get("token_hash");
-  const type = searchParams.get("type") as EmailOtpType | null;
+  const rawType = searchParams.get("type");
+  const allowedTypes = new Set<EmailOtpType>(["signup","invite","magiclink","recovery","email_change","email"]);
+  const type = rawType && allowedTypes.has(rawType as EmailOtpType) ? rawType as EmailOtpType : null;
   const next = searchParams.get("next");
   const safeNext = next?.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
 
