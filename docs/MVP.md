@@ -42,3 +42,15 @@ The owner can ask plain-language questions about the business, such as:
 Answers must be grounded only in tenant-scoped data the signed-in user is allowed to access. If the data is missing or ambiguous, the Operator must say so rather than invent an answer.
 
 The assistant may also propose a next action from the answer (for example, preparing follow-up for stale opportunities), but execution remains subject to the same autonomy and approval policy as every other Operator action.
+
+
+## Two question surfaces
+
+### Customer-facing questions
+The Operator may answer customer questions only from approved customer-safe knowledge and customer-scoped records. Internal notes, business metrics, other customers, private policies and operational data must never be exposed.
+
+### Business-facing questions
+Authenticated organization members may ask questions over tenant-scoped operational data according to their role, including pending work, conversations, opportunities, outcomes and assisted revenue.
+
+### Boundary
+Customer-facing and business-facing retrieval are separate permission contexts. Sharing the same Operator engine must never imply sharing the same data access. Every answer must be grounded in the caller's permitted context; missing evidence produces an explicit uncertainty or escalation, not fabrication.
