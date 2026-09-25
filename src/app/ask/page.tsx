@@ -25,7 +25,7 @@ export default async function AskPage({ searchParams }: Props) {
   ]);
 
   const revenue = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
-  const dataWarning = [conversations, waitingHuman, approvals, openActions, approvedKnowledge].some(value => value === null);
+  const dataWarning = [conversations, waitingHuman, approvals, openActions, approvedKnowledge].some(value => value === null) || outcomes === null;
   const answer = question ? answerBusinessQuestion(question, { conversations: conversations ?? 0, waitingHuman: waitingHuman ?? 0, pendingApprovals: approvals ?? 0, openActions: openActions ?? 0, assistedRevenueMinor: revenue, approvedKnowledge: approvedKnowledge ?? 0 }) : null;
 
   return <main>
