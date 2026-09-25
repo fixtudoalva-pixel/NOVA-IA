@@ -10,7 +10,7 @@ export async function createOrganization(formData: FormData) {
   if (!user) redirect("/login");
 
   const name = normalizeSingleLine(formData.get("name"), 120);
-  if (name.length < 2 || name.length > 120 || /[\u0000-\u001F\u007F]/.test(name)) redirect("/onboarding?error=name");
+  if (name.length < 2 || name.length > 120 || hasUnsafeControlChars(name)) redirect("/onboarding?error=name");
 
   const { data: existing, error: membershipError } = await supabase.from("organization_members").select("organization_id").limit(1).maybeSingle();
   if (membershipError) redirect("/onboarding?error=create");
