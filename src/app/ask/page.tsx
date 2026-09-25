@@ -19,7 +19,7 @@ export default async function AskPage({ searchParams }: Props) {
   const rawQuestion = params.q ?? "";
   const question = rawQuestion.trim().slice(0, 500);
   const questionTooLong = rawQuestion.trim().length > 500;
-  const questionHasControls = /[\u0000-\u001F]/.test(rawQuestion);
+  const questionHasControls = /[\u0000-\u001F\u007F]/.test(rawQuestion);
 
   // MVP reporting weeks use UTC Monday boundaries; tenant time zones are not modeled yet.
   const weekStart = new Date();
