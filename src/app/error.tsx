@@ -6,7 +6,7 @@ export default function ErrorPage({ reset }: { error: Error & { digest?: string 
       <section className="card">
         <h1>Algo correu mal</h1>
         <p>Não foi possível concluir este pedido. Os dados não devem ser repetidos às cegas.</p>
-        <button onClick={() => reset()}>Tentar novamente</button>
+        <div className="auth-actions"><button onClick={() => reset()}>Tentar novamente</button><a href="/dashboard">Voltar ao Dashboard</a></div>
       </section>
     </main>
   );
