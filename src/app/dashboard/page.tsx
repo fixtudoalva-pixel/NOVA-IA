@@ -16,9 +16,10 @@ export default async function DashboardPage() {
 
   const org = membership.organizations;
   const orgId = Array.isArray(org) ? org[0]?.id : org?.id;
-  const [{ count: actions }, { count: conversations }, { data: outcomes }] = await Promise.all([
+  const [{ count: actions }, { count: conversations }, { count: approvals }, { data: outcomes }] = await Promise.all([
     supabase.from("actions").select("*", { count: "exact", head: true }).eq("organization_id", orgId!),
     supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId!),
+    supabase.from("approvals").select("*", { count: "exact", head: true }).eq("organization_id", orgId!).is("decision", null),
     supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId!)
   ]);
   const assisted = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
@@ -30,6 +31,7 @@ export default async function DashboardPage() {
       <article className="card"><span>Receita assistida</span><strong>€{(assisted/100).toFixed(2)}</strong><p>Somatório dos outcomes registados.</p></article>
       <article className="card"><span>Ações</span><strong>{actions ?? 0}</strong><p>Ações visíveis apenas nesta organização.</p></article>
       <article className="card"><span>Conversas</span><strong>{conversations ?? 0}</strong><p>Inbox persistida e isolada por tenant.</p></article>
+      <article className="card"><span>Aprovações pendentes</span><strong>{approvals ?? 0}</strong><p>Decisões que continuam sob controlo humano.</p></article>
     </section>
     <section className="card">
       <h2>Começar a trabalhar</h2>
@@ -37,6 +39,7 @@ export default async function DashboardPage() {
       <div className="auth-actions">
         <a href="/knowledge">Knowledge</a>
         <a href="/inbox">Inbox</a>
+        <a href="/approvals">Aprovações</a>
         <a href="/actions">Action Ledger</a>
       </div>
     </section>
