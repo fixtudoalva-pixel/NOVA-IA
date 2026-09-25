@@ -25,7 +25,7 @@ export default async function DashboardPage() {
     supabase.from("knowledge_items").select("*", { count: "exact", head: true }).eq("organization_id", orgId!).eq("is_approved", true)
   ]);
   const assisted = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
-  const hasMetricReadFailure = [actions, conversations, approvals, knowledge].some(value => value === null);
+  const hasMetricReadFailure = [actions, conversations, approvals, knowledge].some(value => value === null) || outcomes === null;
   const nextStep = (approvals ?? 0) > 0
     ? { href: "/approvals", label: "Rever aprovações pendentes" }
     : (knowledge ?? 0) === 0
