@@ -39,7 +39,7 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
     <section className="hero"><h1>Inbox</h1><p>Cria leads fictícios, mas guarda conversas reais no tenant. Nenhum canal pago é necessário.</p></section>
     <form className="card auth-form" aria-labelledby="simulate-heading">
       <h2 id="simulate-heading">Simular lead</h2><label>Cliente<input name="name" placeholder="Cliente teste" maxLength={120} autoComplete="name" /></label>
-      <label>Mensagem<textarea name="body" required rows={3} minLength={2} maxLength={4000} placeholder="Quanto custa o serviço?" /></label>
+      <label>Mensagem<textarea aria-describedby="message-help" name="body" required rows={3} minLength={2} maxLength={4000} placeholder="Quanto custa o serviço?" /></label><p id="message-help">Entre 2 e 4000 caracteres. Este simulador não envia nada para canais externos.</p>
       {message ? <p role="status">{message}</p> : null}
       <button formAction={simulateInbound} type="submit">Simular mensagem recebida</button>
     </form>
