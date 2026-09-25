@@ -18,7 +18,7 @@ export default async function ApprovalsPage({ searchParams }: ApprovalsPageProps
     : params.error === "decision" ? "Não foi possível registar a decisão." : null;
   const { data: approvals, error: approvalsError } = await supabase.from("approvals")
     .select("id,decision,created_at,actions(id,action_type,risk,rationale,status)")
-    .eq("organization_id", membership.organization_id).is("decision", null).order("created_at", { ascending: false });
+    .eq("organization_id", membership.organization_id).is("decision", null).order("created_at", { ascending: false }).limit(100);
 
   if (approvalsError) throw new Error("Não foi possível carregar as aprovações.");
 
