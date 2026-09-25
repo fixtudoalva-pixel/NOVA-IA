@@ -55,7 +55,7 @@ export default async function DashboardPage() {
     {hasMetricReadFailure && <p role="alert">Algumas métricas não puderam ser carregadas. Atualiza a página antes de tomar decisões com estes números.</p>}
     <section className="grid" aria-label="Métricas da organização">
       <article className="card"><span>Receita assistida</span><strong>{hasMetricReadFailure ? "—" : assistedFormatted}</strong><p>Somatório apenas de vendas registadas como receita assistida.</p></article>
-      <article className="card"><span>Receita esta semana</span><strong>{hasMetricReadFailure ? "—" : weeklyAssistedFormatted}</strong><p>Vendas assistidas registadas desde segunda-feira.</p></article>
+      <article className="card"><span>Receita esta semana</span><strong>{hasMetricReadFailure ? "—" : weeklyAssistedFormatted}</strong><p>Vendas assistidas registadas desde segunda-feira 00:00 UTC.</p></article>
       <article className="card"><span>Ações abertas</span><strong>{hasMetricReadFailure ? "—" : actions ?? 0}</strong><p>Ações ainda não concluídas visíveis apenas nesta organização.</p></article>
       <article className="card"><span>Conversas</span><strong>{hasMetricReadFailure ? "—" : conversations ?? 0}</strong><p>Inbox persistida e isolada por tenant.</p></article>
       <article className="card"><span>Aprovações pendentes</span><strong>{hasMetricReadFailure ? "—" : approvals ?? 0}</strong><p>Decisões que continuam sob controlo humano.</p></article>
