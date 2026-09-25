@@ -64,3 +64,10 @@ Before real customer data or external side effects:
 - stable production auth redirect URL verified;
 - full golden-path test from inbound lead through approval, execution, outcome and Ask Your Business;
 - no high/critical dependency audit findings.
+
+
+## Reporting semantics
+- Revenue shown by the MVP is assisted attribution only, based on human-confirmed sale outcomes.
+- Weekly reporting currently uses Monday 00:00 UTC as the boundary.
+- Profit, margin, tax, cash collected and causal incremental revenue are not inferred from assisted revenue.
+- Ask Your Business must decline unsupported financial questions rather than relabel available revenue.
