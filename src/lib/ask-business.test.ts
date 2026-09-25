@@ -11,6 +11,7 @@ describe("Ask Your Business", () => {
   it("does not treat the adjective aprovado as an approval queue", () => expect(answerBusinessQuestion("O preço está aprovado?", data).href).toBe("/knowledge"));
   it("does not confuse approved knowledge with pending approvals", () => expect(answerBusinessQuestion("Tenho conhecimento aprovado?", data).href).toBe("/knowledge"));
   it("routes customer waiting questions to inbox", () => expect(answerBusinessQuestion("Tenho clientes à espera?", data).href).toBe("/inbox"));
+  it("recognizes contactos wording", () => expect(answerBusinessQuestion("Quantos contactos tenho?", data).text).toContain("4"));
   it("does not treat every customer question as waiting-human", () => expect(answerBusinessQuestion("O que aconteceu com o cliente João?", data).text).toContain("não consigo responder"));
   it("recognizes reply-needed customer wording", () => expect(answerBusinessQuestion("Que clientes tenho para responder?", data).href).toBe("/inbox"));
   it("does not map pending opportunities to generic actions", () => expect(answerBusinessQuestion("Que oportunidades tenho pendentes?", data).text).toContain("não consigo responder"));
