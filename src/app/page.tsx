@@ -18,6 +18,7 @@ export default function Home() {
           usa conhecimento aprovado, executa ações dentro de limites e liga cada
           decisão a resultados auditáveis.
         </p>
+        <a href="/inbox">Experimentar simulador de inbox →</a>
       </section>
       <section className="grid">
         <article className="card"><span>Receita assistida hoje</span><strong>€238</strong><p>Valor demonstrativo atribuído a ações registadas.</p></article>
