@@ -1,0 +1,30 @@
+# MVP v0
+
+## Demo objective
+A business owner can create an organization, add business knowledge and policies, receive a simulated lead, let an AI operator handle the case, approve a sensitive action, and see the resulting commercial outcome in an Action Ledger.
+
+## Golden-path scenario
+1. New lead asks about a service.
+2. Operator retrieves approved company knowledge.
+3. Operator asks only necessary qualification questions.
+4. Operator identifies an opportunity and creates a goal/task.
+5. Low-risk communication can be proposed or executed according to autonomy.
+6. A discount or exceptional commitment triggers approval.
+7. Customer accepts and a simulated booking/sale is recorded.
+8. Dashboard shows action history, AI cost, assisted revenue and attribution basis.
+
+## Not in v0
+- Paid WhatsApp integration
+- Phone/voice agent
+- Autonomous payments
+- Bulk cold outreach
+- Complex CRM replacement
+- Custom model training
+- Native mobile apps
+
+## Success criteria
+- Complete demo can be understood in under 3 minutes.
+- Every AI action is explainable through source context, policy and ledger.
+- Tenant isolation tests pass.
+- No paid external channel is required.
+- AI/provider can be replaced without changing the domain model.
