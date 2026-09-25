@@ -66,6 +66,12 @@ describe("operator escalation consistency", () => {
 });
 
 describe("operator safety edge cases", () => {
+  it("bounds the number of knowledge items echoed in a reply", () => {
+    const knowledge = Array.from({ length: 10 }, (_, i) => ({ kind: "fact", title: "Ajuda " + i, content: "ajuda detalhe " + i }));
+    const decision = runDeterministicOperator({ message: "Preciso de ajuda", knowledge, autonomy: 2 });
+    expect(decision.reply).toContain("Ajuda 0");
+    expect(decision.reply).not.toContain("Ajuda 9");
+  });
   it("ignores knowledge beyond the bounded context window", () => {
     const knowledge = Array.from({ length: 201 }, (_, i) => ({ kind: "fact", title: `Item ${i}`, content: i === 200 ? "segredoespecial" : "irrelevante" }));
     const decision = runDeterministicOperator({ message: "segredoespecial", knowledge, autonomy: 2 });
