@@ -17,4 +17,9 @@ describe("Ask Your Business", () => {
   it("does not invent revenue for unsupported questions", () => expect(answerBusinessQuestion("Diz-me o lucro líquido", data).text).toContain("não consigo responder"));
   it("labels assisted revenue as non-causal", () => expect(answerBusinessQuestion("Quanto vendi?", data).text).toContain("não prova causalidade"));
   it("formats revenue with tenant currency", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, locale: "en-US", currency: "USD" }).text).toContain("$123.45"));
+  it("formats default revenue as Portuguese EUR", () => {
+    const text = answerBusinessQuestion("Quanto vendi?", data).text;
+    expect(text).toContain("123,45");
+    expect(text).toContain("€");
+  });
 });
