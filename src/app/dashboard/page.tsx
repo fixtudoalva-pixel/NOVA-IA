@@ -25,6 +25,7 @@ export default async function DashboardPage() {
     supabase.from("knowledge_items").select("*", { count: "exact", head: true }).eq("organization_id", orgId!).eq("is_approved", true)
   ]);
   const assisted = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
+  const hasMetricReadFailure = [actions, conversations, approvals, knowledge].some(value => value === null);
   const nextStep = (approvals ?? 0) > 0
     ? { href: "/approvals", label: "Rever aprovações pendentes" }
     : (knowledge ?? 0) === 0
@@ -37,6 +38,7 @@ export default async function DashboardPage() {
     <AppNav />
     <header><div className="brand">NOVA IA</div><div className="badge">{membership.role}</div></header>
     <section className="hero"><h1>{Array.isArray(org) ? org[0]?.name : org?.name}</h1><p>Dados reais da organização autenticada.</p></section>
+    {hasMetricReadFailure && <p role="alert">Algumas métricas não puderam ser carregadas. Atualiza a página antes de tomar decisões com estes números.</p>}
     <section className="grid">
       <article className="card"><span>Receita assistida</span><strong>€{(assisted/100).toFixed(2)}</strong><p>Somatório dos outcomes registados.</p></article>
       <article className="card"><span>Ações</span><strong>{actions ?? 0}</strong><p>Ações visíveis apenas nesta organização.</p></article>
