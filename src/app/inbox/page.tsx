@@ -30,7 +30,7 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
 
   const { data: conversations, error: conversationsError } = await supabase.from("conversations")
     .select("id,status,channel,created_at,updated_at,contacts(display_name),messages(body,actor,created_at)")
-    .eq("organization_id", membership.organization_id).order("updated_at", { ascending: false });
+    .eq("organization_id", membership.organization_id).order("updated_at", { ascending: false }).limit(100);
   if (conversationsError) throw new Error("Não foi possível carregar o Inbox.");
 
   return <main>
