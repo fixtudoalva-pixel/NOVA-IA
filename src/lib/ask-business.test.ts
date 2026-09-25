@@ -7,6 +7,7 @@ describe("Ask Your Business", () => {
   it("answers revenue from supplied data", () => expect(answerBusinessQuestion("Quanto vendi?", data).text).toContain("123,45"));
   it("answers approvals from supplied data", () => expect(answerBusinessQuestion("Tenho aprovações?", data).text).toContain("1"));
   it("routes pending work to approvals", () => expect(answerBusinessQuestion("O que tenho para fazer hoje?", data).href).toBe("/approvals"));
+  it("recognizes serviços as Knowledge wording", () => expect(answerBusinessQuestion("Quantos serviços tenho registados?", data).href).toBe("/knowledge"));
   it("answers approved knowledge count", () => expect(answerBusinessQuestion("Quanto conhecimento aprovado tenho?", data).text).toContain("5"));
   it("does not treat the adjective aprovado as an approval queue", () => expect(answerBusinessQuestion("O preço está aprovado?", data).href).toBe("/knowledge"));
   it("does not confuse approved knowledge with pending approvals", () => expect(answerBusinessQuestion("Tenho conhecimento aprovado?", data).href).toBe("/knowledge"));
