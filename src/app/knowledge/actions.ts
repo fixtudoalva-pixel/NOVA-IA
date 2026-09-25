@@ -7,7 +7,8 @@ async function currentOrg() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-  const { data } = await supabase.from("organization_members").select("organization_id").limit(1).single();
+  const { data, error } = await supabase.from("organization_members").select("organization_id").limit(1).maybeSingle();
+  if (error) throw new Error("Não foi possível carregar a organização.");
   if (!data) redirect("/onboarding");
   return { supabase, organizationId: data.organization_id };
 }
