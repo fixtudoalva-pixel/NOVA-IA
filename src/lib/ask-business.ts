@@ -22,7 +22,7 @@ export function answerBusinessQuestion(question: string, data: BusinessSnapshot)
   if (/conhecimento|knowledge|factos|preços/.test(q)) return { text: "Itens de conhecimento aprovados: " + data.approvedKnowledge + ".", href: "/knowledge", label: "Ver Knowledge" };
   if (/aprova|autoriza/.test(q)) return { text: "Aprovações pendentes: " + data.pendingApprovals + ".", href: "/approvals", label: "Ver aprovações" };
   if (/(cliente|clientes|conversa|conversas).*(espera|responder|resposta)|(espera|responder|resposta).*(cliente|clientes|conversa|conversas)/.test(q)) return { text: "Conversas à espera de intervenção humana: " + data.waitingHuman + ".", href: "/inbox", label: "Abrir Inbox" };
-  if (/ação|acoes|ações|pendente|fazer hoje|taref/.test(q)) return { text: "Ações ainda não concluídas: " + data.openActions + ". Aprovações pendentes: " + data.pendingApprovals + ".", href: data.pendingApprovals ? "/approvals" : "/actions", label: "Ver trabalho" };
+  if (/ação|acoes|ações|fazer hoje|taref|trabalho/.test(q)) return { text: "Ações ainda não concluídas: " + data.openActions + ". Aprovações pendentes: " + data.pendingApprovals + ".", href: data.pendingApprovals ? "/approvals" : "/actions", label: "Ver trabalho" };
   if (/conversa|lead|contact/.test(q)) return { text: "Conversas registadas: " + data.conversations + ".", href: "/inbox", label: "Ver conversas" };
   return { text: "Ainda não consigo responder com segurança a essa pergunta usando apenas os dados disponíveis." };
 }
