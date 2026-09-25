@@ -57,6 +57,11 @@ describe("operator escalation consistency", () => {
 });
 
 describe("operator safety edge cases", () => {
+  it("ignores knowledge beyond the bounded context window", () => {
+    const knowledge = Array.from({ length: 201 }, (_, i) => ({ kind: "fact", title: `Item ${i}`, content: i === 200 ? "segredoespecial" : "irrelevante" }));
+    const decision = runDeterministicOperator({ message: "segredoespecial", knowledge, autonomy: 2 });
+    expect(decision.reply).not.toContain("segredoespecial");
+  });
   it("handles whitespace-only input without creating an action", () => {
     const decision = runDeterministicOperator({ message: "   ", knowledge: [], autonomy: 2 });
     expect(decision.proposedActions).toHaveLength(0);
