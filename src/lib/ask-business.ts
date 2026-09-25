@@ -18,7 +18,7 @@ export function answerBusinessQuestion(question: string, data: BusinessSnapshot)
   if (q.length > 500) return { text: "A pergunta excede o limite de 500 caracteres." };
   if (!q) return { text: "Escreve uma pergunta sobre a operação da empresa." };
   if (q.length < 2) return { text: "Escreve uma pergunta mais completa sobre a operação da empresa." };
-  if (/receita|vendi|vendas|faturei|faturação|faturacao/.test(q) && !/lucro|margem|líquido|liquido/.test(q)) {
+  if (/receita|vendi|vendas|faturei|faturação|faturacao/.test(q) && !/lucro|margem|líquido|liquido|imposto|iva|recebi|cobrei/.test(q)) {
     const weekly = /semana|semanal/.test(q);
     const minor = weekly ? (data.weeklyAssistedRevenueMinor ?? 0) : data.assistedRevenueMinor;
     const amount = new Intl.NumberFormat(data.locale ?? "pt-PT", { style: "currency", currency: data.currency ?? "EUR" }).format(minor / 100);
