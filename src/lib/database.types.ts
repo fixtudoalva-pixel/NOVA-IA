@@ -1,1 +1,724 @@
-{"types":"export type Json =\n  | string\n  | number\n  | boolean\n  | null\n  | { [key: string]: Json | undefined }\n  | Json[]\n\nexport type Database = {\n  // Allows to automatically instantiate createClient with right options\n  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)\n  __InternalSupabase: {\n    PostgrestVersion: \"14.5\"\n  }\n  public: {\n    Tables: {\n      actions: {\n        Row: {\n          action_type: string\n          ai_cost_minor: number\n          completed_at: string | null\n          contact_id: string | null\n          conversation_id: string | null\n          created_at: string\n          goal_id: string | null\n          id: string\n          input: Json\n          organization_id: string\n          output: Json | null\n          rationale: string | null\n          risk: string\n          status: Database[\"public\"][\"Enums\"][\"action_status\"]\n        }\n        Insert: {\n          action_type: string\n          ai_cost_minor?: number\n          completed_at?: string | null\n          contact_id?: string | null\n          conversation_id?: string | null\n          created_at?: string\n          goal_id?: string | null\n          id?: string\n          input?: Json\n          organization_id: string\n          output?: Json | null\n          rationale?: string | null\n          risk?: string\n          status?: Database[\"public\"][\"Enums\"][\"action_status\"]\n        }\n        Update: {\n          action_type?: string\n          ai_cost_minor?: number\n          completed_at?: string | null\n          contact_id?: string | null\n          conversation_id?: string | null\n          created_at?: string\n          goal_id?: string | null\n          id?: string\n          input?: Json\n          organization_id?: string\n          output?: Json | null\n          rationale?: string | null\n          risk?: string\n          status?: Database[\"public\"][\"Enums\"][\"action_status\"]\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"actions_contact_id_fkey\"\n            columns: [\"contact_id\"]\n            isOneToOne: false\n            referencedRelation: \"contacts\"\n            referencedColumns: [\"id\"]\n          },\n          {\n            foreignKeyName: \"actions_conversation_id_fkey\"\n            columns: [\"conversation_id\"]\n            isOneToOne: false\n            referencedRelation: \"conversations\"\n            referencedColumns: [\"id\"]\n          },\n          {\n            foreignKeyName: \"actions_goal_id_fkey\"\n            columns: [\"goal_id\"]\n            isOneToOne: false\n            referencedRelation: \"goals\"\n            referencedColumns: [\"id\"]\n          },\n          {\n            foreignKeyName: \"actions_organization_id_fkey\"\n            columns: [\"organization_id\"]\n            isOneToOne: false\n            referencedRelation: \"organizations\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      agent_runs: {\n        Row: {\n          completed_at: string | null\n          completion_tokens: number\n          conversation_id: string | null\n          cost_minor: number\n          created_at: string\n          goal_id: string | null\n          id: string\n          input: Json\n          model_name: string | null\n          model_provider: string | null\n          organization_id: string\n          output: Json | null\n          prompt_tokens: number\n          started_at: string | null\n          status: string\n        }\n        Insert: {\n          completed_at?: string | null\n          completion_tokens?: number\n          conversation_id?: string | null\n          cost_minor?: number\n          created_at?: string\n          goal_id?: string | null\n          id?: string\n          input?: Json\n          model_name?: string | null\n          model_provider?: string | null\n          organization_id: string\n          output?: Json | null\n          prompt_tokens?: number\n          started_at?: string | null\n          status?: string\n        }\n        Update: {\n          completed_at?: string | null\n          completion_tokens?: number\n          conversation_id?: string | null\n          cost_minor?: number\n          created_at?: string\n          goal_id?: string | null\n          id?: string\n          input?: Json\n          model_name?: string | null\n          model_provider?: string | null\n          organization_id?: string\n          output?: Json | null\n          prompt_tokens?: number\n          started_at?: string | null\n          status?: string\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"agent_runs_conversation_id_fkey\"\n            columns: [\"conversation_id\"]\n            isOneToOne: false\n            referencedRelation: \"conversations\"\n            referencedColumns: [\"id\"]\n          },\n          {\n            foreignKeyName: \"agent_runs_goal_id_fkey\"\n            columns: [\"goal_id\"]\n            isOneToOne: false\n            referencedRelation: \"goals\"\n            referencedColumns: [\"id\"]\n          },\n          {\n            foreignKeyName: \"agent_runs_organization_id_fkey\"\n            columns: [\"organization_id\"]\n            isOneToOne: false\n            referencedRelation: \"organizations\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      approvals: {\n        Row: {\n          action_id: string\n          created_at: string\n          decided_at: string | null\n          decided_by: string | null\n          decision: string | null\n          id: string\n          organization_id: string\n          reason: string | null\n          requested_by: string\n        }\n        Insert: {\n          action_id: string\n          created_at?: string\n          decided_at?: string | null\n          decided_by?: string | null\n          decision?: string | null\n          id?: string\n          organization_id: string\n          reason?: string | null\n          requested_by?: string\n        }\n        Update: {\n          action_id?: string\n          created_at?: string\n          decided_at?: string | null\n          decided_by?: string | null\n          decision?: string | null\n          id?: string\n          organization_id?: string\n          reason?: string | null\n          requested_by?: string\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"approvals_action_id_fkey\"\n            columns: [\"action_id\"]\n            isOneToOne: false\n            referencedRelation: \"actions\"\n            referencedColumns: [\"id\"]\n          },\n          {\n            foreignKeyName: \"approvals_organization_id_fkey\"\n            columns: [\"organization_id\"]\n            isOneToOne: false\n            referencedRelation: \"organizations\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      contacts: {\n        Row: {\n          created_at: string\n          display_name: string | null\n          email: string | null\n          id: string\n          organization_id: string\n          phone: string | null\n        }\n        Insert: {\n          created_at?: string\n          display_name?: string | null\n          email?: string | null\n          id?: string\n          organization_id: string\n          phone?: string | null\n        }\n        Update: {\n          created_at?: string\n          display_name?: string | null\n          email?: string | null\n          id?: string\n          organization_id?: string\n          phone?: string | null\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"contacts_organization_id_fkey\"\n            columns: [\"organization_id\"]\n            isOneToOne: false\n            referencedRelation: \"organizations\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      conversations: {\n        Row: {\n          assigned_to: string\n          channel: string\n          contact_id: string | null\n          created_at: string\n          id: string\n          organization_id: string\n          status: Database[\"public\"][\"Enums\"][\"conversation_status\"]\n          updated_at: string\n        }\n        Insert: {\n          assigned_to?: string\n          channel?: string\n          contact_id?: string | null\n          created_at?: string\n          id?: string\n          organization_id: string\n          status?: Database[\"public\"][\"Enums\"][\"conversation_status\"]\n          updated_at?: string\n        }\n        Update: {\n          assigned_to?: string\n          channel?: string\n          contact_id?: string | null\n          created_at?: string\n          id?: string\n          organization_id?: string\n          status?: Database[\"public\"][\"Enums\"][\"conversation_status\"]\n          updated_at?: string\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"conversations_contact_id_fkey\"\n            columns: [\"contact_id\"]\n            isOneToOne: false\n            referencedRelation: \"contacts\"\n            referencedColumns: [\"id\"]\n          },\n          {\n            foreignKeyName: \"conversations_organization_id_fkey\"\n            columns: [\"organization_id\"]\n            isOneToOne: false\n            referencedRelation: \"organizations\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      goals: {\n        Row: {\n          created_at: string\n          description: string | null\n          id: string\n          organization_id: string\n          status: string\n          title: string\n        }\n        Insert: {\n          created_at?: string\n          description?: string | null\n          id?: string\n          organization_id: string\n          status?: string\n          title: string\n        }\n        Update: {\n          created_at?: string\n          description?: string | null\n          id?: string\n          organization_id?: string\n          status?: string\n          title?: string\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"goals_organization_id_fkey\"\n            columns: [\"organization_id\"]\n            isOneToOne: false\n            referencedRelation: \"organizations\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      knowledge_items: {\n        Row: {\n          content: string\n          created_at: string\n          id: string\n          is_approved: boolean\n          kind: string\n          organization_id: string\n          source: string | null\n          title: string\n          updated_at: string\n        }\n        Insert: {\n          content: string\n          created_at?: string\n          id?: string\n          is_approved?: boolean\n          kind?: string\n          organization_id: string\n          source?: string | null\n          title: string\n          updated_at?: string\n        }\n        Update: {\n          content?: string\n          created_at?: string\n          id?: string\n          is_approved?: boolean\n          kind?: string\n          organization_id?: string\n          source?: string | null\n          title?: string\n          updated_at?: string\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"knowledge_items_organization_id_fkey\"\n            columns: [\"organization_id\"]\n            isOneToOne: false\n            referencedRelation: \"organizations\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      messages: {\n        Row: {\n          actor: Database[\"public\"][\"Enums\"][\"message_actor\"]\n          body: string\n          conversation_id: string\n          created_at: string\n          direction: Database[\"public\"][\"Enums\"][\"message_direction\"]\n          id: string\n          metadata: Json\n          organization_id: string\n        }\n        Insert: {\n          actor: Database[\"public\"][\"Enums\"][\"message_actor\"]\n          body: string\n          conversation_id: string\n          created_at?: string\n          direction: Database[\"public\"][\"Enums\"][\"message_direction\"]\n          id?: string\n          metadata?: Json\n          organization_id: string\n        }\n        Update: {\n          actor?: Database[\"public\"][\"Enums\"][\"message_actor\"]\n          body?: string\n          conversation_id?: string\n          created_at?: string\n          direction?: Database[\"public\"][\"Enums\"][\"message_direction\"]\n          id?: string\n          metadata?: Json\n          organization_id?: string\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"messages_conversation_id_fkey\"\n            columns: [\"conversation_id\"]\n            isOneToOne: false\n            referencedRelation: \"conversations\"\n            referencedColumns: [\"id\"]\n          },\n          {\n            foreignKeyName: \"messages_organization_id_fkey\"\n            columns: [\"organization_id\"]\n            isOneToOne: false\n            referencedRelation: \"organizations\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      organization_members: {\n        Row: {\n          created_at: string\n          organization_id: string\n          role: Database[\"public\"][\"Enums\"][\"member_role\"]\n          user_id: string\n        }\n        Insert: {\n          created_at?: string\n          organization_id: string\n          role?: Database[\"public\"][\"Enums\"][\"member_role\"]\n          user_id: string\n        }\n        Update: {\n          created_at?: string\n          organization_id?: string\n          role?: Database[\"public\"][\"Enums\"][\"member_role\"]\n          user_id?: string\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"organization_members_organization_id_fkey\"\n            columns: [\"organization_id\"]\n            isOneToOne: false\n            referencedRelation: \"organizations\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n      organizations: {\n        Row: {\n          created_at: string\n          currency: string\n          id: string\n          locale: string\n          name: string\n        }\n        Insert: {\n          created_at?: string\n          currency?: string\n          id?: string\n          locale?: string\n          name: string\n        }\n        Update: {\n          created_at?: string\n          currency?: string\n          id?: string\n          locale?: string\n          name?: string\n        }\n        Relationships: []\n      }\n      outcomes: {\n        Row: {\n          action_id: string | null\n          attribution: string\n          created_at: string\n          evidence: Json\n          id: string\n          kind: Database[\"public\"][\"Enums\"][\"outcome_kind\"]\n          organization_id: string\n          revenue_minor: number | null\n        }\n        Insert: {\n          action_id?: string | null\n          attribution?: string\n          created_at?: string\n          evidence?: Json\n          id?: string\n          kind?: Database[\"public\"][\"Enums\"][\"outcome_kind\"]\n          organization_id: string\n          revenue_minor?: number | null\n        }\n        Update: {\n          action_id?: string | null\n          attribution?: string\n          created_at?: string\n          evidence?: Json\n          id?: string\n          kind?: Database[\"public\"][\"Enums\"][\"outcome_kind\"]\n          organization_id?: string\n          revenue_minor?: number | null\n        }\n        Relationships: [\n          {\n            foreignKeyName: \"outcomes_action_id_fkey\"\n            columns: [\"action_id\"]\n            isOneToOne: false\n            referencedRelation: \"actions\"\n            referencedColumns: [\"id\"]\n          },\n          {\n            foreignKeyName: \"outcomes_organization_id_fkey\"\n            columns: [\"organization_id\"]\n            isOneToOne: false\n            referencedRelation: \"organizations\"\n            referencedColumns: [\"id\"]\n          },\n        ]\n      }\n    }\n    Views: {\n      [_ in never]: never\n    }\n    Functions: {\n      create_organization: {\n        Args: {\n          organization_currency?: string\n          organization_locale?: string\n          organization_name: string\n        }\n        Returns: string\n      }\n      decide_approval: {\n        Args: { p_action_id: string; p_approval_id: string; p_decision: string }\n        Returns: undefined\n      }\n      execute_approved_action: {\n        Args: { p_action_id: string }\n        Returns: undefined\n      }\n      is_org_member: { Args: { org_id: string }; Returns: boolean }\n    }\n    Enums: {\n      action_status:\n        | \"proposed\"\n        | \"awaiting_approval\"\n        | \"approved\"\n        | \"executing\"\n        | \"completed\"\n        | \"failed\"\n        | \"cancelled\"\n      conversation_status:\n        | \"open\"\n        | \"waiting_customer\"\n        | \"waiting_human\"\n        | \"closed\"\n      member_role: \"owner\" | \"admin\" | \"operator\" | \"viewer\"\n      message_actor: \"customer\" | \"human\" | \"agent\" | \"system\"\n      message_direction: \"inbound\" | \"outbound\" | \"internal\"\n      outcome_kind: \"unknown\" | \"reply\" | \"booking\" | \"sale\" | \"lost\" | \"other\"\n    }\n    CompositeTypes: {\n      [_ in never]: never\n    }\n  }\n}\n\ntype DatabaseWithoutInternals = Omit<Database, \"__InternalSupabase\">\n\ntype DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, \"public\">]\n\nexport type Tables<\n  DefaultSchemaTableNameOrOptions extends\n    | keyof (DefaultSchema[\"Tables\"] & DefaultSchema[\"Views\"])\n    | { schema: keyof DatabaseWithoutInternals },\n  TableName extends (DefaultSchemaTableNameOrOptions extends {\n    schema: keyof DatabaseWithoutInternals\n  }\n    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"] &\n        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Views\"])\n    : never) = never,\n> = DefaultSchemaTableNameOrOptions extends {\n  schema: keyof DatabaseWithoutInternals\n}\n  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"] &\n      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Views\"])[TableName] extends {\n      Row: infer R\n    }\n    ? R\n    : never\n  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema[\"Tables\"] &\n        DefaultSchema[\"Views\"])\n    ? (DefaultSchema[\"Tables\"] &\n        DefaultSchema[\"Views\"])[DefaultSchemaTableNameOrOptions] extends {\n        Row: infer R\n      }\n      ? R\n      : never\n    : never\n\nexport type TablesInsert<\n  DefaultSchemaTableNameOrOptions extends\n    | keyof DefaultSchema[\"Tables\"]\n    | { schema: keyof DatabaseWithoutInternals },\n  TableName extends (DefaultSchemaTableNameOrOptions extends {\n    schema: keyof DatabaseWithoutInternals\n  }\n    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"]\n    : never) = never,\n> = DefaultSchemaTableNameOrOptions extends {\n  schema: keyof DatabaseWithoutInternals\n}\n  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"][TableName] extends {\n      Insert: infer I\n    }\n    ? I\n    : never\n  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema[\"Tables\"]\n    ? DefaultSchema[\"Tables\"][DefaultSchemaTableNameOrOptions] extends {\n        Insert: infer I\n      }\n      ? I\n      : never\n    : never\n\nexport type TablesUpdate<\n  DefaultSchemaTableNameOrOptions extends\n    | keyof DefaultSchema[\"Tables\"]\n    | { schema: keyof DatabaseWithoutInternals },\n  TableName extends (DefaultSchemaTableNameOrOptions extends {\n    schema: keyof DatabaseWithoutInternals\n  }\n    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"]\n    : never) = never,\n> = DefaultSchemaTableNameOrOptions extends {\n  schema: keyof DatabaseWithoutInternals\n}\n  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions[\"schema\"]][\"Tables\"][TableName] extends {\n      Update: infer U\n    }\n    ? U\n    : never\n  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema[\"Tables\"]\n    ? DefaultSchema[\"Tables\"][DefaultSchemaTableNameOrOptions] extends {\n        Update: infer U\n      }\n      ? U\n      : never\n    : never\n\nexport type Enums<\n  DefaultSchemaEnumNameOrOptions extends\n    | keyof DefaultSchema[\"Enums\"]\n    | { schema: keyof DatabaseWithoutInternals },\n  EnumName extends (DefaultSchemaEnumNameOrOptions extends {\n    schema: keyof DatabaseWithoutInternals\n  }\n    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions[\"schema\"]][\"Enums\"]\n    : never) = never,\n> = DefaultSchemaEnumNameOrOptions extends {\n  schema: keyof DatabaseWithoutInternals\n}\n  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions[\"schema\"]][\"Enums\"][EnumName]\n  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema[\"Enums\"]\n    ? DefaultSchema[\"Enums\"][DefaultSchemaEnumNameOrOptions]\n    : never\n\nexport type CompositeTypes<\n  PublicCompositeTypeNameOrOptions extends\n    | keyof DefaultSchema[\"CompositeTypes\"]\n    | { schema: keyof DatabaseWithoutInternals },\n  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {\n    schema: keyof DatabaseWithoutInternals\n  }\n    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions[\"schema\"]][\"CompositeTypes\"]\n    : never) = never,\n> = PublicCompositeTypeNameOrOptions extends {\n  schema: keyof DatabaseWithoutInternals\n}\n  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions[\"schema\"]][\"CompositeTypes\"][CompositeTypeName]\n  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema[\"CompositeTypes\"]\n    ? DefaultSchema[\"CompositeTypes\"][PublicCompositeTypeNameOrOptions]\n    : never\n\nexport const Constants = {\n  public: {\n    Enums: {\n      action_status: [\n        \"proposed\",\n        \"awaiting_approval\",\n        \"approved\",\n        \"executing\",\n        \"completed\",\n        \"failed\",\n        \"cancelled\",\n      ],\n      conversation_status: [\n        \"open\",\n        \"waiting_customer\",\n        \"waiting_human\",\n        \"closed\",\n      ],\n      member_role: [\"owner\", \"admin\", \"operator\", \"viewer\"],\n      message_actor: [\"customer\", \"human\", \"agent\", \"system\"],\n      message_direction: [\"inbound\", \"outbound\", \"internal\"],\n      outcome_kind: [\"unknown\", \"reply\", \"booking\", \"sale\", \"lost\", \"other\"],\n    },\n  },\n} as const\n"}
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
+export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.5"
+  }
+  public: {
+    Tables: {
+      actions: {
+        Row: {
+          action_type: string
+          ai_cost_minor: number
+          completed_at: string | null
+          contact_id: string | null
+          conversation_id: string | null
+          created_at: string
+          goal_id: string | null
+          id: string
+          input: Json
+          organization_id: string
+          output: Json | null
+          rationale: string | null
+          risk: string
+          status: Database["public"]["Enums"]["action_status"]
+        }
+        Insert: {
+          action_type: string
+          ai_cost_minor?: number
+          completed_at?: string | null
+          contact_id?: string | null
+          conversation_id?: string | null
+          created_at?: string
+          goal_id?: string | null
+          id?: string
+          input?: Json
+          organization_id: string
+          output?: Json | null
+          rationale?: string | null
+          risk?: string
+          status?: Database["public"]["Enums"]["action_status"]
+        }
+        Update: {
+          action_type?: string
+          ai_cost_minor?: number
+          completed_at?: string | null
+          contact_id?: string | null
+          conversation_id?: string | null
+          created_at?: string
+          goal_id?: string | null
+          id?: string
+          input?: Json
+          organization_id?: string
+          output?: Json | null
+          rationale?: string | null
+          risk?: string
+          status?: Database["public"]["Enums"]["action_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "actions_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "goals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "actions_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      agent_runs: {
+        Row: {
+          completed_at: string | null
+          completion_tokens: number
+          conversation_id: string | null
+          cost_minor: number
+          created_at: string
+          goal_id: string | null
+          id: string
+          input: Json
+          model_name: string | null
+          model_provider: string | null
+          organization_id: string
+          output: Json | null
+          prompt_tokens: number
+          started_at: string | null
+          status: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completion_tokens?: number
+          conversation_id?: string | null
+          cost_minor?: number
+          created_at?: string
+          goal_id?: string | null
+          id?: string
+          input?: Json
+          model_name?: string | null
+          model_provider?: string | null
+          organization_id: string
+          output?: Json | null
+          prompt_tokens?: number
+          started_at?: string | null
+          status?: string
+        }
+        Update: {
+          completed_at?: string | null
+          completion_tokens?: number
+          conversation_id?: string | null
+          cost_minor?: number
+          created_at?: string
+          goal_id?: string | null
+          id?: string
+          input?: Json
+          model_name?: string | null
+          model_provider?: string | null
+          organization_id?: string
+          output?: Json | null
+          prompt_tokens?: number
+          started_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agent_runs_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_runs_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "goals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agent_runs_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      approvals: {
+        Row: {
+          action_id: string
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          decision: string | null
+          id: string
+          organization_id: string
+          reason: string | null
+          requested_by: string
+        }
+        Insert: {
+          action_id: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision?: string | null
+          id?: string
+          organization_id: string
+          reason?: string | null
+          requested_by?: string
+        }
+        Update: {
+          action_id?: string
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          decision?: string | null
+          id?: string
+          organization_id?: string
+          reason?: string | null
+          requested_by?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approvals_action_id_fkey"
+            columns: ["action_id"]
+            isOneToOne: false
+            referencedRelation: "actions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approvals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contacts: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          organization_id: string
+          phone: string | null
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          organization_id: string
+          phone?: string | null
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          organization_id?: string
+          phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contacts_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      conversations: {
+        Row: {
+          assigned_to: string
+          channel: string
+          contact_id: string | null
+          created_at: string
+          id: string
+          organization_id: string
+          status: Database["public"]["Enums"]["conversation_status"]
+          updated_at: string
+        }
+        Insert: {
+          assigned_to?: string
+          channel?: string
+          contact_id?: string | null
+          created_at?: string
+          id?: string
+          organization_id: string
+          status?: Database["public"]["Enums"]["conversation_status"]
+          updated_at?: string
+        }
+        Update: {
+          assigned_to?: string
+          channel?: string
+          contact_id?: string | null
+          created_at?: string
+          id?: string
+          organization_id?: string
+          status?: Database["public"]["Enums"]["conversation_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "conversations_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "conversations_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      goals: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          organization_id: string
+          status: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          organization_id: string
+          status?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          organization_id?: string
+          status?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goals_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      knowledge_items: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          is_approved: boolean
+          kind: string
+          organization_id: string
+          source: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          kind?: string
+          organization_id: string
+          source?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          kind?: string
+          organization_id?: string
+          source?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "knowledge_items_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      messages: {
+        Row: {
+          actor: Database["public"]["Enums"]["message_actor"]
+          body: string
+          conversation_id: string
+          created_at: string
+          direction: Database["public"]["Enums"]["message_direction"]
+          id: string
+          metadata: Json
+          organization_id: string
+        }
+        Insert: {
+          actor: Database["public"]["Enums"]["message_actor"]
+          body: string
+          conversation_id: string
+          created_at?: string
+          direction: Database["public"]["Enums"]["message_direction"]
+          id?: string
+          metadata?: Json
+          organization_id: string
+        }
+        Update: {
+          actor?: Database["public"]["Enums"]["message_actor"]
+          body?: string
+          conversation_id?: string
+          created_at?: string
+          direction?: Database["public"]["Enums"]["message_direction"]
+          id?: string
+          metadata?: Json
+          organization_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_conversation_id_fkey"
+            columns: ["conversation_id"]
+            isOneToOne: false
+            referencedRelation: "conversations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "messages_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organization_members: {
+        Row: {
+          created_at: string
+          organization_id: string
+          role: Database["public"]["Enums"]["member_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          organization_id: string
+          role?: Database["public"]["Enums"]["member_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          organization_id?: string
+          role?: Database["public"]["Enums"]["member_role"]
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "organization_members_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          created_at: string
+          currency: string
+          id: string
+          locale: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          id?: string
+          locale?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          id?: string
+          locale?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      outcomes: {
+        Row: {
+          action_id: string | null
+          attribution: string
+          created_at: string
+          evidence: Json
+          id: string
+          kind: Database["public"]["Enums"]["outcome_kind"]
+          organization_id: string
+          revenue_minor: number | null
+        }
+        Insert: {
+          action_id?: string | null
+          attribution?: string
+          created_at?: string
+          evidence?: Json
+          id?: string
+          kind?: Database["public"]["Enums"]["outcome_kind"]
+          organization_id: string
+          revenue_minor?: number | null
+        }
+        Update: {
+          action_id?: string | null
+          attribution?: string
+          created_at?: string
+          evidence?: Json
+          id?: string
+          kind?: Database["public"]["Enums"]["outcome_kind"]
+          organization_id?: string
+          revenue_minor?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "outcomes_action_id_fkey"
+            columns: ["action_id"]
+            isOneToOne: false
+            referencedRelation: "actions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "outcomes_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      create_organization: {
+        Args: {
+          organization_currency?: string
+          organization_locale?: string
+          organization_name: string
+        }
+        Returns: string
+      }
+      decide_approval: {
+        Args: { p_action_id: string; p_approval_id: string; p_decision: string }
+        Returns: undefined
+      }
+      execute_approved_action: {
+        Args: { p_action_id: string }
+        Returns: undefined
+      }
+      is_org_member: { Args: { org_id: string }; Returns: boolean }
+    }
+    Enums: {
+      action_status:
+        | "proposed"
+        | "awaiting_approval"
+        | "approved"
+        | "executing"
+        | "completed"
+        | "failed"
+        | "cancelled"
+      conversation_status:
+        | "open"
+        | "waiting_customer"
+        | "waiting_human"
+        | "closed"
+      member_role: "owner" | "admin" | "operator" | "viewer"
+      message_actor: "customer" | "human" | "agent" | "system"
+      message_direction: "inbound" | "outbound" | "internal"
+      outcome_kind: "unknown" | "reply" | "booking" | "sale" | "lost" | "other"
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
+}
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never) = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never) = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      action_status: [
+        "proposed",
+        "awaiting_approval",
+        "approved",
+        "executing",
+        "completed",
+        "failed",
+        "cancelled",
+      ],
+      conversation_status: [
+        "open",
+        "waiting_customer",
+        "waiting_human",
+        "closed",
+      ],
+      member_role: ["owner", "admin", "operator", "viewer"],
+      message_actor: ["customer", "human", "agent", "system"],
+      message_direction: ["inbound", "outbound", "internal"],
+      outcome_kind: ["unknown", "reply", "booking", "sale", "lost", "other"],
+    },
+  },
+} as const
