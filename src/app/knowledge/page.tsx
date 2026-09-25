@@ -32,7 +32,7 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
     <header><div className="brand">NOVA IA</div><div className="badge">Knowledge</div></header>
     <section className="hero"><h1>Conhecimento aprovado</h1><p>O operador só deve tratar factos específicos da empresa como verdade depois de aprovação humana.</p></section>
     <form className="card auth-form" aria-labelledby="knowledge-form-heading"><h2 id="knowledge-form-heading">Novo conhecimento</h2>
-      <label>Tipo<select name="kind"><option value="service">Serviço</option><option value="price">Preço</option><option value="policy">Política</option><option value="fact">Facto</option></select></label>
+      <label>Tipo<select name="kind" required><option value="service">Serviço</option><option value="price">Preço</option><option value="policy">Política</option><option value="fact">Facto</option></select></label>
       <label>Título<input name="title" required minLength={2} maxLength={160} /></label>
       <label>Conteúdo<textarea name="content" required rows={4} minLength={2} maxLength={10000} /></label>
       {message ? <p role="status">{message}</p> : null}
