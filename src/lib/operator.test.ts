@@ -133,6 +133,7 @@ describe("operator safety edge cases", () => {
     expect(decision.reply).toContain("mensagem com conteúdo");
   });
   it("does not create booking action from the word hora alone", () => expect(runDeterministicOperator({ message: "Que hora é?", knowledge: [], autonomy: 2 }).proposedActions).toHaveLength(0));
+  it("does not match Knowledge for stop-word-only text", () => expect(runDeterministicOperator({ message: "Tenho uma", knowledge: [{ kind: "fact", title: "Uma coisa", content: "segredo" }], autonomy: 2 }).reply).not.toContain("segredo"));
   it("does not match Knowledge only because both contain a generic stop word", () => {
     const r = runDeterministicOperator({ message: "Preciso de ajuda com bateria", knowledge: [{ kind: "fact", title: "Ecrã", content: "Tem garantia para clientes." }], autonomy: 2 });
     expect(r.reply).not.toContain("garantia");
