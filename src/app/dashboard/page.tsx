@@ -12,10 +12,7 @@ export default async function DashboardPage() {
     .limit(1);
 
   const membership = memberships?.[0];
-  if (!membership) {
-    return <main><header><div className="brand">NOVA IA</div><div className="badge">Onboarding</div></header>
-      <section className="hero"><h1>Conta segura criada.</h1><p>Falta criar a primeira organização. O onboarding empresarial será o próximo fluxo.</p></section></main>;
-  }
+  if (!membership) redirect("/onboarding");
 
   const org = membership.organizations;
   const orgId = Array.isArray(org) ? org[0]?.id : org?.id;
@@ -33,6 +30,15 @@ export default async function DashboardPage() {
       <article className="card"><span>Receita assistida</span><strong>€{(assisted/100).toFixed(2)}</strong><p>Somatório dos outcomes registados.</p></article>
       <article className="card"><span>Ações</span><strong>{actions ?? 0}</strong><p>Ações visíveis apenas nesta organização.</p></article>
       <article className="card"><span>Conversas</span><strong>{conversations ?? 0}</strong><p>Inbox persistida e isolada por tenant.</p></article>
+    </section>
+    <section className="card">
+      <h2>Começar a trabalhar</h2>
+      <p>Configura conhecimento aprovado, simula uma conversa e acompanha as decisões e resultados do Operator.</p>
+      <div className="auth-actions">
+        <a href="/knowledge">Knowledge</a>
+        <a href="/inbox">Inbox</a>
+        <a href="/actions">Action Ledger</a>
+      </div>
     </section>
   </main>;
 }
