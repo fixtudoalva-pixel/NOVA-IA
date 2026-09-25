@@ -5,7 +5,10 @@ import { createClient } from "@/lib/supabase/server";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const configured = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  const origin = configured && /^https?:\/\//i.test(configured) ? new URL(configured).origin : new URL(request.url).origin;
+  let origin = new URL(request.url).origin;
+  if (configured && /^https?:\/\//i.test(configured)) {
+    try { origin = new URL(configured).origin; } catch { /* fall back to request origin */ }
+  }
   const tokenHash = searchParams.get("token_hash")?.trim() ?? null;
   const rawType = searchParams.get("type");
   const allowedTypes = new Set<EmailOtpType>(["signup","invite","magiclink","recovery","email_change","email"]);
