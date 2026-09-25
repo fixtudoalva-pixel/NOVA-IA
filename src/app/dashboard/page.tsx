@@ -24,6 +24,11 @@ export default async function DashboardPage() {
     supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId!)
   ]);
   const assisted = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
+  const nextStep = (approvals ?? 0) > 0
+    ? { href: "/approvals", label: "Rever aprovações pendentes" }
+    : (conversations ?? 0) === 0
+      ? { href: "/inbox", label: "Criar a primeira conversa" }
+      : { href: "/inbox", label: "Continuar no Inbox" };
 
   return <main>
     <AppNav />
@@ -38,6 +43,7 @@ export default async function DashboardPage() {
     <section className="card">
       <h2>Começar a trabalhar</h2>
       <p>Configura conhecimento aprovado, simula uma conversa e acompanha as decisões e resultados do Operator.</p>
+      <p><a href={nextStep.href}>{nextStep.label} →</a></p>
       <div className="auth-actions">
         <a href="/knowledge">Knowledge</a>
         <a href="/inbox">Inbox</a>
