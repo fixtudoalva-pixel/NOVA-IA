@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { simulateInbound } from "./actions";
+import { runOperator } from "./operator-actions";
 
 export default async function InboxPage() {
   const supabase = await createClient();
@@ -27,7 +28,7 @@ export default async function InboxPage() {
         const last = msgs.at(-1);
         const contact = Array.isArray(c.contacts) ? c.contacts[0] : c.contacts;
         return <div className="row" key={c.id}>
-          <div><strong>{contact?.display_name ?? "Sem nome"}</strong></div><div>{last?.body ?? "—"}</div><div>{c.status}</div><div>{c.channel}</div>
+          <div><strong>{contact?.display_name ?? "Sem nome"}</strong></div><div>{last?.body ?? "—"}</div><div>{c.status}</div><div><form><input type="hidden" name="conversation_id" value={c.id}/><button formAction={runOperator}>Executar Operator</button></form></div>
         </div>;
       })}
     </section>
