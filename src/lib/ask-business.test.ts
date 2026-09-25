@@ -29,6 +29,7 @@ describe("Ask Your Business", () => {
   it("rejects one-character questions", () => expect(answerBusinessQuestion("?", data).text).toContain("mais completa"));
   it("does not answer lucro with revenue even when vendas is mentioned", () => expect(answerBusinessQuestion("Qual foi o lucro das vendas?", data).text).toContain("não consigo responder"));
   it("does not invent revenue for unsupported questions", () => expect(answerBusinessQuestion("Diz-me o lucro líquido", data).text).toContain("não consigo responder"));
+  it("recognizes receita semanal wording", () => expect(answerBusinessQuestion("Receita semanal", data).text).toContain("45,67"));
   it("recognizes faturação as assisted revenue wording", () => expect(answerBusinessQuestion("Qual é a faturação registada?", data).href).toBe("/actions"));
   it("does not use weekly revenue for an unqualified total question", () => {
     const text = answerBusinessQuestion("Quanto vendi?", data).text;
