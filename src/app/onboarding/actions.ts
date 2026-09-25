@@ -2,7 +2,7 @@
 
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { normalizeSingleLine } from "@/lib/validation";
+import { hasUnsafeControlChars, normalizeSingleLine } from "@/lib/validation";
 
 export async function createOrganization(formData: FormData) {
   const supabase = await createClient();
