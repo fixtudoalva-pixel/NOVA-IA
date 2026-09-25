@@ -14,6 +14,7 @@ describe("Ask Your Business", () => {
   it("recognizes reply-needed customer wording", () => expect(answerBusinessQuestion("Que clientes tenho para responder?", data).href).toBe("/inbox"));
   it("refuses unsupported questions", () => expect(answerBusinessQuestion("Qual é o melhor produto?", data).text).toContain("não consigo responder"));
   it("handles empty questions", () => expect(answerBusinessQuestion("", data).text).toContain("Escreve"));
+  it("rejects one-character questions", () => expect(answerBusinessQuestion("?", data).text).toContain("mais completa"));
   it("does not invent revenue for unsupported questions", () => expect(answerBusinessQuestion("Diz-me o lucro líquido", data).text).toContain("não consigo responder"));
   it("labels assisted revenue as non-causal", () => expect(answerBusinessQuestion("Quanto vendi?", data).text).toContain("não prova causalidade"));
   it("formats revenue with tenant currency", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, locale: "en-US", currency: "USD" }).text).toContain("$123.45"));
