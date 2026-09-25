@@ -41,7 +41,7 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
       <h2 id="simulate-heading">Simular lead</h2><label>Cliente<input name="name" placeholder="Cliente teste" maxLength={120} /></label>
       <label>Mensagem<textarea name="body" required rows={3} minLength={2} maxLength={4000} placeholder="Quanto custa o serviço?" /></label>
       {message ? <p role="status">{message}</p> : null}
-      <button formAction={simulateInbound}>Simular mensagem recebida</button>
+      <button formAction={simulateInbound} type="submit">Simular mensagem recebida</button>
     </form>
     <section className="card ledger">
       <h2>Conversas persistidas</h2>
