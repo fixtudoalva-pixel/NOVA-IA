@@ -26,7 +26,7 @@ export async function recordSaleOutcome(formData: FormData) {
   const { supabase } = await context();
   const actionId = String(formData.get("action_id") ?? "");
   const euros = Number(formData.get("euros") ?? 0);
-  if (!actionId || !Number.isFinite(euros) || euros <= 0) redirect("/actions?error=sale");
+  if (!actionId || !Number.isFinite(euros) || euros <= 0 || euros > 100000000) redirect("/actions?error=sale");
   const revenueMinor = Math.round(euros * 100);
   const { error } = await supabase.rpc("record_sale_outcome", {
     p_action_id: actionId,
