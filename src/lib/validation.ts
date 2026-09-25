@@ -9,5 +9,5 @@ export function normalizeSingleLine(value: unknown, max: number) {
 }
 
 export function hasUnsafeControlChars(value: string) {
-  return /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(value);
+  return /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(value);
 }
