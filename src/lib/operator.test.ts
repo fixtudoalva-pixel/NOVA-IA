@@ -58,6 +58,10 @@ describe("deterministic operator", () => {
     expect(r.reply).toContain("não tenho um preço aprovado");
   });
   it("normalizes Knowledge kind casing", () => expect(runDeterministicOperator({ message: "Quanto custa o X?", knowledge: [{ kind: " PRICE ", title: "Modelo X", content: "10 €" }], autonomy: 2 }).reply).toContain("10 €"));
+  it("does not match partial subject tokens across models", () => {
+    const r = runDeterministicOperator({ message: "Quanto custa o X1?", knowledge: [{ kind: "price", title: "X10", content: "100 €" }], autonomy: 2 });
+    expect(r.reply).toContain("não tenho um preço aprovado");
+  });
   it("prefers price Knowledge over a matching generic fact", () => {
     const r = runDeterministicOperator({ message: "Quanto custa o modelo X?", knowledge: [{ kind: "fact", title: "Modelo X", content: "Existe." }, { kind: "price", title: "Modelo X", content: "Preço aprovado: 100 €." }], autonomy: 2 });
     expect(r.reply).toContain("100 €");
