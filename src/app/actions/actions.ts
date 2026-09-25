@@ -16,7 +16,7 @@ async function context() {
 export async function executeApprovedAction(formData: FormData) {
   const { supabase } = await context();
   const actionId = String(formData.get("action_id") ?? "").trim();
-  if (!/^[0-9a-f-]{36}$/i.test(actionId)) redirect("/actions?error=execute");
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actionId)) redirect("/actions?error=execute");
   const { error } = await supabase.rpc("execute_approved_action", { p_action_id: actionId });
   if (error) redirect("/actions?error=execute");
   revalidatePath("/actions"); revalidatePath("/dashboard"); revalidatePath("/ask");
@@ -29,7 +29,7 @@ export async function recordSaleOutcome(formData: FormData) {
   const rawAmount = String(formData.get("amount") ?? "").trim().replace(",", ".");
   if (!/^\d{1,9}(\.\d{1,2})?$/.test(rawAmount)) redirect("/actions?error=sale");
   const amount = Number(rawAmount);
-  if (!/^[0-9a-f-]{36}$/i.test(actionId) || !Number.isFinite(amount) || amount <= 0 || amount > 100000000) redirect("/actions?error=sale");
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actionId) || !Number.isFinite(amount) || amount <= 0 || amount > 100000000) redirect("/actions?error=sale");
   const revenueMinor = Math.round(amount * 100);
   if (!Number.isSafeInteger(revenueMinor)) redirect("/actions?error=sale");
   const { error } = await supabase.rpc("record_sale_outcome", {
