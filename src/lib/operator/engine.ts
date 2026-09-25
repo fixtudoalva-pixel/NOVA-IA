@@ -33,6 +33,9 @@ export function runDeterministicOperator(input: {
   } else if (asksPrice) {
     reply = "Ainda não tenho um preço aprovado para lhe indicar. Posso recolher os detalhes necessários e pedir confirmação?";
     confidence = 0.95;
+  } else if (asksBooking) {
+    reply = "Posso preparar um pedido de marcação, mas ainda não confirmei disponibilidade. Indique a preferência de dia e horário.";
+    confidence = 0.9;
   } else {
     reply = "Obrigado pela mensagem. Para lhe responder corretamente, preciso de mais alguns detalhes sobre o que necessita.";
     confidence = 0.75;
