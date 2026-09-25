@@ -13,11 +13,20 @@ async function decide(formData: FormData, decision: "approved" | "rejected") {
   const approvalId = String(formData.get("approval_id") ?? "");
   const actionId = String(formData.get("action_id") ?? "");
 
-  await supabase.from("approvals").update({ decision, decided_by: user.id, decided_at: new Date().toISOString() })
-    .eq("id", approvalId).eq("organization_id", orgId);
-  await supabase.from("actions").update({ status: decision === "approved" ? "approved" : "cancelled" })
-    .eq("id", actionId).eq("organization_id", orgId);
+  const { data: approval } = await supabase.from("approvals")
+    .select("id,decision,action_id").eq("id", approvalId).eq("organization_id", orgId).single();
+  if (!approval || approval.decision || approval.action_id !== actionId) return;
+
+  await supabase.from("approvals").update({
+    decision, decided_by: user.id, decided_at: new Date().toISOString()
+  }).eq("id", approvalId).eq("organization_id", orgId).is("decision", null);
+
+  await supabase.from("actions").update({
+    status: decision === "approved" ? "approved" : "cancelled"
+  }).eq("id", actionId).eq("organization_id", orgId).eq("status", "awaiting_approval");
+
   revalidatePath("/approvals");
+  revalidatePath("/actions");
   revalidatePath("/dashboard");
 }
 export async function approve(formData: FormData) { return decide(formData, "approved"); }
