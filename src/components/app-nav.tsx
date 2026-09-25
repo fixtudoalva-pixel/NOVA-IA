@@ -7,6 +7,7 @@ export function AppNav() {
       <a href="/inbox">Inbox</a>
       <a href="/approvals">Aprovações</a>
       <a href="/actions">Ledger</a>
+      <form action="/logout" method="post"><button className="nav-button" type="submit">Sair</button></form>
     </nav>
   );
 }
