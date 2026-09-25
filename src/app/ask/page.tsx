@@ -18,18 +18,25 @@ export default async function AskPage({ searchParams }: Props) {
   const params = await searchParams;
   const question = (params.q ?? "").trim().slice(0, 500);
 
-  const [{ count: conversations, error: conversationsError }, { count: waitingHuman, error: waitingError }, { count: approvals, error: approvalsError }, { count: openActions, error: actionsError }, { data: outcomes, error: outcomesError }, { count: approvedKnowledge, error: knowledgeError }] = await Promise.all([
+  const weekStart = new Date();
+  const day = weekStart.getUTCDay();
+  weekStart.setUTCDate(weekStart.getUTCDate() - ((day + 6) % 7));
+  weekStart.setUTCHours(0, 0, 0, 0);
+
+  const [{ count: conversations, error: conversationsError }, { count: waitingHuman, error: waitingError }, { count: approvals, error: approvalsError }, { count: openActions, error: actionsError }, { data: outcomes, error: outcomesError }, { data: weeklyOutcomes, error: weeklyOutcomesError }, { count: approvedKnowledge, error: knowledgeError }] = await Promise.all([
     supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId),
     supabase.from("conversations").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("status", "waiting_human"),
     supabase.from("approvals").select("*", { count: "exact", head: true }).eq("organization_id", orgId).is("decision", null),
     supabase.from("actions").select("*", { count: "exact", head: true }).eq("organization_id", orgId).in("status", ["proposed","awaiting_approval","approved","executing"]),
     supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId).eq("kind", "sale"),
+    supabase.from("outcomes").select("revenue_minor").eq("organization_id", orgId).eq("kind", "sale").gte("created_at", weekStart.toISOString()),
     supabase.from("knowledge_items").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("is_approved", true)
   ]);
 
   const revenue = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
-  const dataWarning = Boolean(conversationsError || waitingError || approvalsError || actionsError || outcomesError || knowledgeError);
-  const answer = question && !dataWarning ? answerBusinessQuestion(question, { locale: orgSettings?.locale ?? "pt-PT", currency: orgSettings?.currency ?? "EUR", conversations: conversations ?? 0, waitingHuman: waitingHuman ?? 0, pendingApprovals: approvals ?? 0, openActions: openActions ?? 0, assistedRevenueMinor: revenue, approvedKnowledge: approvedKnowledge ?? 0 }) : null;
+  const weeklyRevenue = weeklyOutcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
+  const dataWarning = Boolean(conversationsError || waitingError || approvalsError || actionsError || outcomesError || weeklyOutcomesError || knowledgeError);
+  const answer = question && !dataWarning ? answerBusinessQuestion(question, { locale: orgSettings?.locale ?? "pt-PT", currency: orgSettings?.currency ?? "EUR", conversations: conversations ?? 0, waitingHuman: waitingHuman ?? 0, pendingApprovals: approvals ?? 0, openActions: openActions ?? 0, assistedRevenueMinor: revenue, weeklyAssistedRevenueMinor: weeklyRevenue, approvedKnowledge: approvedKnowledge ?? 0 }) : null;
 
   return <main>
     <AppNav />
