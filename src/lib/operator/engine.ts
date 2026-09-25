@@ -42,15 +42,12 @@ export function runDeterministicOperator(input: {
     payload: {}
   }] : [];
 
-  return OperatorDecisionSchema.parse({
+  const policyDecisions = proposedActions.map(a => evaluateActionPolicy({\n    autonomy: input.autonomy, risk: a.risk, hasExternalSideEffect: true\n  }));\n  const needsHuman = policyDecisions.some(p => p.requiresApproval);\n\n  return OperatorDecisionSchema.parse({
     intent: asksPrice ? "price_enquiry" : asksBooking ? "booking_enquiry" : "general_enquiry",
     summary: "Mensagem recebida e analisada com base apenas no conhecimento aprovado.",
     confidence,
     reply,
     proposedActions,
-    needsHuman: proposedActions.some(a => evaluateActionPolicy({
-      autonomy: input.autonomy, risk: a.risk, hasExternalSideEffect: true
-    }).requiresApproval),
-    humanReason: proposedActions.length && input.autonomy < 3 ? "A política atual exige aprovação para esta ação." : null
+    needsHuman,\n    humanReason: needsHuman ? "A política atual exige aprovação para esta ação." : null
   });
 }
