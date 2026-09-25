@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { evaluateActionPolicy, type AutonomyLevel } from "@/lib/domain";
 
-type Entry = { id: number; kind: "customer" | "proposal" | "sent" | "rejected"; text: string; reason?: string };
+type Entry = { id: number; kind: "customer" | "recommendation" | "proposal" | "sent" | "rejected"; text: string; reason?: string };
 
 function propose(message: string, knowledge: string) {
   const lower = message.toLocaleLowerCase("pt-PT");
@@ -30,7 +30,7 @@ export default function InboxPage() {
     const policy = evaluateActionPolicy({ autonomy, risk: draft.risk, hasExternalSideEffect: true });
     setEntries((current) => [...current,
       { id: nextId, kind: "customer", text: value },
-      { id: nextId + 1, kind: policy.allowed && !policy.requiresApproval ? "sent" : "proposal", text: draft.text, reason: `${draft.reason} ${policy.reason}` }
+      { id: nextId + 1, kind: !policy.allowed ? "recommendation" : policy.requiresApproval ? "proposal" : "sent", text: draft.text, reason: `${draft.reason} ${policy.reason}` }
     ]);
     setNextId(nextId + 2);
     setMessage("");
@@ -40,10 +40,14 @@ export default function InboxPage() {
     setEntries((current) => current.map((entry) => entry.id === id && entry.kind === "proposal" ? { ...entry, kind: approved ? "sent" : "rejected" } : entry));
   }
 
+  const proposed = entries.filter((entry) => entry.kind === "proposal").length;
+  const simulated = entries.filter((entry) => entry.kind === "sent").length;
+
   return (
     <main>
       <header><a className="brand" href="/">NOVA IA</a><span className="badge">Simulador local</span></header>
       <section className="hero"><h1>Inbox</h1><p>Experimente o atendimento com conhecimento aprovado e controlo humano. As mensagens ficam apenas nesta sessão do navegador; não são enviadas a clientes.</p></section>
+      <div className="sim-summary"><span>Mensagens recebidas: {entries.filter((entry) => entry.kind === "customer").length}</span><span>A aguardar: {proposed}</span><span>Respostas simuladas: {simulated}</span></div>
       <section className="sim-grid">
         <div className="card sim-form">
           <h2>Configuração</h2>
@@ -56,12 +60,13 @@ export default function InboxPage() {
           <label htmlFor="message">Mensagem de um cliente fictício</label>
           <textarea id="message" value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Quanto custa trocar o ecrã do meu telemóvel?" rows={3} />
           <button onClick={receive} disabled={!message.trim()}>Receber mensagem</button>
+          {entries.length > 0 && <button className="secondary" onClick={() => { setEntries([]); setNextId(1); }}>Limpar simulação</button>}
         </div>
         <div className="card sim-history" aria-live="polite">
           <h2>Conversa e decisões</h2>
           {entries.length === 0 && <p>Introduza uma mensagem para começar a simulação.</p>}
           {entries.map((entry) => <article className="sim-entry" key={entry.id}>
-            <span>{entry.kind === "customer" ? "Cliente" : entry.kind === "proposal" ? "A aguardar aprovação" : entry.kind === "sent" ? "Resposta simulada" : "Proposta rejeitada"}</span>
+            <span>{entry.kind === "customer" ? "Cliente" : entry.kind === "recommendation" ? "Recomendação interna · não enviada" : entry.kind === "proposal" ? "A aguardar aprovação" : entry.kind === "sent" ? "Resposta simulada" : "Proposta rejeitada"}</span>
             <p>{entry.text}</p>
             {entry.reason && <small>{entry.reason}</small>}
             {entry.kind === "proposal" && <div className="sim-actions"><button onClick={() => decide(entry.id, true)}>Aprovar na simulação</button><button className="secondary" onClick={() => decide(entry.id, false)}>Rejeitar</button></div>}
