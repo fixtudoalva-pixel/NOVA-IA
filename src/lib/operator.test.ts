@@ -24,6 +24,10 @@ describe("deterministic operator", () => {
   it("does not classify every quanto question as price", () => {
     expect(runDeterministicOperator({ message: "Quanto tempo demora?", knowledge: [], autonomy: 2 }).intent).toBe("general_enquiry");
   });
+  it("does not infer availability from generic matching Knowledge", () => {
+    const r = runDeterministicOperator({ message: "Têm disponibilidade?", knowledge: [{ kind: "fact", title: "Disponibilidade", content: "Atendemos clientes." }], autonomy: 2 });
+    expect(r.reply).toContain("não confirmei disponibilidade");
+  });
   it("does not invent availability without Knowledge", () => {
     const r = runDeterministicOperator({ message: "Têm disponibilidade?", knowledge: [], autonomy: 2 });
     expect(r.reply).toContain("não confirmei disponibilidade");
