@@ -1,3 +1,4 @@
+import { AppNav } from "@/components/app-nav";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { approve, reject } from "./actions";
@@ -19,6 +20,7 @@ export default async function ApprovalsPage({ searchParams }: ApprovalsPageProps
     .eq("organization_id", membership.organization_id).is("decision", null).order("created_at", { ascending: false });
 
   return <main>
+    <AppNav />
     <header><div className="brand">NOVA IA</div><div className="badge">Human control</div></header>
     <section className="hero"><h1>Aprovações</h1><p>Ações fora da autonomia permitida ficam bloqueadas até decisão humana.</p></section>
     <section className="card ledger">
