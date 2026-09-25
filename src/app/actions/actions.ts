@@ -37,7 +37,7 @@ export async function recordSaleOutcome(formData: FormData) {
   if (readError || !action) redirect("/actions?error=sale");
   const [whole, fraction = ""] = rawAmount.split(".");
   const revenueMinor = Number(whole) * 100 + Number((fraction + "00").slice(0, 2));
-  if (!Number.isSafeInteger(revenueMinor)) redirect("/actions?error=sale");
+  if (!Number.isSafeInteger(revenueMinor) || revenueMinor <= 0 || revenueMinor > 10000000000) redirect("/actions?error=sale");
   const { error } = await supabase.rpc("record_sale_outcome", {
     p_action_id: actionId,
     p_revenue_minor: revenueMinor
