@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { evaluateActionPolicy } from "./domain";
 import { runDeterministicOperator } from "./operator/engine";
+import { OperatorDecisionSchema } from "./operator/contracts";
 
 describe("action policy", () => {
   it("blocks critical actions", () => {
@@ -152,4 +153,14 @@ describe("operator safety edge cases", () => {
     expect(decision.reply.toLowerCase()).toContain("não tenho um preço aprovado");
     expect(decision.proposedActions).toHaveLength(0);
   });
+});
+
+
+describe("operator contract bounds", () => {
+  const base = { intent: "general", summary: "ok", confidence: 0.5, reply: "ok", proposedActions: [], needsHuman: false, humanReason: null };
+  it("rejects overlong intent", () => expect(() => OperatorDecisionSchema.parse({ ...base, intent: "x".repeat(121) })).toThrow());
+  it("rejects overlong replies", () => expect(() => OperatorDecisionSchema.parse({ ...base, reply: "x".repeat(10001) })).toThrow());
+  it("rejects more than 20 proposed actions", () => expect(() => OperatorDecisionSchema.parse({ ...base, proposedActions: Array.from({length:21},()=>({type:"x",risk:"low",rationale:"x",payload:{}})) })).toThrow());
+  it("rejects overlong action types", () => expect(() => OperatorDecisionSchema.parse({ ...base, proposedActions:[{type:"x".repeat(121),risk:"low",rationale:"x",payload:{}}] })).toThrow());
+  it("rejects overlong rationales", () => expect(() => OperatorDecisionSchema.parse({ ...base, proposedActions:[{type:"x",risk:"low",rationale:"x".repeat(2001),payload:{}}] })).toThrow());
 });
