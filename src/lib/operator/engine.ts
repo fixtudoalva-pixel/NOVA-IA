@@ -1,5 +1,5 @@
 import { OperatorDecisionSchema, type OperatorDecision } from "./contracts";
-import { evaluateActionPolicy } from "@/lib/domain";
+import { evaluateActionPolicy } from "../domain";
 
 type Knowledge = { kind: string; title: string; content: string };
 
