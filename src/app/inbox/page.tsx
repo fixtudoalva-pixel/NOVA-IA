@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { evaluateActionPolicy, type AutonomyLevel } from "@/lib/domain";
 import { propose } from "@/lib/operator/simulator";
 
@@ -35,7 +36,7 @@ export default function InboxPage() {
 
   return (
     <main>
-      <header><a className="brand" href="/">NOVA IA</a><span className="badge">Simulador local</span></header>
+      <header><Link className="brand" href="/">NOVA IA</Link><span className="badge">Simulador local</span></header>
       <section className="hero"><h1>Inbox</h1><p>Experimente o atendimento com conhecimento aprovado e controlo humano. As mensagens ficam apenas nesta sessão do navegador; não são enviadas a clientes.</p></section>
       <div className="sim-summary"><span>Mensagens recebidas: {entries.filter((entry) => entry.kind === "customer").length}</span><span>A aguardar: {proposed}</span><span>Respostas simuladas: {simulated}</span></div>
       <section className="sim-grid">

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { getBrowserClient } from "@/lib/supabase/browser";
 
 function authErrorMessage(error: unknown): string {
@@ -62,7 +63,7 @@ export default function LoginPage() {
   }
 
   return <main>
-    <header><a className="brand" href="/">NOVA IA</a><span className="badge">Acesso à empresa</span></header>
+    <header><Link className="brand" href="/">NOVA IA</Link><span className="badge">Acesso à empresa</span></header>
     <section className="hero"><h1>{mode === "login" ? "Entrar" : "Criar conta"}</h1><p>O espaço de trabalho utiliza autenticação e proteção de dados por empresa.</p></section>
     {!supabase ? <div className="card">Falta configurar NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY no alojamento.</div> :
       <form className="card sim-form auth-form" onSubmit={submit}>

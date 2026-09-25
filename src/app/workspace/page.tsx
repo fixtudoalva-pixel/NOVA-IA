@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { getBrowserClient } from "@/lib/supabase/browser";
 import { propose } from "@/lib/operator/simulator";
 import { OperatorDecisionSchema } from "@/lib/operator/contracts";
@@ -181,9 +182,9 @@ export default function WorkspacePage() {
   const completed = actions.filter((item) => item.status === "completed").length;
   const revenue = outcomes.filter((item) => item.kind === "sale").reduce((sum, item) => sum + (item.revenue_minor ?? 0), 0);
 
-  if (!client) return <main><header><a className="brand" href="/">NOVA IA</a></header><div className="card">Este espaço precisa das variáveis NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY.</div></main>;
+  if (!client) return <main><header><Link className="brand" href="/">NOVA IA</Link></header><div className="card">Este espaço precisa das variáveis NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY.</div></main>;
   return <main>
-    <header><a className="brand" href="/">NOVA IA</a><button className="secondary" onClick={async () => { await client.auth.signOut(); router.replace("/login"); }}>Sair</button></header>
+    <header><Link className="brand" href="/">NOVA IA</Link><button className="secondary" onClick={async () => { await client.auth.signOut(); router.replace("/login"); }}>Sair</button></header>
     <section className="hero"><h1>{org?.name ?? "Espaço de trabalho"}</h1><p>Laboratório autenticado. Todas as conversas e execuções são simuladas; nenhuma mensagem é entregue a clientes.</p></section>
     {notice && <p role="alert" className="notice">{notice}</p>}
     {loading ? <p>A carregar…</p> : !org ? <form className="card sim-form auth-form" onSubmit={createOrg}><h2>Criar a empresa</h2><label htmlFor="org-name">Nome</label><input id="org-name" required minLength={2} maxLength={120} value={orgName} onChange={(e) => setOrgName(e.target.value)} placeholder="FixTudo" /><button disabled={busy}>Criar espaço</button></form> : <>
