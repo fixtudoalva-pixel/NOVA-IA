@@ -62,6 +62,11 @@ describe("operator safety edge cases", () => {
     const decision = runDeterministicOperator({ message: "segredoespecial", knowledge, autonomy: 2 });
     expect(decision.reply).not.toContain("segredoespecial");
   });
+  it("ignores malformed blank knowledge", () => {
+    const decision = runDeterministicOperator({ message: "Quanto custa?", knowledge: [{ kind: "price", title: "  ", content: "  " }], autonomy: 2 });
+    expect(decision.reply.toLowerCase()).toContain("preço");
+    expect(decision.reply).not.toContain("  ");
+  });
   it("handles whitespace-only input without creating an action", () => {
     const decision = runDeterministicOperator({ message: "   ", knowledge: [], autonomy: 2 });
     expect(decision.proposedActions).toHaveLength(0);
