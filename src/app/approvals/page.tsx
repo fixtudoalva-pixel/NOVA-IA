@@ -31,7 +31,7 @@ export default async function ApprovalsPage({ searchParams }: ApprovalsPageProps
         const action = Array.isArray(a.actions) ? a.actions[0] : a.actions;
         return <div className="row" key={a.id}>
           <div><strong>{action?.action_type}</strong><br/><span>{action?.rationale}</span></div>
-          <div>Risco: {action?.risk}</div><div>{action?.status}</div>
+          <div>Risco declarado: {action?.risk}</div><div>{action?.status}</div>
           <div className="auth-actions"><form><input type="hidden" name="approval_id" value={a.id}/><input type="hidden" name="action_id" value={action?.id}/><button formAction={approve}>Aprovar</button><button className="secondary" formAction={reject}>Rejeitar</button></form></div>
         </div>;
       })}
