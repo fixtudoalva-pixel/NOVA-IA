@@ -31,7 +31,7 @@ export default async function OnboardingPage({ searchParams }: OnboardingPagePro
     <header><div className="brand">NOVA IA</div><div className="badge">Onboarding</div></header>
     <section className="hero"><h1>Primeira empresa</h1><p>Cria o tenant isolado onde o operador vai trabalhar.</p></section>
     <form className="card auth-form" aria-labelledby="org-form-heading"><h2 id="org-form-heading">Dados da organização</h2>
-      <label>Nome da empresa<input name="name" required minLength={2} maxLength={120} placeholder="Empresa de teste" /></label>
+      <label>Nome da empresa<input name="name" required minLength={2} maxLength={120} placeholder="Empresa de teste" autoComplete="organization" /></label>
       {message ? <p role="alert">{message}</p> : null}
       <button formAction={createOrganization} type="submit">Criar organização</button>
     </form>
