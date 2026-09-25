@@ -44,6 +44,7 @@ describe("deterministic operator", () => {
   it("does not treat a generic hoje statement as booking", () => {
     expect(runDeterministicOperator({ message: "Hoje estou com um problema.", knowledge: [], autonomy: 2 }).proposedActions).toHaveLength(0);
   });
+  it("recognizes horário availability as booking intent", () => expect(runDeterministicOperator({ message: "Que horário têm disponível?", knowledge: [], autonomy: 2 }).proposedActions[0]?.type).toBe("propose_booking"));
   it("recognizes agendar as booking intent", () => {
     expect(runDeterministicOperator({ message: "Quero agendar uma visita.", knowledge: [], autonomy: 2 }).proposedActions[0]?.type).toBe("propose_booking");
   });
