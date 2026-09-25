@@ -28,7 +28,7 @@ The standalone simulator uses deterministic rules, not a connected AI model. Its
 ## Authenticated workspace
 Set `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` for the NOVA IA Supabase project. The `/login` and `/workspace` routes provide account access, one organization per account, approved knowledge, simulated inbound conversations, decision proposals, approval, simulated execution and an action history. Configure the Supabase Auth site URL and redirect URL for the deployed domain so confirmation emails return to `/workspace`.
 
-The workspace uses the existing database RPCs and row-level security. It does not send real messages or invoke an AI provider. The deterministic operator is a prototype. The source schema in `supabase/migrations` does not yet include all migrations applied to the live NOVA IA database; treat the live schema as authoritative until reconciled.
+The workspace uses database RPCs and row-level security. It does not send real messages or invoke an AI provider. The deterministic operator is a prototype. The files in `supabase/migrations` reproduce the applied migration history of the NOVA IA project; do not apply them again to the existing database.
 
 ## Status
 Interactive local demo plus a database-backed workspace when the Supabase variables are configured. External channels and AI providers remain unconnected.

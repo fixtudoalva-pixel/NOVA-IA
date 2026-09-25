@@ -1,0 +1,10 @@
+create policy "members insert actions" on public.actions for insert to authenticated with check (public.is_org_member(organization_id));
+create policy "members update actions" on public.actions for update to authenticated using (public.is_org_member(organization_id)) with check (public.is_org_member(organization_id));
+create policy "members insert approvals" on public.approvals for insert to authenticated with check (public.is_org_member(organization_id));
+create policy "members update approvals" on public.approvals for update to authenticated using (public.is_org_member(organization_id)) with check (public.is_org_member(organization_id));
+create policy "members insert outcomes" on public.outcomes for insert to authenticated with check (public.is_org_member(organization_id));
+create policy "members insert agent runs" on public.agent_runs for insert to authenticated with check (public.is_org_member(organization_id));
+create policy "members insert messages" on public.messages for insert to authenticated with check (public.is_org_member(organization_id));
+alter function public.commit_operator_decision(uuid,timestamptz,jsonb,jsonb) security invoker;
+alter function public.decide_approval(uuid,uuid,text) security invoker;
+alter function public.execute_approved_action(uuid) security invoker;

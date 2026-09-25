@@ -13,7 +13,6 @@ create table public.knowledge_items (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
-
 create table public.conversations (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid not null references public.organizations(id) on delete cascade,
@@ -24,7 +23,6 @@ create table public.conversations (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
-
 create table public.messages (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid not null references public.organizations(id) on delete cascade,
@@ -35,35 +33,29 @@ create table public.messages (
   metadata jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now()
 );
-
 create table public.agent_runs (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid not null references public.organizations(id) on delete cascade,
   conversation_id uuid references public.conversations(id) on delete set null,
   goal_id uuid references public.goals(id) on delete set null,
-  model_provider text,
-  model_name text,
+  model_provider text, model_name text,
   status text not null default 'queued',
   input jsonb not null default '{}'::jsonb,
   output jsonb,
   prompt_tokens bigint not null default 0,
   completion_tokens bigint not null default 0,
   cost_minor bigint not null default 0,
-  started_at timestamptz,
-  completed_at timestamptz,
+  started_at timestamptz, completed_at timestamptz,
   created_at timestamptz not null default now()
 );
-
 alter table public.knowledge_items enable row level security;
 alter table public.conversations enable row level security;
 alter table public.messages enable row level security;
 alter table public.agent_runs enable row level security;
-
 create policy "members read knowledge" on public.knowledge_items for select using (public.is_org_member(organization_id));
 create policy "members read conversations" on public.conversations for select using (public.is_org_member(organization_id));
 create policy "members read messages" on public.messages for select using (public.is_org_member(organization_id));
 create policy "members read agent runs" on public.agent_runs for select using (public.is_org_member(organization_id));
-
 create index knowledge_items_org_idx on public.knowledge_items(organization_id);
 create index conversations_org_idx on public.conversations(organization_id);
 create index conversations_contact_idx on public.conversations(contact_id);

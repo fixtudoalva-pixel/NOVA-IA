@@ -11,7 +11,6 @@ create table public.organizations (
   currency text not null default 'EUR',
   created_at timestamptz not null default now()
 );
-
 create table public.organization_members (
   organization_id uuid not null references public.organizations(id) on delete cascade,
   user_id uuid not null references auth.users(id) on delete cascade,
@@ -19,25 +18,18 @@ create table public.organization_members (
   created_at timestamptz not null default now(),
   primary key (organization_id, user_id)
 );
-
 create table public.contacts (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid not null references public.organizations(id) on delete cascade,
-  display_name text,
-  email text,
-  phone text,
+  display_name text, email text, phone text,
   created_at timestamptz not null default now()
 );
-
 create table public.goals (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid not null references public.organizations(id) on delete cascade,
-  title text not null,
-  description text,
-  status text not null default 'active',
+  title text not null, description text, status text not null default 'active',
   created_at timestamptz not null default now()
 );
-
 create table public.actions (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid not null references public.organizations(id) on delete cascade,
@@ -53,7 +45,6 @@ create table public.actions (
   created_at timestamptz not null default now(),
   completed_at timestamptz
 );
-
 create table public.approvals (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid not null references public.organizations(id) on delete cascade,
@@ -65,7 +56,6 @@ create table public.approvals (
   created_at timestamptz not null default now(),
   decided_at timestamptz
 );
-
 create table public.outcomes (
   id uuid primary key default gen_random_uuid(),
   organization_id uuid not null references public.organizations(id) on delete cascade,
@@ -92,17 +82,10 @@ as $$ select exists (
   where m.organization_id = org_id and m.user_id = auth.uid()
 ); $$;
 
-create policy "members read organizations" on public.organizations
-for select using (public.is_org_member(id));
-create policy "members read memberships" on public.organization_members
-for select using (public.is_org_member(organization_id));
-create policy "members read contacts" on public.contacts
-for select using (public.is_org_member(organization_id));
-create policy "members read goals" on public.goals
-for select using (public.is_org_member(organization_id));
-create policy "members read actions" on public.actions
-for select using (public.is_org_member(organization_id));
-create policy "members read approvals" on public.approvals
-for select using (public.is_org_member(organization_id));
-create policy "members read outcomes" on public.outcomes
-for select using (public.is_org_member(organization_id));
+create policy "members read organizations" on public.organizations for select using (public.is_org_member(id));
+create policy "members read memberships" on public.organization_members for select using (public.is_org_member(organization_id));
+create policy "members read contacts" on public.contacts for select using (public.is_org_member(organization_id));
+create policy "members read goals" on public.goals for select using (public.is_org_member(organization_id));
+create policy "members read actions" on public.actions for select using (public.is_org_member(organization_id));
+create policy "members read approvals" on public.approvals for select using (public.is_org_member(organization_id));
+create policy "members read outcomes" on public.outcomes for select using (public.is_org_member(organization_id));
