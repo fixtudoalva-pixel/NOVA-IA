@@ -13,13 +13,10 @@ async function context() {
 }
 
 export async function executeApprovedAction(formData: FormData) {
-  const { supabase, orgId } = await context();
+  const { supabase } = await context();
   const actionId = String(formData.get("action_id") ?? "");
-  const { data: action } = await supabase.from("actions").select("id,action_type,status").eq("id", actionId).eq("organization_id", orgId).single();
-  if (!action || action.status !== "approved") return;
-  const completedAt = new Date().toISOString();
-  await supabase.from("actions").update({ status: "completed", completed_at: completedAt, output: { executor: "simulator", completed_at: completedAt } }).eq("id", actionId).eq("organization_id", orgId).eq("status", "approved");
-  await supabase.from("outcomes").insert({ organization_id: orgId, action_id: actionId, kind: action.action_type === "propose_booking" ? "booking" : "other", attribution: "assisted", evidence: { source: "simulator" } });
+  if (!actionId) return;
+  await supabase.rpc("execute_approved_action", { p_action_id: actionId });
   revalidatePath("/actions"); revalidatePath("/dashboard");
 }
 
