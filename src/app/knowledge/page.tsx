@@ -43,7 +43,7 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
       {!items?.length && <p className="empty-state">Ainda não existe conhecimento. Adiciona um rascunho e aprova-o antes de o Operator o usar.</p>}
       {items?.map(item => <div className="row" key={item.id}>
         <div><strong>{item.title}</strong><br/><span>{item.kind}</span></div>
-        <div>{item.content}</div>
+        <div>{item.content.length > 500 ? item.content.slice(0, 500) + "…" : item.content}</div>
         <div>{item.is_approved ? "Aprovado · utilizável pelo Operator" : "Rascunho · ainda não utilizável"}</div>
         <div>{!item.is_approved && <form><input type="hidden" name="id" value={item.id}/><button formAction={approveKnowledge} aria-label={`Aprovar conhecimento: ${item.title}`}>Aprovar</button></form>}</div>
       </div>)}
