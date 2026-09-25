@@ -31,8 +31,7 @@ export async function recordSaleOutcome(formData: FormData) {
   const rawAmount = String(formData.get("amount") ?? "").trim().replace(",", ".");
   if (rawAmount.length > 12) redirect("/actions?error=sale");
   if (!/^\d{1,9}(\.\d{1,2})?$/.test(rawAmount)) redirect("/actions?error=sale");
-  const amount = Number(rawAmount);
-  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actionId) || !Number.isFinite(amount) || amount <= 0 || amount > 100000000) redirect("/actions?error=sale");
+  if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actionId) || Number(rawAmount) <= 0 || Number(rawAmount) > 100000000) redirect("/actions?error=sale");
   const { data: action, error: readError } = await supabase.from("actions").select("id").eq("id", actionId).eq("organization_id", orgId).eq("status", "completed").maybeSingle();
   if (readError || !action) redirect("/actions?error=sale");
   const [whole, fraction = ""] = rawAmount.split(".");
