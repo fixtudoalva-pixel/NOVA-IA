@@ -9,6 +9,9 @@ describe("action policy", () => {
   it("allows internal reads without approval", () => {
     expect(evaluateActionPolicy({ autonomy: 0, risk: "low", hasExternalSideEffect: false })).toMatchObject({ allowed: true, requiresApproval: false });
   });
+  it("fails closed for an invalid autonomy value", () => {
+    expect(evaluateActionPolicy({ autonomy: 9 as never, risk: "low", hasExternalSideEffect: true })).toMatchObject({ allowed: false, requiresApproval: true });
+  });
   it("requires approval for external actions at level 2", () => {
     expect(evaluateActionPolicy({ autonomy: 2, risk: "medium", hasExternalSideEffect: true }).requiresApproval).toBe(true);
   });
