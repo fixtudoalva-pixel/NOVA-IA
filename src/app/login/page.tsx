@@ -28,7 +28,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       <form className="card auth-form" aria-labelledby="login-form-heading"><h2 id="login-form-heading">Credenciais</h2>
         <label>Email<input name="email" type="email" required maxLength={254} autoComplete="email" /></label>
         <label>Password<input name="password" type="password" required minLength={8} maxLength={128} autoComplete="current-password" aria-describedby="password-help" /></label>
-        <p id="password-help">Mínimo de 8 caracteres. Para produção, evita passwords reutilizadas noutros serviços.</p>
+        <p id="password-help">Entre 8 e 128 caracteres. Para produção, evita passwords reutilizadas noutros serviços.</p>
         {message ? <p role="status">{message}</p> : null}
         <div className="auth-actions">
           <button formAction={login} type="submit">Entrar</button>
