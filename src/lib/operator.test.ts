@@ -49,3 +49,16 @@ describe("operator escalation consistency", () => {
     expect(decision.humanReason).toContain("aprovação");
   });
 });
+
+describe("operator safety edge cases", () => {
+  it("does not turn an unknown request into an external action", () => {
+    const decision = runDeterministicOperator({ message: "Podes ajudar-me com uma dúvida?", knowledge: [], autonomy: 2 });
+    expect(decision.proposedActions).toHaveLength(0);
+  });
+
+  it("keeps missing company facts explicit instead of fabricating them", () => {
+    const decision = runDeterministicOperator({ message: "Qual é o preço?", knowledge: [], autonomy: 2 });
+    expect(decision.reply.toLowerCase()).toContain("não tenho um preço aprovado");
+    expect(decision.proposedActions).toHaveLength(0);
+  });
+});
