@@ -33,6 +33,6 @@ export async function recordSaleOutcome(formData: FormData) {
     p_revenue_minor: revenueMinor
   });
   if (error) redirect("/actions?error=sale");
-  revalidatePath("/actions"); revalidatePath("/dashboard");
+  revalidatePath("/actions"); revalidatePath("/dashboard"); revalidatePath("/ask");
   redirect("/actions?sale=1");
 }
