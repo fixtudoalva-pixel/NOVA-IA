@@ -32,6 +32,7 @@ export default async function ApprovalsPage({ searchParams }: ApprovalsPageProps
       {!approvals?.length && <p className="empty-state">Sem aprovações pendentes. O Operator continuará a pedir autorização quando a política exigir.</p>}
       {approvals?.map(a => {
         const action = Array.isArray(a.actions) ? a.actions[0] : a.actions;
+        if (!action) return null;
         return <div className="row" key={a.id}>
           <div><strong>{action?.action_type}</strong><br/><span>{action?.rationale ? (action.rationale.length > 300 ? action.rationale.slice(0, 300) + "…" : action.rationale) : "Sem justificação"}</span></div>
           <div>Risco declarado: {action?.risk}</div><div>{action?.status}</div>
