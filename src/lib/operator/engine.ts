@@ -23,7 +23,7 @@ export function runDeterministicOperator(input: {
   const priceKnowledge = relevant.filter(k => k.kind === "price");
   const bookingKnowledge = relevant.filter(k => k.kind === "policy" || k.kind === "service");
   const lower = message.toLocaleLowerCase("pt-PT");
-  const hasControlChars = /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(message);
+  const hasControlChars = /[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/.test(message);
   if (hasControlChars) return OperatorDecisionSchema.parse({ intent: "general_enquiry", summary: "Mensagem rejeitada por conter caracteres de controlo.", confidence: 1, reply: "Não consegui processar esta mensagem com segurança.", proposedActions: [], needsHuman: false, humanReason: null });
   const asksPrice = /preç|custa|quanto\s+(?:custa|fica|é)|orçamento|orcamento/.test(lower);
   const asksBooking = /marcar|marcação|agendar|agendamento|disponib|vaga|horário|horario/.test(lower) || /(?:amanhã|hoje).*(?:marcar|agendar|hora)|(?:marcar|agendar).*(?:amanhã|hoje)/.test(lower);
