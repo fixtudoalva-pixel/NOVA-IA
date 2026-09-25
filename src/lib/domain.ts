@@ -8,11 +8,16 @@ export interface PolicyDecision {
   reason: string;
 }
 
+const validRisks = new Set<ActionRisk>(["low", "medium", "high", "critical"]);
+
 export function evaluateActionPolicy(input: {
   autonomy: AutonomyLevel;
   risk: ActionRisk;
   hasExternalSideEffect: boolean;
 }): PolicyDecision {
+  if (!validRisks.has(input.risk)) {
+    return { allowed: false, requiresApproval: true, reason: "Invalid action risk." };
+  }
   if (input.risk === "critical") {
     return { allowed: false, requiresApproval: true, reason: "Critical actions are blocked in MVP." };
   }
