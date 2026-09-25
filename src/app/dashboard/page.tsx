@@ -27,6 +27,8 @@ export default async function DashboardPage() {
     supabase.from("knowledge_items").select("*", { count: "exact", head: true }).eq("organization_id", orgId).eq("is_approved", true)
   ]);
   const assisted = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
+  const orgSettings = Array.isArray(org) ? org[0] : org;
+  const assistedFormatted = new Intl.NumberFormat(orgSettings?.locale ?? "pt-PT", { style: "currency", currency: orgSettings?.currency ?? "EUR" }).format(assisted / 100);
   const hasMetricReadFailure = Boolean(actionsError || conversationsError || approvalsError || outcomesError || knowledgeError);
   const nextStep = (approvals ?? 0) > 0
     ? { href: "/approvals", label: "Rever aprovações pendentes" }
@@ -42,7 +44,7 @@ export default async function DashboardPage() {
     <section className="hero"><h1>{Array.isArray(org) ? org[0]?.name : org?.name}</h1><p>Dados reais da organização autenticada.</p></section>
     {hasMetricReadFailure && <p role="alert">Algumas métricas não puderam ser carregadas. Atualiza a página antes de tomar decisões com estes números.</p>}
     <section className="grid">
-      <article className="card"><span>Receita assistida</span><strong>€{(assisted/100).toFixed(2)}</strong><p>Somatório apenas de vendas registadas como receita assistida.</p></article>
+      <article className="card"><span>Receita assistida</span><strong>{assistedFormatted}</strong><p>Somatório apenas de vendas registadas como receita assistida.</p></article>
       <article className="card"><span>Ações</span><strong>{actions ?? 0}</strong><p>Ações visíveis apenas nesta organização.</p></article>
       <article className="card"><span>Conversas</span><strong>{conversations ?? 0}</strong><p>Inbox persistida e isolada por tenant.</p></article>
       <article className="card"><span>Aprovações pendentes</span><strong>{approvals ?? 0}</strong><p>Decisões que continuam sob controlo humano.</p></article>
