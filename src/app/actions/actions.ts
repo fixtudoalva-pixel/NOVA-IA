@@ -14,9 +14,11 @@ async function context() {
 }
 
 export async function executeApprovedAction(formData: FormData) {
-  const { supabase } = await context();
+  const { supabase, orgId } = await context();
   const actionId = String(formData.get("action_id") ?? "").trim();
   if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(actionId)) redirect("/actions?error=execute");
+  const { data: action, error: readError } = await supabase.from("actions").select("id").eq("id", actionId).eq("organization_id", orgId).eq("status", "approved").maybeSingle();
+  if (readError || !action) redirect("/actions?error=execute");
   const { error } = await supabase.rpc("execute_approved_action", { p_action_id: actionId });
   if (error) redirect("/actions?error=execute");
   revalidatePath("/actions"); revalidatePath("/dashboard"); revalidatePath("/ask");
