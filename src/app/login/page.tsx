@@ -13,6 +13,8 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
         ? "Não foi possível entrar. Confirma o email e a password."
         : params.error === "rate_limit"
           ? "O serviço de email atingiu temporariamente o limite de envios. Não repitas o pedido agora; tenta novamente mais tarde."
+          : params.error === "logout"
+            ? "Não foi possível terminar a sessão corretamente. Fecha esta página e tenta novamente antes de usares uma conta diferente."
           : params.error === "signup"
           ? "Não foi possível criar a conta. Confirma os dados ou tenta outro email."
           : params.error === "confirmation"
