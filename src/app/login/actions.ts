@@ -11,7 +11,7 @@ function getSiteUrl(host: string | null, protocol: string | null) {
   const vercel = process.env.NEXT_PUBLIC_VERCEL_URL?.trim();
   if (vercel) return `https://${vercel.replace(/\/$/, "")}`;
 
-  if (host) return `${protocol ?? "https"}://${host}`;
+  if (host && /^[a-z0-9.-]+(?::\\d+)?$/i.test(host)) return `${protocol === "http" ? "http" : "https"}://${host}`;
   return "http://localhost:3000";
 }
 
