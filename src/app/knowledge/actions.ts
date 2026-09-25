@@ -20,7 +20,7 @@ export async function addKnowledge(formData: FormData) {
   const kind = String(formData.get("kind") ?? "fact").trim().toLowerCase();
   const allowedKinds = new Set(["service", "price", "policy", "fact"]);
 
-  if (title.length < 2 || title.length > 160 || content.length < 2 || content.length > 10000 || /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(title + content) || !allowedKinds.has(kind)) {
+  if (title.length < 2 || title.length > 160 || content.length < 2 || content.length > 10000 || /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(title) || /[\u0000-\u0008\u000B\u000C\u000E-\u001F]/.test(content) || !allowedKinds.has(kind)) {
     redirect("/knowledge?error=validation");
   }
 
