@@ -26,7 +26,7 @@ export default async function ApprovalsPage({ searchParams }: ApprovalsPageProps
     <section className="card ledger">
       <h2>Pendentes</h2>
       {message ? <p role="status">{message}</p> : null}
-      {!approvals?.length && <p>Sem aprovações pendentes.</p>}
+      {!approvals?.length && <p className="empty-state">Sem aprovações pendentes. O Operator continuará a pedir autorização quando a política exigir.</p>}
       {approvals?.map(a => {
         const action = Array.isArray(a.actions) ? a.actions[0] : a.actions;
         return <div className="row" key={a.id}>
