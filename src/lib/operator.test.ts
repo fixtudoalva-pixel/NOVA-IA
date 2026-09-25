@@ -21,6 +21,9 @@ describe("action policy", () => {
 });
 
 describe("deterministic operator", () => {
+  it("does not classify every quanto question as price", () => {
+    expect(runDeterministicOperator({ message: "Quanto tempo demora?", knowledge: [], autonomy: 2 }).intent).toBe("general_enquiry");
+  });
   it("never invents a missing price", () => {
     const result = runDeterministicOperator({ message: "Quanto custa trocar o ecrã?", knowledge: [], autonomy: 2 });
     expect(result.intent).toBe("price_enquiry");
