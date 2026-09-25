@@ -57,6 +57,10 @@ describe("operator escalation consistency", () => {
 });
 
 describe("operator safety edge cases", () => {
+  it("handles whitespace-only input without creating an action", () => {
+    const decision = runDeterministicOperator({ message: "   ", knowledge: [], autonomy: 2 });
+    expect(decision.proposedActions).toHaveLength(0);
+  });
   it("does not turn an unknown request into an external action", () => {
     const decision = runDeterministicOperator({ message: "Podes ajudar-me com uma dúvida?", knowledge: [], autonomy: 2 });
     expect(decision.proposedActions).toHaveLength(0);
