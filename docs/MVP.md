@@ -74,3 +74,6 @@ Before real customer data or external side effects:
 
 ## MVP tenant model
 The current UI intentionally resolves a single organization membership. Organization creation is now also constrained server-side to one membership per onboarding user for this MVP flow. A future multi-organization release requires an explicit active-organization selector rather than relying on the first membership.
+
+## Merge readiness
+The foundation pull request stays draft until the latest Quality Gate is green, the authenticated golden path is exercised end-to-end, and tenant-isolation tests cover at least two users/organizations. A mergeable GitHub state alone is not a production-readiness signal.
