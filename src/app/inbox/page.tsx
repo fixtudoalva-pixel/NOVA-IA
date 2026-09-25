@@ -1,3 +1,4 @@
+import { AppNav } from "@/components/app-nav";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { simulateInbound } from "./actions";
@@ -31,6 +32,7 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
     .eq("organization_id", membership.organization_id).order("created_at", { ascending: false });
 
   return <main>
+    <AppNav />
     <header><div className="brand">NOVA IA</div><div className="badge">Live simulator</div></header>
     <section className="hero"><h1>Inbox</h1><p>Cria leads fictícios, mas guarda conversas reais no tenant. Nenhum canal pago é necessário.</p></section>
     <form className="card auth-form">
