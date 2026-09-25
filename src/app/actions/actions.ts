@@ -30,6 +30,7 @@ export async function recordSaleOutcome(formData: FormData) {
   const amount = Number(rawAmount);
   if (!/^[0-9a-f-]{36}$/i.test(actionId) || !Number.isFinite(amount) || amount <= 0 || amount > 100000000) redirect("/actions?error=sale");
   const revenueMinor = Math.round(amount * 100);
+  if (!Number.isSafeInteger(revenueMinor)) redirect("/actions?error=sale");
   const { error } = await supabase.rpc("record_sale_outcome", {
     p_action_id: actionId,
     p_revenue_minor: revenueMinor
