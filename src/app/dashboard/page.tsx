@@ -19,6 +19,7 @@ export default async function DashboardPage() {
   const org = membership.organizations;
   const orgId = Array.isArray(org) ? org[0]?.id : org?.id;
   if (!orgId) redirect("/onboarding");
+  // MVP reporting weeks use UTC Monday boundaries; tenant time zones are not modeled yet.
   const weekStart = new Date();
   const day = weekStart.getUTCDay();
   weekStart.setUTCDate(weekStart.getUTCDate() - ((day + 6) % 7));
