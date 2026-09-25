@@ -39,6 +39,10 @@ describe("deterministic operator", () => {
     const result = runDeterministicOperator({ message: "Qual é a reparação disponível?", knowledge: [{ kind: "service", title: "Reparação", content: "Reparação disponível." }], autonomy: 2 });
     expect(result.reply).toContain("Reparação disponível");
   });
+  it("does not use a generic fact as a price", () => {
+    const r = runDeterministicOperator({ message: "Quanto custa o ecrã?", knowledge: [{ kind: "fact", title: "Ecrã", content: "Trabalhamos com ecrãs." }], autonomy: 2 });
+    expect(r.reply).toContain("não tenho um preço aprovado");
+  });
   it("uses approved knowledge supplied to it", () => {
     const result = runDeterministicOperator({
       message: "Quanto custa trocar o ecrã do modelo X?",
