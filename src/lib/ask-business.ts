@@ -13,7 +13,7 @@ export type BusinessSnapshot = {
 export type BusinessAnswer = { text: string; href?: string; label?: string };
 
 export function answerBusinessQuestion(question: string, data: BusinessSnapshot): BusinessAnswer {
-  const q = question.trim().toLowerCase();
+  const q = question.trim().toLocaleLowerCase("pt-PT");
   if (!q) return { text: "Escreve uma pergunta sobre a operação da empresa." };
   if (q.length < 2) return { text: "Escreve uma pergunta mais completa sobre a operação da empresa." };
   if (/receita|vendi|vendas|faturei/.test(q)) {
