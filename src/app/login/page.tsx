@@ -23,7 +23,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
     <main>
       <header><div className="brand">NOVA IA</div><div className="badge">Secure access</div></header>
       <section className="hero"><h1>Entrar</h1><p>Acesso ao operador empresarial e respetivo Action Ledger.</p></section>
-      <form className="card auth-form">
+      <form className="card auth-form" aria-labelledby="login-form-heading"><h2 id="login-form-heading">Credenciais</h2>
         <label>Email<input name="email" type="email" required maxLength={254} autoComplete="email" /></label>
         <label>Password<input name="password" type="password" required minLength={8} maxLength={128} autoComplete="current-password" aria-describedby="password-help" /></label>
         <p id="password-help">Mínimo de 8 caracteres. Para produção, evita passwords reutilizadas noutros serviços.</p>
