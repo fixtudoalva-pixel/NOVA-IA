@@ -9,10 +9,12 @@ export default async function AskPage({ searchParams }: Props) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-  const { data: membership, error: membershipError } = await supabase.from("organization_members").select("organization_id").limit(1).maybeSingle();
+  const { data: membership, error: membershipError } = await supabase.from("organization_members").select("organization_id, organizations(locale,currency)").limit(1).maybeSingle();
   if (membershipError) throw new Error("Não foi possível carregar a organização.");
   if (!membership) redirect("/onboarding");
   const orgId = membership.organization_id;
+  const org = membership.organizations;
+  const orgSettings = Array.isArray(org) ? org[0] : org;
   const params = await searchParams;
   const question = (params.q ?? "").trim().slice(0, 500);
 
@@ -27,7 +29,7 @@ export default async function AskPage({ searchParams }: Props) {
 
   const revenue = outcomes?.reduce((sum, x) => sum + (x.revenue_minor ?? 0), 0) ?? 0;
   const dataWarning = Boolean(conversationsError || waitingError || approvalsError || actionsError || outcomesError || knowledgeError);
-  const answer = question && !dataWarning ? answerBusinessQuestion(question, { conversations: conversations ?? 0, waitingHuman: waitingHuman ?? 0, pendingApprovals: approvals ?? 0, openActions: openActions ?? 0, assistedRevenueMinor: revenue, approvedKnowledge: approvedKnowledge ?? 0 }) : null;
+  const answer = question && !dataWarning ? answerBusinessQuestion(question, { locale: orgSettings?.locale ?? "pt-PT", currency: orgSettings?.currency ?? "EUR", conversations: conversations ?? 0, waitingHuman: waitingHuman ?? 0, pendingApprovals: approvals ?? 0, openActions: openActions ?? 0, assistedRevenueMinor: revenue, approvedKnowledge: approvedKnowledge ?? 0 }) : null;
 
   return <main>
     <AppNav />
