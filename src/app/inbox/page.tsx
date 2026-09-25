@@ -51,7 +51,7 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
         const last = msgs.at(-1);
         const contact = Array.isArray(c.contacts) ? c.contacts[0] : c.contacts;
         return <div className="row" key={c.id}>
-          <div><strong>{contact?.display_name ?? "Sem nome"}</strong><br/><span>{c.channel}</span></div><div><span>{last?.actor ?? "—"}</span><br/>{last?.body ? (last.body.length > 240 ? last.body.slice(0, 240) + "…" : last.body) : "—"}</div><div><span>Estado</span><br/>{c.status.replaceAll("_", " ")}</div><div><form><input type="hidden" name="conversation_id" value={c.id}/><button formAction={runOperator} type="submit" aria-label={`Executar Operator para ${contact?.display_name ?? "conversa"}`}>Executar Operator</button></form></div>
+          <div><strong>{contact?.display_name ?? "Sem nome"}</strong><br/><span>{c.channel}</span></div><div><span>{last?.actor ?? "—"}</span><br/>{last?.body ? (last.body.length > 240 ? last.body.slice(0, 240) + "…" : last.body) : "—"}</div><div><span>Estado</span><br/>{c.status.replaceAll("_", " ")}</div><div><form><input type="hidden" name="conversation_id" value={c.id}/><button formAction={runOperator} disabled={c.status === "closed"} type="submit" aria-label={`Executar Operator para ${contact?.display_name ?? "conversa"}`}>Executar Operator</button></form></div>
         </div>;
       })}
     </section>
