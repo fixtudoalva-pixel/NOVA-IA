@@ -32,13 +32,13 @@ export function runDeterministicOperator(input: {
   let confidence = 0.55;
 
   if (asksPrice && priceKnowledge.length) {
-    reply = priceKnowledge.slice(0, 5).map(k => `${k.title}: ${k.content}`).join("\\n").slice(0, 8000);
+    reply = priceKnowledge.slice(0, 5).map(k => `${k.title}: ${k.content}`).join("\n").slice(0, 8000);
     confidence = 0.9;
   } else if (asksBooking && bookingKnowledge.length) {
-    reply = bookingKnowledge.slice(0, 3).map(k => `${k.title}: ${k.content}`).join("\\n").slice(0, 6000) + "\\nPosso preparar um pedido de marcação, mas a disponibilidade concreta continua por confirmar.";
+    reply = bookingKnowledge.slice(0, 3).map(k => `${k.title}: ${k.content}`).join("\n").slice(0, 6000) + "\nPosso preparar um pedido de marcação, mas a disponibilidade concreta continua por confirmar.";
     confidence = 0.88;
   } else if (relevant.length && !asksPrice && !asksBooking) {
-    reply = relevant.slice(0, 5).map(k => `${k.title}: ${k.content}`).join("\\n").slice(0, 8000);
+    reply = relevant.slice(0, 5).map(k => `${k.title}: ${k.content}`).join("\n").slice(0, 8000);
     confidence = 0.88;
   } else if (asksPrice) {
     reply = "Ainda não tenho um preço aprovado para lhe indicar. Posso recolher os detalhes necessários e pedir confirmação?";
