@@ -44,3 +44,7 @@ button.secondary { background: transparent; color: var(--text); border: 1px soli
 [role="status"], [role="alert"] { border:1px solid var(--line); border-radius:10px; padding:11px 13px; color:var(--text) !important; background:#0b0e14; }
 .empty-state { color:var(--muted); padding:12px 0; }
 @media (max-width:760px){ .app-nav{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px}.app-nav a{white-space:nowrap}.auth-actions{flex-wrap:wrap} }
+
+.app-nav form { margin:0; }
+.nav-button { padding:9px 12px; font-size:14px; background:transparent; color:var(--muted); border:1px solid var(--line); }
+.nav-button:hover { color:var(--text); border-color:var(--muted); }
