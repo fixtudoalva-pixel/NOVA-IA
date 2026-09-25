@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import type { Json } from "@/lib/database.types";
 import { runDeterministicOperator } from "@/lib/operator/engine";
-import { evaluateActionPolicy } from "@/lib/domain";
 
 export async function runOperator(formData: FormData) {
   const supabase = await createClient();
@@ -49,14 +48,8 @@ export async function runOperator(formData: FormData) {
     autonomy: 2
   });
 
-  const actions = decision.proposedActions.map(proposed => ({
-    ...proposed,
-    requiresApproval: evaluateActionPolicy({
-      autonomy: 2,
-      risk: proposed.risk,
-      hasExternalSideEffect: true
-    }).requiresApproval
-  }));
+  // The database independently enforces approval for every MVP Operator side effect.
+  const actions = decision.proposedActions.map(proposed => ({ ...proposed, requiresApproval: true }));
 
   const { error } = await supabase.rpc("commit_operator_decision", {
     p_conversation_id: conversationId,
