@@ -14,6 +14,7 @@ export type BusinessAnswer = { text: string; href?: string; label?: string };
 export function answerBusinessQuestion(question: string, data: BusinessSnapshot): BusinessAnswer {
   const q = question.trim().toLowerCase();
   if (!q) return { text: "Escreve uma pergunta sobre a operação da empresa." };
+  if (q.length < 2) return { text: "Escreve uma pergunta mais completa sobre a operação da empresa." };
   if (/receita|vendi|vendas|faturei/.test(q)) {
     const amount = new Intl.NumberFormat(data.locale ?? "pt-PT", { style: "currency", currency: data.currency ?? "EUR" }).format(data.assistedRevenueMinor / 100);
     return { text: "Receita assistida registada: " + amount + ". Este valor é atribuição assistida, não prova causalidade.", href: "/actions", label: "Ver Ledger" };
