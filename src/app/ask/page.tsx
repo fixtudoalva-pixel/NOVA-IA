@@ -49,6 +49,6 @@ export default async function AskPage({ searchParams }: Props) {
     {questionTooLong && <p role="alert">A pergunta excede o limite de 500 caracteres.</p>}
     {dataWarning && <p role="alert">Algumas métricas não puderam ser carregadas. Não vou gerar uma resposta com métricas incompletas.</p>}
     {answer && <section className="card"><span>Resposta</span><strong>{answer.text}</strong>{answer.href && <p><a href={answer.href}>{answer.label} →</a></p>}</section>}
-    <section className="card"><h2>Exemplos</h2><div className="auth-actions"><a href="/ask?q=Tenho+clientes+à+espera%3F">Clientes à espera</a><a href="/ask?q=Tenho+aprovações+pendentes%3F">Aprovações</a><a href="/ask?q=Quanto+tenho+de+receita+assistida%3F">Receita total</a><a href="/ask?q=Quanto+tenho+de+receita+esta+semana%3F">Receita esta semana</a><a href="/ask?q=O+que+tenho+para+fazer+hoje%3F">Trabalho de hoje</a></div></section>
+    <section className="card" aria-labelledby="ask-examples-heading"><h2 id="ask-examples-heading">Exemplos</h2><div className="auth-actions"><a href="/ask?q=Tenho+clientes+à+espera%3F">Clientes à espera</a><a href="/ask?q=Tenho+aprovações+pendentes%3F">Aprovações</a><a href="/ask?q=Quanto+tenho+de+receita+assistida%3F">Receita total</a><a href="/ask?q=Quanto+tenho+de+receita+esta+semana%3F">Receita esta semana</a><a href="/ask?q=O+que+tenho+para+fazer+hoje%3F">Trabalho de hoje</a></div></section>
   </main>;
 }
