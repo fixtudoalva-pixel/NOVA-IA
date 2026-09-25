@@ -25,7 +25,8 @@ export async function executeApprovedAction(formData: FormData) {
 export async function recordSaleOutcome(formData: FormData) {
   const { supabase } = await context();
   const actionId = String(formData.get("action_id") ?? "");
-  const amount = Number(formData.get("amount") ?? 0);
+  const rawAmount = String(formData.get("amount") ?? "").trim().replace(",", ".");
+  const amount = Number(rawAmount);
   if (!actionId || !Number.isFinite(amount) || amount <= 0 || amount > 100000000) redirect("/actions?error=sale");
   const revenueMinor = Math.round(amount * 100);
   const { error } = await supabase.rpc("record_sale_outcome", {
