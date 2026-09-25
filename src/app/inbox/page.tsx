@@ -43,12 +43,13 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
     </form>
     <section className="card ledger">
       <h2>Conversas persistidas</h2>
+      {!conversations?.length && <p className="empty-state">Ainda não existem conversas. Usa o simulador acima para criar a primeira.</p>}
       {conversations?.map(c => {
         const msgs = [...(c.messages ?? [])].sort((a,b)=>a.created_at.localeCompare(b.created_at));
         const last = msgs.at(-1);
         const contact = Array.isArray(c.contacts) ? c.contacts[0] : c.contacts;
         return <div className="row" key={c.id}>
-          <div><strong>{contact?.display_name ?? "Sem nome"}</strong></div><div>{last?.body ?? "—"}</div><div>{c.status}</div><div><form><input type="hidden" name="conversation_id" value={c.id}/><button formAction={runOperator}>Executar Operator</button></form></div>
+          <div><strong>{contact?.display_name ?? "Sem nome"}</strong><br/><span>{c.channel}</span></div><div><span>{last?.actor ?? "—"}</span><br/>{last?.body ?? "—"}</div><div>{c.status}</div><div><form><input type="hidden" name="conversation_id" value={c.id}/><button formAction={runOperator}>Executar Operator</button></form></div>
         </div>;
       })}
     </section>
