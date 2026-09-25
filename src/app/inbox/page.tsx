@@ -10,7 +10,8 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-  const { data: membership } = await supabase.from("organization_members").select("organization_id").limit(1).single();
+  const { data: membership, error: membershipError } = await supabase.from("organization_members").select("organization_id").limit(1).maybeSingle();
+  if (membershipError) throw new Error("Não foi possível carregar a organização.");
   if (!membership) redirect("/onboarding");
   const params = await searchParams;
   const message = params.created === "1"
@@ -27,9 +28,10 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
               ? "Não foi possível executar o Operator."
               : null;
 
-  const { data: conversations } = await supabase.from("conversations")
+  const { data: conversations, error: conversationsError } = await supabase.from("conversations")
     .select("id,status,channel,created_at,updated_at,contacts(display_name),messages(body,actor,created_at)")
     .eq("organization_id", membership.organization_id).order("updated_at", { ascending: false });
+  if (conversationsError) throw new Error("Não foi possível carregar o Inbox.");
 
   return <main>
     <AppNav />
