@@ -30,7 +30,7 @@ export default async function ActionsPage({ searchParams }: ActionsPageProps) {
       {message ? <p role="status">{message}</p> : null}
       {!actions?.length && <p className="empty-state">Ainda não existem ações. As decisões do Operator aparecerão aqui quando propuser trabalho executável.</p>}
       {actions?.map(a => {
-        const saleOutcome=(a.outcomes ?? []).find(o=>o.kind==="sale");
+        const saleOutcome=(a.outcomes ?? []).find(o=>o.kind==="sale" && o.attribution==="assisted");
         const revenue=saleOutcome?.revenue_minor ?? 0;
         return <div className="row" key={a.id}>
           <div><strong>{a.action_type}</strong><br/><span>{a.rationale ? (a.rationale.length > 300 ? a.rationale.slice(0, 300) + "…" : a.rationale) : "Sem justificação"}</span></div>
