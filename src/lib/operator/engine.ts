@@ -17,7 +17,8 @@ export function runDeterministicOperator(input: {
   autonomy: 0 | 1 | 2 | 3 | 4;
 }): OperatorDecision {
   const message = input.message.trim().slice(0, 4000);
-  const relevant = findRelevantKnowledge(message, input.knowledge);
+  const safeKnowledge = input.knowledge.slice(0, 200).map(k => ({ ...k, title: k.title.slice(0, 160), content: k.content.slice(0, 10000) }));
+  const relevant = findRelevantKnowledge(message, safeKnowledge);
   const lower = message.toLocaleLowerCase();
   const asksPrice = /preç|custa|quanto|orçamento/.test(lower);
   const asksBooking = /marcar|marcação|amanhã|hoje|hora|disponib/.test(lower);
