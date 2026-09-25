@@ -24,6 +24,11 @@ describe("deterministic operator", () => {
   it("does not classify every quanto question as price", () => {
     expect(runDeterministicOperator({ message: "Quanto tempo demora?", knowledge: [], autonomy: 2 }).intent).toBe("general_enquiry");
   });
+  it("can cite booking policy while keeping availability unconfirmed", () => {
+    const r = runDeterministicOperator({ message: "Quero marcar uma visita", knowledge: [{ kind: "policy", title: "Marcações", content: "As visitas requerem confirmação." }], autonomy: 2 });
+    expect(r.reply).toContain("requerem confirmação");
+    expect(r.reply).toContain("por confirmar");
+  });
   it("does not infer availability from generic matching Knowledge", () => {
     const r = runDeterministicOperator({ message: "Têm disponibilidade?", knowledge: [{ kind: "fact", title: "Disponibilidade", content: "Atendemos clientes." }], autonomy: 2 });
     expect(r.reply).toContain("não confirmei disponibilidade");
