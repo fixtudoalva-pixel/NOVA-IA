@@ -69,6 +69,8 @@ export default function WorkspacePage() {
     let active = true;
     async function start() {
       try {
+        const confirmationError = new URLSearchParams(window.location.search).get("error_code") || new URLSearchParams(window.location.hash.slice(1)).get("error_code");
+        if (confirmationError === "otp_expired") { router.replace("/login?confirmation=expired"); return; }
         const { data: { user }, error } = await client!.auth.getUser();
         if (error || !user) { router.replace("/login"); return; }
         const memberships = await client!.from("organization_members").select("organization_id").eq("user_id", user.id).limit(1);

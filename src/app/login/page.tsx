@@ -1,8 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getBrowserClient } from "@/lib/supabase/browser";
+
+function authErrorMessage(error: unknown): string {
+  const code = typeof error === "object" && error !== null && "code" in error ? String(error.code) : "";
+  if (code === "email_not_confirmed") return "O email ainda não foi confirmado. Abre a mensagem de confirmação mais recente antes de iniciares sessão.";
+  if (code === "over_email_send_rate_limit") return "O serviço de email atingiu o limite temporário de envios. Aguarda antes de pedir outra confirmação e usa sempre a mensagem mais recente.";
+  return error instanceof Error ? error.message : "Não foi possível concluir o acesso.";
+}
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,6 +19,12 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState("");
   const supabase = getBrowserClient();
+
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("confirmation") === "expired") {
+      setNotice("O link de confirmação expirou ou já foi usado. Introduz o email e pede uma nova confirmação quando o limite de envios permitir.");
+    }
+  }, []);
 
   async function submit(event: React.FormEvent) {
     event.preventDefault();
@@ -26,7 +39,7 @@ export default function LoginPage() {
       if (result.data.session) router.replace("/workspace");
       else setNotice("Confirma o endereço no email e volta a iniciar sessão.");
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Não foi possível concluir o acesso.");
+      setNotice(authErrorMessage(error));
     } finally { setBusy(false); }
   }
 
@@ -44,7 +57,7 @@ export default function LoginPage() {
       if (error) throw error;
       setNotice("Se o endereço tiver uma confirmação pendente, vais receber um novo email. Verifica também o spam.");
     } catch (error) {
-      setNotice(error instanceof Error ? error.message : "Não foi possível reenviar a confirmação.");
+      setNotice(authErrorMessage(error));
     } finally { setBusy(false); }
   }
 
