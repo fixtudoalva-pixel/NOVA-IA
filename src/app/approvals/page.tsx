@@ -2,12 +2,18 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { approve, reject } from "./actions";
 
-export default async function ApprovalsPage() {
+type ApprovalsPageProps = { searchParams: Promise<{ error?: string; approved?: string; rejected?: string }> };
+
+export default async function ApprovalsPage({ searchParams }: ApprovalsPageProps) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
   const { data: membership } = await supabase.from("organization_members").select("organization_id").limit(1).single();
   if (!membership) redirect("/onboarding");
+  const params = await searchParams;
+  const message = params.approved === "1" ? "Ação aprovada. Já pode avançar para execução."
+    : params.rejected === "1" ? "Ação rejeitada. Não será executada."
+    : params.error === "decision" ? "Não foi possível registar a decisão." : null;
   const { data: approvals } = await supabase.from("approvals")
     .select("id,decision,created_at,actions(id,action_type,risk,rationale,status)")
     .eq("organization_id", membership.organization_id).is("decision", null).order("created_at", { ascending: false });
@@ -17,6 +23,7 @@ export default async function ApprovalsPage() {
     <section className="hero"><h1>Aprovações</h1><p>Ações fora da autonomia permitida ficam bloqueadas até decisão humana.</p></section>
     <section className="card ledger">
       <h2>Pendentes</h2>
+      {message ? <p role="status">{message}</p> : null}
       {!approvals?.length && <p>Sem aprovações pendentes.</p>}
       {approvals?.map(a => {
         const action = Array.isArray(a.actions) ? a.actions[0] : a.actions;
