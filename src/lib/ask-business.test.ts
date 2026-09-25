@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { answerBusinessQuestion } from "./ask-business";
 
-const data = { conversations: 4, waitingHuman: 2, pendingApprovals: 1, openActions: 3, assistedRevenueMinor: 12345, approvedKnowledge: 5 };
+const data = { conversations: 4, waitingHuman: 2, pendingApprovals: 1, openActions: 3, assistedRevenueMinor: 12345, weeklyAssistedRevenueMinor: 4567, approvedKnowledge: 5 };
 
 describe("Ask Your Business", () => {
   it("answers revenue from supplied data", () => expect(answerBusinessQuestion("Quanto vendi?", data).text).toContain("123,45"));
@@ -18,6 +18,11 @@ describe("Ask Your Business", () => {
   it("handles empty questions", () => expect(answerBusinessQuestion("", data).text).toContain("Escreve"));
   it("rejects one-character questions", () => expect(answerBusinessQuestion("?", data).text).toContain("mais completa"));
   it("does not invent revenue for unsupported questions", () => expect(answerBusinessQuestion("Diz-me o lucro líquido", data).text).toContain("não consigo responder"));
+  it("answers weekly revenue from weekly data", () => {
+    const text = answerBusinessQuestion("Quanto tenho de receita esta semana?", data).text;
+    expect(text).toContain("45,67");
+    expect(text).toContain("esta semana");
+  });
   it("labels assisted revenue as non-causal", () => expect(answerBusinessQuestion("Quanto vendi?", data).text).toContain("não prova causalidade"));
   it("formats revenue with tenant currency", () => expect(answerBusinessQuestion("Quanto vendi?", { ...data, locale: "en-US", currency: "USD" }).text).toContain("$123.45"));
   it("formats default revenue as Portuguese EUR", () => {
