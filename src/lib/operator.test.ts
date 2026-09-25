@@ -109,6 +109,7 @@ describe("operator safety edge cases", () => {
     const decision = runDeterministicOperator({ message: "segredoespecial", knowledge, autonomy: 2 });
     expect(decision.reply).not.toContain("segredoespecial");
   });
+  it("ignores unsupported Knowledge kinds", () => expect(runDeterministicOperator({ message: "Quanto custa o X?", knowledge: [{ kind: "secret", title: "X", content: "1 €" }], autonomy: 2 }).reply).toContain("não tenho um preço aprovado"));
   it("ignores malformed blank knowledge", () => {
     const decision = runDeterministicOperator({ message: "Quanto custa?", knowledge: [{ kind: "price", title: "  ", content: "  " }], autonomy: 2 });
     expect(decision.reply.toLowerCase()).toContain("preço");
