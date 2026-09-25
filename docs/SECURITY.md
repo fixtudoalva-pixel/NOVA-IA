@@ -29,3 +29,6 @@ The live database migration history is append-only and includes short-lived secu
 - Production must set NEXT_PUBLIC_SITE_URL to the stable canonical HTTPS origin.
 - Request Host and Vercel host are fallbacks, not the preferred production authority.
 - Post-confirmation redirects accept only bounded relative paths.
+
+## MVP Operator approval enforcement
+The database now derives the MVP Operator approval requirement itself: every proposed external Operator action is persisted as awaiting approval, regardless of any client-supplied requiresApproval field. Critical actions remain rejected. This removes the previous trust in the browser/server-action payload for approval state.
