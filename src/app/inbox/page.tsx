@@ -1,26 +1,72 @@
-const threads = [
-  { name: "Cliente teste", message: "Quanto custa trocar o ecrã do meu telemóvel?", status: "Novo" },
-  { name: "Lead #002", message: "Conseguem ver isto amanhã?", status: "Aguardar IA" },
-  { name: "Lead #003", message: "Obrigado, fica combinado.", status: "Concluído" }
-];
+"use client";
+
+import { useState } from "react";
+import { evaluateActionPolicy, type AutonomyLevel } from "@/lib/domain";
+
+type Entry = { id: number; kind: "customer" | "proposal" | "sent" | "rejected"; text: string; reason?: string };
+
+function propose(message: string, knowledge: string) {
+  const lower = message.toLocaleLowerCase("pt-PT");
+  if (/desconto|mais barato|baixar o preço|redução/.test(lower))
+    return { text: "Posso verificar se é possível fazer uma condição especial. Qual é o modelo do equipamento e que serviço precisa?", risk: "high" as const, reason: "Pedido de desconto: qualquer compromisso comercial exige aprovação." };
+  if (/marcar|amanhã|horário|disponib/.test(lower))
+    return { text: "Posso ajudar com a marcação. Qual é o equipamento, o problema e o horário que prefere? Confirmo a disponibilidade antes de fechar.", risk: "medium" as const, reason: "Disponibilidade não confirmada; sem promessa de vaga." };
+  if (/preço|custa|orçamento|valor/.test(lower))
+    return { text: knowledge.trim() ? `A informação aprovada que tenho é: ${knowledge.trim()} Para confirmar o orçamento, qual é o modelo exato e o problema?` : "Para lhe dar um orçamento correto, qual é o modelo exato do equipamento e o problema?", risk: "low" as const, reason: knowledge.trim() ? "Resposta baseada no conhecimento introduzido nesta sessão." : "Sem tabela de preços aprovada: pedir os dados necessários." };
+  return { text: "Obrigado pela mensagem. Pode indicar o modelo do equipamento e descrever o problema para o podermos ajudar?", risk: "low" as const, reason: "Resposta genérica de qualificação." };
+}
 
 export default function InboxPage() {
+  const [message, setMessage] = useState("");
+  const [knowledge, setKnowledge] = useState("");
+  const [autonomy, setAutonomy] = useState<AutonomyLevel>(1);
+  const [entries, setEntries] = useState<Entry[]>([]);
+  const [nextId, setNextId] = useState(1);
+
+  function receive() {
+    const value = message.trim();
+    if (!value) return;
+    const draft = propose(value, knowledge);
+    const policy = evaluateActionPolicy({ autonomy, risk: draft.risk, hasExternalSideEffect: true });
+    setEntries((current) => [...current,
+      { id: nextId, kind: "customer", text: value },
+      { id: nextId + 1, kind: policy.allowed && !policy.requiresApproval ? "sent" : "proposal", text: draft.text, reason: `${draft.reason} ${policy.reason}` }
+    ]);
+    setNextId(nextId + 2);
+    setMessage("");
+  }
+
+  function decide(id: number, approved: boolean) {
+    setEntries((current) => current.map((entry) => entry.id === id && entry.kind === "proposal" ? { ...entry, kind: approved ? "sent" : "rejected" } : entry));
+  }
+
   return (
     <main>
-      <header><div className="brand">NOVA IA</div><div className="badge">Inbox Simulator</div></header>
-      <section className="hero">
-        <h1>Inbox</h1>
-        <p>Laboratório sem custos para testar atendimento, decisões, aprovações e resultados antes de ligar canais externos.</p>
-      </section>
-      <section className="card">
-        {threads.map((thread) => (
-          <div className="row" key={thread.name}>
-            <strong>{thread.name}</strong>
-            <div>{thread.message}</div>
-            <div>{thread.status}</div>
-            <div>simulator</div>
-          </div>
-        ))}
+      <header><a className="brand" href="/">NOVA IA</a><span className="badge">Simulador local</span></header>
+      <section className="hero"><h1>Inbox</h1><p>Experimente o atendimento com conhecimento aprovado e controlo humano. As mensagens ficam apenas nesta sessão do navegador; não são enviadas a clientes.</p></section>
+      <section className="sim-grid">
+        <div className="card sim-form">
+          <h2>Configuração</h2>
+          <label htmlFor="knowledge">Conhecimento aprovado da empresa</label>
+          <textarea id="knowledge" value={knowledge} onChange={(event) => setKnowledge(event.target.value)} placeholder="Ex.: Fazemos diagnóstico de telemóveis. O preço é confirmado após inspeção." rows={5} />
+          <label htmlFor="autonomy">Nível de autonomia</label>
+          <select id="autonomy" value={autonomy} onChange={(event) => setAutonomy(Number(event.target.value) as AutonomyLevel)}>
+            <option value={0}>0 · Observar</option><option value={1}>1 · Propor</option><option value={2}>2 · Aprovação para enviar</option><option value={3}>3 · Enviar dentro dos limites</option><option value={4}>4 · Autonomia ampliada</option>
+          </select>
+          <label htmlFor="message">Mensagem de um cliente fictício</label>
+          <textarea id="message" value={message} onChange={(event) => setMessage(event.target.value)} placeholder="Quanto custa trocar o ecrã do meu telemóvel?" rows={3} />
+          <button onClick={receive} disabled={!message.trim()}>Receber mensagem</button>
+        </div>
+        <div className="card sim-history" aria-live="polite">
+          <h2>Conversa e decisões</h2>
+          {entries.length === 0 && <p>Introduza uma mensagem para começar a simulação.</p>}
+          {entries.map((entry) => <article className="sim-entry" key={entry.id}>
+            <span>{entry.kind === "customer" ? "Cliente" : entry.kind === "proposal" ? "A aguardar aprovação" : entry.kind === "sent" ? "Resposta simulada" : "Proposta rejeitada"}</span>
+            <p>{entry.text}</p>
+            {entry.reason && <small>{entry.reason}</small>}
+            {entry.kind === "proposal" && <div className="sim-actions"><button onClick={() => decide(entry.id, true)}>Aprovar na simulação</button><button className="secondary" onClick={() => decide(entry.id, false)}>Rejeitar</button></div>}
+          </article>)}
+        </div>
       </section>
     </main>
   );
