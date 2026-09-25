@@ -98,6 +98,11 @@ describe("operator escalation consistency", () => {
 });
 
 describe("operator safety edge cases", () => {
+  it("renders Knowledge items on real newline boundaries", () => {
+    const r = runDeterministicOperator({ message: "ajuda detalhe", knowledge: [{ kind: "fact", title: "Ajuda A", content: "detalhe A" }, { kind: "fact", title: "Ajuda B", content: "detalhe B" }], autonomy: 2 });
+    expect(r.reply).toContain("\n");
+    expect(r.reply).not.toContain("\\n");
+  });
   it("bounds the number of knowledge items echoed in a reply", () => {
     const knowledge = Array.from({ length: 10 }, (_, i) => ({ kind: "fact", title: "Ajuda " + i, content: "ajuda detalhe " + i }));
     const decision = runDeterministicOperator({ message: "Preciso de ajuda", knowledge, autonomy: 2 });
