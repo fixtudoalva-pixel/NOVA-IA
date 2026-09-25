@@ -20,12 +20,12 @@ export async function runOperator(formData: FormData) {
   const orgId = membership.organization_id;
   const { data: conversation, error: conversationError } = await supabase
     .from("conversations")
-    .select("id,messages(id,body,actor,direction,created_at)")
+    .select("id,status,messages(id,body,actor,direction,created_at)")
     .eq("id", conversationId)
     .eq("organization_id", orgId)
     .single();
 
-  if (conversationError || !conversation) redirect("/inbox?error=operator");
+  if (conversationError || !conversation || conversation.status === "closed") redirect("/inbox?error=operator");
 
   const latestCustomer = [...(conversation.messages ?? [])]
     .filter(m => m.actor === "customer" && m.direction === "inbound")
