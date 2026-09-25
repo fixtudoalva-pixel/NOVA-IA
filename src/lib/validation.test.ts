@@ -8,5 +8,6 @@ describe("input validation", () => {
   it("normalizes repeated whitespace", () => expect(normalizeSingleLine("  Nova   Empresa  ", 120)).toBe("Nova Empresa"));
   it("bounds normalized single-line values", () => expect(normalizeSingleLine("abcdef", 3)).toBe("abc"));
   it("detects unsafe control characters", () => expect(hasUnsafeControlChars("ok\u0000bad")).toBe(true));
+  it("detects DEL control characters", () => expect(hasUnsafeControlChars("bad\u007f")).toBe(true));
   it("allows ordinary line breaks", () => expect(hasUnsafeControlChars("linha 1\nlinha 2")).toBe(false));
 });
