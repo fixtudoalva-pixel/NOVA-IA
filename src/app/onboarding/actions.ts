@@ -9,7 +9,7 @@ export async function createOrganization(formData: FormData) {
   if (!user) redirect("/login");
 
   const name = String(formData.get("name") ?? "").trim();
-  if (name.length < 2) redirect("/onboarding?error=name");
+  if (name.length < 2 || name.length > 120) redirect("/onboarding?error=name");
 
   const { error } = await supabase.rpc("create_organization", {
     organization_name: name,
