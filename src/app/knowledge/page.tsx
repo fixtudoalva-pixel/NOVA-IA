@@ -9,7 +9,8 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login");
-  const { data: membership } = await supabase.from("organization_members").select("organization_id").limit(1).single();
+  const { data: membership, error: membershipError } = await supabase.from("organization_members").select("organization_id").limit(1).maybeSingle();
+  if (membershipError) throw new Error("Não foi possível carregar a organização.");
   if (!membership) redirect("/onboarding");
   const { data: items } = await supabase.from("knowledge_items").select("*").eq("organization_id", membership.organization_id).order("created_at", { ascending: false });
   const params = await searchParams;
