@@ -44,18 +44,18 @@ export default function WorkspacePage() {
     const [conv, people, msgs, facts, acts, approvalsResult, runsResult, results] = await Promise.all([
       client.from("conversations").select("id,contact_id,created_at,status").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(50),
       client.from("contacts").select("id,display_name").eq("organization_id", orgId).limit(50),
-      client.from("messages").select("id,conversation_id,actor,direction,body,created_at").eq("organization_id", orgId).order("created_at", { ascending: true }).limit(500),
+      client.from("messages").select("id,conversation_id,actor,direction,body,created_at").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(500),
       client.from("knowledge_items").select("id,title,content,is_approved").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(100),
       client.from("actions").select("id,conversation_id,action_type,status,risk,rationale,created_at").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(100),
       client.from("approvals").select("id,action_id,decision").eq("organization_id", orgId).limit(100),
-      client.from("agent_runs").select("source_message_id").eq("organization_id", orgId).limit(500),
+      client.from("agent_runs").select("source_message_id").eq("organization_id", orgId).order("created_at", { ascending: false }).limit(500),
       client.from("outcomes").select("id,action_id,kind,revenue_minor").eq("organization_id", orgId).limit(100)
     ]);
     const error = [conv, people, msgs, facts, acts, approvalsResult, runsResult, results].find((item) => item.error)?.error;
     if (error) throw error;
     setConversations((conv.data ?? []) as Conversation[]);
     setContacts((people.data ?? []) as Contact[]);
-    setMessages((msgs.data ?? []) as Message[]);
+    setMessages(((msgs.data ?? []) as Message[]).reverse());
     setKnowledge((facts.data ?? []) as Knowledge[]);
     setActions((acts.data ?? []) as Action[]);
     setApprovals((approvalsResult.data ?? []) as Approval[]);
@@ -215,8 +215,8 @@ export default function WorkspacePage() {
           {item.status === "awaiting_approval" && <div className="sim-actions"><button disabled={busy} onClick={() => void approval(item, true)}>Aprovar</button><button className="secondary" disabled={busy} onClick={() => void approval(item, false)}>Rejeitar</button></div>}
           {item.status === "approved" && <button disabled={busy} onClick={() => void execute(item)}>Executar na simulação</button>}
           {item.status === "completed" && <div><small>Ação concluída apenas no simulador. Regista uma venda apenas se foi confirmada por uma pessoa.</small>
-            <div className="sale-form"><label htmlFor={`sale-${item.id}`}>Venda confirmada (€)</label><input id={`sale-${item.id}`} inputMode="decimal" type="number" step="0.01" min="0.01" value={saleAmount[item.id] ?? ""} onChange={(event) => setSaleAmount((current) => ({ ...current, [item.id]: event.target.value }))} /><button disabled={busy || !saleAmount[item.id]} onClick={() => void recordSale(item)}>Registar venda</button></div>
-            {outcomes.some((outcome) => outcome.action_id === item.id && outcome.kind === "sale") && <p className="good">Venda confirmada no registo.</p>}
+            {outcomes.find((outcome) => outcome.action_id === item.id && outcome.kind === "sale") ? <p className="good">Venda confirmada no registo: {((outcomes.find((outcome) => outcome.action_id === item.id && outcome.kind === "sale")?.revenue_minor ?? 0) / 100).toLocaleString("pt-PT", { style: "currency", currency: "EUR" })}.</p> :
+              <div className="sale-form"><label htmlFor={`sale-${item.id}`}>Venda confirmada (€)</label><input id={`sale-${item.id}`} inputMode="decimal" type="number" step="0.01" min="0.01" value={saleAmount[item.id] ?? ""} onChange={(event) => setSaleAmount((current) => ({ ...current, [item.id]: event.target.value }))} /><button disabled={busy || !saleAmount[item.id]} onClick={() => void recordSale(item)}>Registar venda</button></div>}
           </div>}
         </article>)}
       </section>}
