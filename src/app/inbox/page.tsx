@@ -37,8 +37,8 @@ export default async function InboxPage({ searchParams }: InboxPageProps) {
     <AppNav />
     <header><div className="brand">NOVA IA</div><div className="badge">Live simulator</div></header>
     <section className="hero"><h1>Inbox</h1><p>Cria leads fictícios, mas guarda conversas reais no tenant. Nenhum canal pago é necessário.</p></section>
-    <form className="card auth-form">
-      <label>Cliente<input name="name" placeholder="Cliente teste" maxLength={120} /></label>
+    <form className="card auth-form" aria-labelledby="simulate-heading">
+      <h2 id="simulate-heading">Simular lead</h2><label>Cliente<input name="name" placeholder="Cliente teste" maxLength={120} /></label>
       <label>Mensagem<textarea name="body" required rows={3} minLength={2} maxLength={4000} placeholder="Quanto custa o serviço?" /></label>
       {message ? <p role="status">{message}</p> : null}
       <button formAction={simulateInbound}>Simular mensagem recebida</button>
