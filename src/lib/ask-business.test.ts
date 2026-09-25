@@ -25,6 +25,11 @@ describe("Ask Your Business", () => {
     expect(text).toContain("123,45");
     expect(text).not.toContain("45,67");
   });
+  it("does not label historical revenue as weekly when weekly data is absent", () => {
+    const { weeklyAssistedRevenueMinor: _weekly, ...withoutWeekly } = data;
+    const text = answerBusinessQuestion("Quanto vendi esta semana?", withoutWeekly).text;
+    expect(text).toContain("0,00");
+  });
   it("answers weekly revenue from weekly data", () => {
     const text = answerBusinessQuestion("Quanto tenho de receita esta semana?", data).text;
     expect(text).toContain("45,67");
