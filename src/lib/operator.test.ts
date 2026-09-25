@@ -47,6 +47,7 @@ describe("deterministic operator", () => {
   it("recognizes agendar as booking intent", () => {
     expect(runDeterministicOperator({ message: "Quero agendar uma visita.", knowledge: [], autonomy: 2 }).proposedActions[0]?.type).toBe("propose_booking");
   });
+  it("blocks critical proposed actions at policy level", () => expect(evaluateActionPolicy({ autonomy: 4, risk: "critical", hasExternalSideEffect: true }).allowed).toBe(false));
   it("routes booking intent through human approval at level 2", () => {
     const result = runDeterministicOperator({ message: "Podemos marcar para amanhã?", knowledge: [], autonomy: 2 });
     expect(result.proposedActions[0]?.type).toBe("propose_booking");
