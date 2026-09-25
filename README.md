@@ -20,5 +20,10 @@ The first MVP runs without paid WhatsApp or telephony. It provides a simulated i
 
 Initial laboratory: a repair-service business. The domain model must remain generic enough for other verticals.
 
+## Try the local simulator
+Run `npm install` and `npm run dev`, then open `/inbox`. Add an approved business fact and submit a fictional customer message such as “Quanto custa trocar o ecrã?”. Try autonomy levels 0–4 and a message requesting a discount. The decision history stays in browser memory and clears on refresh.
+
+The simulator uses deterministic rules, not a connected AI model. Its replies are never sent to a customer. No account, database or external channel is connected yet.
+
 ## Status
-Foundation phase. Architecture and domain model are being established before external integrations.
+Interactive demo of the inbox and approval policy. The SQL schema and operator contract are foundations for later integration, not active persistence.
