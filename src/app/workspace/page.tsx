@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getBrowserClient } from "@/lib/supabase/browser";
 import { propose } from "@/lib/operator/simulator";
+import { OperatorDecisionSchema } from "@/lib/operator/contracts";
 
 type Org = { id: string; name: string };
 type Contact = { id: string; display_name: string | null };
@@ -128,11 +129,14 @@ export default function WorkspacePage() {
     if (!source || runs.some((item) => item.source_message_id === source.id)) return;
     const approved = knowledge.filter((item) => item.is_approved).map((item) => item.content).join(" ").slice(0, 1200);
     const proposal = propose(source.body, approved);
+    const decision = OperatorDecisionSchema.parse({
+      intent: proposal.intent, summary: proposal.reason, confidence: 1, reply: proposal.text, needsHuman: true,
+      proposedActions: [{ type: "reply_to_customer", risk: proposal.risk, rationale: proposal.reason, payload: { body: proposal.text, channel: "simulator" } }]
+    });
     await task(async () => {
       const { error } = await client!.rpc("commit_operator_decision", {
         p_conversation_id: selected, p_source_message_id: source.id,
-        p_decision: { intent: proposal.intent, summary: proposal.reason, confidence: 1, reply: proposal.text, needsHuman: true },
-        p_actions: [{ type: "reply_to_customer", risk: proposal.risk, rationale: proposal.reason, payload: { body: proposal.text, channel: "simulator" } }]
+        p_decision: decision, p_actions: decision.proposedActions
       });
       if (error) throw error;
     });
