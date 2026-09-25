@@ -41,7 +41,7 @@ export async function runOperator(formData: FormData) {
     .order("updated_at", { ascending: false })
     .limit(200);
   if (knowledgeError) redirect("/inbox?error=operator");
-  const approvedKnowledge = (knowledge ?? []).filter(item => item.title.trim().length >= 2 && item.content.trim().length >= 2);
+  const approvedKnowledge = (knowledge ?? []).filter(item => item.title.trim().length >= 2 && item.title.length <= 160 && item.content.trim().length >= 2 && item.content.length <= 10000);
 
   const decision = runDeterministicOperator({
     message: latestCustomer.body,
